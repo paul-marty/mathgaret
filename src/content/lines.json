@@ -1,0 +1,1045 @@
+{
+  "speakers": {
+    "narrateur": {
+      "name": "Narrateur",
+      "color": "#f6ecd9",
+      "radio": false
+    },
+    "margaret": {
+      "name": "Margaret",
+      "color": "#7fb8d8",
+      "radio": false
+    },
+    "collegue": {
+      "name": "Collègue",
+      "color": "#f2c14e",
+      "radio": false
+    },
+    "houston": {
+      "name": "Houston",
+      "color": "#8fd1b5",
+      "radio": true
+    },
+    "lauren": {
+      "name": "Lauren",
+      "color": "#f0a090",
+      "radio": false
+    }
+  },
+  "lines": {
+    "menu_nouvelle": {
+      "speaker": "narrateur",
+      "text": "Nouvelle mission",
+      "source": "provisoire",
+      "scene": "accueil"
+    },
+    "menu_continuer": {
+      "speaker": "narrateur",
+      "text": "Continuer",
+      "source": "provisoire",
+      "scene": "accueil"
+    },
+    "menu_rejouer": {
+      "speaker": "narrateur",
+      "text": "Rejouer un chapitre",
+      "source": "provisoire",
+      "scene": "accueil"
+    },
+    "menu_retour": {
+      "speaker": "narrateur",
+      "text": "Retour",
+      "source": "provisoire",
+      "scene": "accueil"
+    },
+    "rejeu_chapitre": {
+      "speaker": "narrateur",
+      "text": "Chapitre {n} : {titre}",
+      "source": "provisoire",
+      "scene": "accueil"
+    },
+    "cfg_niveau_debut": {
+      "speaker": "narrateur",
+      "text": "Début de CP",
+      "source": "provisoire",
+      "scene": "réglages"
+    },
+    "cfg_niveau_milieu": {
+      "speaker": "narrateur",
+      "text": "Milieu de CP",
+      "source": "provisoire",
+      "scene": "réglages"
+    },
+    "cfg_niveau_fin": {
+      "speaker": "narrateur",
+      "text": "Fin de CP",
+      "source": "provisoire",
+      "scene": "réglages"
+    },
+    "cfg_duree_30": {
+      "speaker": "narrateur",
+      "text": "Trente minutes",
+      "source": "provisoire",
+      "scene": "réglages"
+    },
+    "cfg_duree_45": {
+      "speaker": "narrateur",
+      "text": "Quarante-cinq minutes",
+      "source": "provisoire",
+      "scene": "réglages"
+    },
+    "cfg_duree_60": {
+      "speaker": "narrateur",
+      "text": "Une heure",
+      "source": "provisoire",
+      "scene": "réglages"
+    },
+    "cfg_jetons_oui": {
+      "speaker": "narrateur",
+      "text": "Mes jetons sont prêts",
+      "source": "provisoire",
+      "scene": "réglages"
+    },
+    "cfg_jetons_non": {
+      "speaker": "narrateur",
+      "text": "Sans jetons",
+      "source": "provisoire",
+      "scene": "réglages"
+    },
+    "cfg_doux_oui": {
+      "speaker": "narrateur",
+      "text": "Ambiance douce",
+      "source": "provisoire",
+      "scene": "réglages"
+    },
+    "cfg_doux_non": {
+      "speaker": "narrateur",
+      "text": "Ambiance normale",
+      "source": "provisoire",
+      "scene": "réglages"
+    },
+    "cfg_st_oui": {
+      "speaker": "narrateur",
+      "text": "Sous-titres affichés",
+      "source": "provisoire",
+      "scene": "réglages"
+    },
+    "cfg_st_non": {
+      "speaker": "narrateur",
+      "text": "Sans sous-titres",
+      "source": "provisoire",
+      "scene": "réglages"
+    },
+    "cfg_go": {
+      "speaker": "narrateur",
+      "text": "C'est parti !",
+      "source": "provisoire",
+      "scene": "réglages"
+    },
+    "hud_reecouter": {
+      "speaker": "narrateur",
+      "text": "Réécouter",
+      "source": "provisoire",
+      "scene": "boutons"
+    },
+    "hud_aide": {
+      "speaker": "narrateur",
+      "text": "Aide",
+      "source": "provisoire",
+      "scene": "boutons"
+    },
+    "hud_jetons": {
+      "speaker": "narrateur",
+      "text": "Jetons",
+      "source": "provisoire",
+      "scene": "boutons"
+    },
+    "hud_valider": {
+      "speaker": "narrateur",
+      "text": "Vérifier",
+      "source": "provisoire",
+      "scene": "boutons"
+    },
+    "gen_reecoute_1": {
+      "speaker": "collegue",
+      "text": "Bien sûr. Regardons ensemble ce qu'il faut préparer.",
+      "source": "propose",
+      "scene": "aides (P7)"
+    },
+    "gen_reecoute_n": {
+      "speaker": "collegue",
+      "text": "Je te la redis. Tu peux regarder les objets pendant que je parle.",
+      "source": "propose",
+      "scene": "aides (P7)"
+    },
+    "gen_aide": {
+      "speaker": "collegue",
+      "text": "On va chercher ensemble. Montre-moi ce que nous avons au départ.",
+      "source": "propose",
+      "scene": "aides (P7)"
+    },
+    "gen_erreur": {
+      "speaker": "collegue",
+      "text": "Le test nous montre quelque chose à corriger. Regardons les quantités.",
+      "source": "propose",
+      "scene": "aides (P7)"
+    },
+    "gen_correction": {
+      "speaker": "collegue",
+      "text": "Voilà, le système fonctionne. Tu as trouvé ce qu'il fallait changer !",
+      "source": "propose",
+      "scene": "aides (P7)"
+    },
+    "gen_jetons": {
+      "speaker": "collegue",
+      "text": "Les grands ingénieurs utilisent aussi des outils pour réfléchir !",
+      "source": "repris",
+      "scene": "aides (P7)"
+    },
+    "gen_reprise": {
+      "speaker": "narrateur",
+      "text": "Nous étions en train de préparer la mission. Reprenons !",
+      "source": "provisoire",
+      "scene": "reprise (P2, P4)"
+    },
+    "gen_bravo_1": {
+      "speaker": "collegue",
+      "text": "Bravo !",
+      "source": "provisoire",
+      "scene": "réussites"
+    },
+    "gen_bravo_2": {
+      "speaker": "collegue",
+      "text": "C'est exactement ça !",
+      "source": "provisoire",
+      "scene": "réussites"
+    },
+    "gen_bravo_3": {
+      "speaker": "collegue",
+      "text": "Parfait, ça fonctionne !",
+      "source": "provisoire",
+      "scene": "réussites"
+    },
+    "gen_compter": {
+      "speaker": "collegue",
+      "text": "Comptons ensemble.",
+      "source": "provisoire",
+      "scene": "aides (P7)"
+    },
+    "tuto_aide": {
+      "speaker": "collegue",
+      "text": "Si tu as besoin d'aide, appuie sur mon bouton. Je viendrai chercher avec toi.",
+      "source": "provisoire",
+      "scene": "C1.1 tutoriel"
+    },
+    "tuto_reponse": {
+      "speaker": "collegue",
+      "text": "Choisis ton nombre avec plus et moins. Quand tu es prête, appuie sur la grande coche pour vérifier.",
+      "source": "provisoire",
+      "scene": "C1.2 tutoriel (P3)"
+    },
+    "tuto_choix": {
+      "speaker": "collegue",
+      "text": "Choisis un plateau, puis appuie sur la grande coche pour vérifier.",
+      "source": "provisoire",
+      "scene": "C1.3 tutoriel (P3)"
+    },
+    "tuto_ordre": {
+      "speaker": "collegue",
+      "text": "Choisis dans l'ordre, puis appuie sur la grande coche pour vérifier.",
+      "source": "provisoire",
+      "scene": "C1.3 tutoriel (P3)"
+    },
+    "tuto_reecoute": {
+      "speaker": "collegue",
+      "text": "Pour entendre encore la consigne, appuie sur le haut-parleur. La première fois, c'est gratuit. Si tu l'écoutes plusieurs fois, tu gagneras moins d'étoiles d'efficacité.",
+      "source": "provisoire",
+      "scene": "C1.2 tutoriel (P8)"
+    },
+    "tuto_jetons_prets": {
+      "speaker": "collegue",
+      "text": "Tes jetons sont prêts ? Tu peux t'en servir pour compter. Il y en a aussi ici, avec ce bouton.",
+      "source": "provisoire",
+      "scene": "C1.2 tutoriel (P17)"
+    },
+    "tuto_jetons": {
+      "speaker": "collegue",
+      "text": "Il y a des jetons avec ce bouton, si tu veux compter avec.",
+      "source": "provisoire",
+      "scene": "C1.2 tutoriel (P17)"
+    },
+    "ms_papiers": {
+      "speaker": "collegue",
+      "text": "Celle-ci veut déjà voyager.",
+      "source": "propose",
+      "scene": "micro-surprise"
+    },
+    "ms_bip": {
+      "speaker": "collegue",
+      "text": "Message reçu !",
+      "source": "propose",
+      "scene": "micro-surprise"
+    },
+    "bilan_mission": {
+      "speaker": "narrateur",
+      "text": "Chapitre terminé ! Voici ton étoile de mission.",
+      "source": "provisoire",
+      "scene": "bilan"
+    },
+    "bilan_efficacite": {
+      "speaker": "narrateur",
+      "text": "Et voici tes étoiles d'efficacité : {n} sur 5.",
+      "source": "provisoire",
+      "scene": "bilan"
+    },
+    "bilan_suite": {
+      "speaker": "narrateur",
+      "text": "Tu veux continuer l'aventure, ou faire une pause ?",
+      "source": "provisoire",
+      "scene": "bilan"
+    },
+    "bilan_continuer": {
+      "speaker": "narrateur",
+      "text": "Continuer l'aventure",
+      "source": "provisoire",
+      "scene": "bilan"
+    },
+    "bilan_pause": {
+      "speaker": "narrateur",
+      "text": "Faire une pause",
+      "source": "provisoire",
+      "scene": "bilan"
+    },
+    "bilan_bientot": {
+      "speaker": "narrateur",
+      "text": "La suite de l'aventure arrive bientôt !",
+      "source": "provisoire",
+      "scene": "bilan"
+    },
+    "c1_1_date": {
+      "speaker": "narrateur",
+      "text": "Au milieu des années 1960, aux États-Unis.",
+      "source": "provisoire",
+      "scene": "C1.1"
+    },
+    "c1_1_intro": {
+      "speaker": "narrateur",
+      "text": "Voici Margaret Hamilton. Elle sait donner des instructions aux ordinateurs. Avec son équipe, elle va participer à une aventure extraordinaire.",
+      "source": "propose",
+      "scene": "C1.1"
+    },
+    "c1_1_defi": {
+      "speaker": "collegue",
+      "text": "Margaret ! Tu tombes bien ! Nous avons un énorme défi. Nous devons préparer les programmes de leur ordinateur, pour aider les astronautes à aller sur la Lune !",
+      "source": "propose",
+      "scene": "C1.1"
+    },
+    "c1_1_travail": {
+      "speaker": "margaret",
+      "text": "Alors, au travail !",
+      "source": "repris",
+      "scene": "C1.1"
+    },
+    "c1_1_poste": {
+      "speaker": "collegue",
+      "text": "Allume ton poste de travail !",
+      "source": "provisoire",
+      "scene": "C1.1"
+    },
+    "c1_2_consigne": {
+      "speaker": "collegue",
+      "text": "Pour démarrer notre ordinateur, nous devons allumer {total} voyants. Il y en a déjà {deja}. Combien devons-nous encore en allumer ?",
+      "source": "repris",
+      "scene": "C1.2"
+    },
+    "c1_2_consigne_fin": {
+      "speaker": "collegue",
+      "text": "Pour démarrer notre ordinateur, nous devons préparer {total} contrôles. Chaque voyant est un contrôle. {deja} sont déjà prêts. Combien devons-nous encore en préparer ?",
+      "source": "provisoire",
+      "scene": "C1.2"
+    },
+    "c1_2_autre": {
+      "speaker": "collegue",
+      "text": "Il reste un autre panneau à vérifier !",
+      "source": "provisoire",
+      "scene": "C1.2"
+    },
+    "c1_2_succes": {
+      "speaker": "collegue",
+      "text": "Les voyants sont allumés ! Écoute, l'ordinateur se réveille !",
+      "source": "provisoire",
+      "scene": "C1.2"
+    },
+    "c1_2_trop_peu": {
+      "speaker": "collegue",
+      "text": "Tu en as allumé {n}. Il reste encore {k} places à remplir.",
+      "source": "propose",
+      "scene": "C1.2"
+    },
+    "c1_2_trop_peu_1": {
+      "speaker": "collegue",
+      "text": "Tu en as allumé {n}. Il reste encore une place à remplir.",
+      "source": "propose",
+      "scene": "C1.2"
+    },
+    "c1_2_trop_1": {
+      "speaker": "collegue",
+      "text": "Tu en as allumé {n}. Il y en a un de trop.",
+      "source": "provisoire",
+      "scene": "C1.2"
+    },
+    "c1_2_trop": {
+      "speaker": "collegue",
+      "text": "Tu en as allumé {n}. Il y en a {k} de trop.",
+      "source": "provisoire",
+      "scene": "C1.2"
+    },
+    "c1_2_aide_1": {
+      "speaker": "collegue",
+      "text": "Il en faut {total}. {deja} brillent déjà. Les places vides attendent leurs voyants.",
+      "source": "provisoire",
+      "scene": "C1.2"
+    },
+    "c1_2_aide_2": {
+      "speaker": "collegue",
+      "text": "Regarde : je montre les places vides. Ce sont les voyants qui manquent.",
+      "source": "provisoire",
+      "scene": "C1.2"
+    },
+    "c1_2_aide_4": {
+      "speaker": "collegue",
+      "text": "Il faut en allumer {answer}. Choisis {answer}, puis appuie sur la grande coche.",
+      "source": "provisoire",
+      "scene": "C1.2"
+    },
+    "c1_3_explore": {
+      "speaker": "collegue",
+      "text": "Tu peux regarder le laboratoire : le poste, l'imprimante, la maquette…",
+      "source": "provisoire",
+      "scene": "C1.3"
+    },
+    "c1_3_obj_poste": {
+      "speaker": "margaret",
+      "text": "C'est ici que j'écris les programmes.",
+      "source": "provisoire",
+      "scene": "C1.3"
+    },
+    "c1_3_obj_imprimante": {
+      "speaker": "collegue",
+      "text": "L'imprimante écrit sur du papier tout ce que calcule l'ordinateur.",
+      "source": "provisoire",
+      "scene": "C1.3"
+    },
+    "c1_3_obj_maquette": {
+      "speaker": "collegue",
+      "text": "C'est une maquette de la fusée. La vraie est immense !",
+      "source": "provisoire",
+      "scene": "C1.3"
+    },
+    "c1_3_ohnon": {
+      "speaker": "collegue",
+      "text": "Oh non ! Notre programme ne fonctionne pas comme prévu !",
+      "source": "repris",
+      "scene": "C1.3"
+    },
+    "c1_3_liste": {
+      "speaker": "collegue",
+      "text": "Regardons la liste des équipements. L'ordinateur a mélangé nos vérifications.",
+      "source": "propose",
+      "scene": "C1.3"
+    },
+    "c1_3_consigne_debut": {
+      "speaker": "collegue",
+      "text": "Il nous faut {target} équipements. Quel plateau en contient {target} ?",
+      "source": "provisoire",
+      "scene": "C1.3"
+    },
+    "c1_3_consigne_plus": {
+      "speaker": "collegue",
+      "text": "Quel plateau contient le plus d'équipements ?",
+      "source": "provisoire",
+      "scene": "C1.3"
+    },
+    "c1_3_consigne_moins": {
+      "speaker": "collegue",
+      "text": "Quel plateau contient le moins d'équipements ?",
+      "source": "provisoire",
+      "scene": "C1.3"
+    },
+    "c1_3_consigne_fin": {
+      "speaker": "collegue",
+      "text": "Remets les repères de la simulation dans l'ordre, du plus petit au plus grand.",
+      "source": "provisoire",
+      "scene": "C1.3"
+    },
+    "c1_3_succes": {
+      "speaker": "collegue",
+      "text": "Cette ligne est rangée !",
+      "source": "provisoire",
+      "scene": "C1.3"
+    },
+    "c1_3_erreur_plateau": {
+      "speaker": "collegue",
+      "text": "Ce plateau en contient {n}. Comparons les objets.",
+      "source": "provisoire",
+      "scene": "C1.3"
+    },
+    "c1_3_erreur_ordre": {
+      "speaker": "collegue",
+      "text": "Ces repères ne sont pas encore dans l'ordre. Comparons les nombres.",
+      "source": "provisoire",
+      "scene": "C1.3"
+    },
+    "c1_3_aide_1_debut": {
+      "speaker": "collegue",
+      "text": "On cherche le plateau qui contient {target} équipements.",
+      "source": "provisoire",
+      "scene": "C1.3"
+    },
+    "c1_3_aide_1_plus": {
+      "speaker": "collegue",
+      "text": "On cherche le plateau qui en a le plus.",
+      "source": "provisoire",
+      "scene": "C1.3"
+    },
+    "c1_3_aide_1_moins": {
+      "speaker": "collegue",
+      "text": "On cherche le plateau qui en a le moins.",
+      "source": "provisoire",
+      "scene": "C1.3"
+    },
+    "c1_3_aide_1_fin": {
+      "speaker": "collegue",
+      "text": "Le plus petit repère vient en premier.",
+      "source": "provisoire",
+      "scene": "C1.3"
+    },
+    "c1_3_aide_2": {
+      "speaker": "collegue",
+      "text": "Je range les objets en ligne, l'un en face de l'autre.",
+      "source": "provisoire",
+      "scene": "C1.3"
+    },
+    "c1_3_aide_2_fin": {
+      "speaker": "collegue",
+      "text": "Regarde les paquets de dix sur chaque carte.",
+      "source": "provisoire",
+      "scene": "C1.3"
+    },
+    "c1_3_aide_3_fin": {
+      "speaker": "collegue",
+      "text": "Comptons les paquets de dix.",
+      "source": "provisoire",
+      "scene": "C1.3"
+    },
+    "c1_3_aide_4": {
+      "speaker": "collegue",
+      "text": "C'est celui-ci. Choisis-le, puis appuie sur la grande coche.",
+      "source": "provisoire",
+      "scene": "C1.3"
+    },
+    "c1_3_aide_4_fin": {
+      "speaker": "collegue",
+      "text": "Voici le bon ordre. Appuie sur la grande coche.",
+      "source": "provisoire",
+      "scene": "C1.3"
+    },
+    "c1_3_papier": {
+      "speaker": "collegue",
+      "text": "Je crois que nous avons assez de papier pour aujourd'hui.",
+      "source": "propose",
+      "scene": "C1.3"
+    },
+    "c1_4_lune": {
+      "speaker": "collegue",
+      "text": "Margaret, si nous réussissons, des astronautes pourront marcher sur la Lune !",
+      "source": "repris",
+      "scene": "C1.4"
+    },
+    "c1_4_probleme": {
+      "speaker": "collegue",
+      "text": "Et leur ordinateur devra savoir quoi faire, même lorsqu'un problème arrive.",
+      "source": "propose",
+      "scene": "C1.4"
+    },
+    "gen_etape": {
+      "speaker": "collegue",
+      "text": "C'est juste ! On garde ce résultat, et on continue.",
+      "source": "provisoire",
+      "scene": "aides (deux étapes)"
+    },
+    "sim_regardons": {
+      "speaker": "narrateur",
+      "text": "Regardons notre simulation.",
+      "source": "propose",
+      "scene": "simulation (P1)"
+    },
+    "ms_rouleau": {
+      "speaker": "collegue",
+      "text": "Cette fois, je l'ai attrapée !",
+      "source": "provisoire",
+      "scene": "micro-surprise"
+    },
+    "c2_1_lieu": {
+      "speaker": "narrateur",
+      "text": "Au laboratoire du MIT, l'équipe prépare l'ordinateur d'Apollo.",
+      "source": "provisoire",
+      "scene": "C2.1"
+    },
+    "c2_1_machine": {
+      "speaker": "collegue",
+      "text": "Margaret ! Regarde notre nouvel ordinateur. Il va voyager jusqu'à la Lune ! Mais il faut lui apprendre à faire les bonnes choses dans le bon ordre.",
+      "source": "repris",
+      "scene": "C2.1"
+    },
+    "c2_1_pret": {
+      "speaker": "collegue",
+      "text": "On va lui donner ses premières instructions. Tu es prête ?",
+      "source": "repris",
+      "scene": "C2.1"
+    },
+    "c2_1_toucher": {
+      "speaker": "collegue",
+      "text": "Touche l'ordinateur quand tu es prête !",
+      "source": "provisoire",
+      "scene": "C2.1"
+    },
+    "c2_1_liste": {
+      "speaker": "collegue",
+      "text": "Première instruction : préparer les équipements de notre fusée de simulation.",
+      "source": "provisoire",
+      "scene": "C2.1"
+    },
+    "c2_1_consigne": {
+      "speaker": "collegue",
+      "text": "Il y a {total} équipements à préparer. {minus} sont déjà installés dans le compartiment. Combien en reste-t-il ?",
+      "source": "provisoire",
+      "scene": "C2.1"
+    },
+    "c2_1_consigne_2": {
+      "speaker": "collegue",
+      "text": "Parmi ces {total} équipements, l'ordinateur en a contrôlé {minus}. Combien en reste-t-il à traiter ?",
+      "source": "provisoire",
+      "scene": "C2.1"
+    },
+    "c2_1_autre": {
+      "speaker": "collegue",
+      "text": "Préparons les équipements d'une autre fonction de l'ordinateur.",
+      "source": "provisoire",
+      "scene": "C2.1"
+    },
+    "c2_1_succes": {
+      "speaker": "collegue",
+      "text": "Instruction enregistrée ! Regarde, une nouvelle fonction de l'ordinateur s'allume.",
+      "source": "provisoire",
+      "scene": "C2.1"
+    },
+    "c2_1_peu": {
+      "speaker": "collegue",
+      "text": "Tu en as compté {n}. Il en reste encore {k} à compter.",
+      "source": "propose",
+      "scene": "C2.1"
+    },
+    "c2_1_peu_1": {
+      "speaker": "collegue",
+      "text": "Tu en as compté {n}. Il en reste encore un à compter.",
+      "source": "propose",
+      "scene": "C2.1"
+    },
+    "c2_1_trop": {
+      "speaker": "collegue",
+      "text": "Tu en as compté {n}. Il n'y en a pas autant : regarde les {k} places vides.",
+      "source": "provisoire",
+      "scene": "C2.1"
+    },
+    "c2_1_trop_1": {
+      "speaker": "collegue",
+      "text": "Tu en as compté {n}. Il n'y en a pas autant : regarde la place vide.",
+      "source": "provisoire",
+      "scene": "C2.1"
+    },
+    "c2_1_aide_1": {
+      "speaker": "collegue",
+      "text": "Il y avait {total} équipements. {minus} sont partis dans le compartiment. Combien sont restés ?",
+      "source": "provisoire",
+      "scene": "C2.1"
+    },
+    "c2_1_aide_1_2": {
+      "speaker": "collegue",
+      "text": "Il y en avait {total}. {minus} ont une coche. Combien n'ont pas encore de coche ?",
+      "source": "provisoire",
+      "scene": "C2.1"
+    },
+    "c2_1_aide_2": {
+      "speaker": "collegue",
+      "text": "Regarde : je montre ceux qui restent.",
+      "source": "provisoire",
+      "scene": "C2.1"
+    },
+    "c2_1_aide_4": {
+      "speaker": "collegue",
+      "text": "Il en reste {answer}. Choisis {answer}, puis appuie sur la grande coche.",
+      "source": "provisoire",
+      "scene": "C2.1"
+    },
+    "c2_1_cloture": {
+      "speaker": "collegue",
+      "text": "Toutes les instructions sont prêtes. On peut lancer un essai !",
+      "source": "provisoire",
+      "scene": "C2.1"
+    },
+    "c2_l_narration": {
+      "speaker": "narrateur",
+      "text": "Quelques années plus tôt, Lauren, la fille de Margaret, avait joué avec un simulateur du laboratoire.",
+      "source": "propose",
+      "scene": "C2 souvenir de Lauren (P18)"
+    },
+    "c2_l_bouton": {
+      "speaker": "lauren",
+      "text": "J'ai voulu essayer ce bouton…",
+      "source": "propose",
+      "scene": "C2 souvenir de Lauren (P18)"
+    },
+    "c2_l_important": {
+      "speaker": "margaret",
+      "text": "Tu nous as montré quelque chose d'important. Un ordinateur doit aussi nous aider quand nous faisons une erreur.",
+      "source": "propose",
+      "scene": "C2 souvenir de Lauren (P18)"
+    },
+    "c2_l_apollo8": {
+      "speaker": "narrateur",
+      "text": "Pendant Apollo 8, une erreur semblable est arrivée à un astronaute. Les équipes ont travaillé pour mieux protéger les programmes.",
+      "source": "propose",
+      "scene": "C2 souvenir de Lauren (P18)"
+    },
+    "c2_l_retour": {
+      "speaker": "collegue",
+      "text": "Voilà pourquoi nous essayons nos programmes.",
+      "source": "propose",
+      "scene": "C2 souvenir de Lauren (P18)"
+    },
+    "c2_2_direction": {
+      "speaker": "collegue",
+      "text": "Margaret ! Notre fusée ne va pas dans la bonne direction !",
+      "source": "repris",
+      "scene": "C2.2"
+    },
+    "c2_2_trouver": {
+      "speaker": "margaret",
+      "text": "Il faut trouver ce qui ne va pas !",
+      "source": "repris",
+      "scene": "C2.2"
+    },
+    "c2_2_tranquille": {
+      "speaker": "margaret",
+      "text": "C'est notre essai. Nous pouvons le corriger tranquillement.",
+      "source": "propose",
+      "scene": "C2.2"
+    },
+    "c2_2_consigne": {
+      "speaker": "collegue",
+      "text": "La fusée est sur la case {from}. La balise est sur la case {to}. De combien de cases la fusée doit-elle avancer ?",
+      "source": "provisoire",
+      "scene": "C2.2"
+    },
+    "c2_2_autre": {
+      "speaker": "collegue",
+      "text": "Vérifions un autre segment de l'essai.",
+      "source": "provisoire",
+      "scene": "C2.2"
+    },
+    "c2_2_succes": {
+      "speaker": "collegue",
+      "text": "La fusée a rejoint la balise ! Le repère est vert.",
+      "source": "provisoire",
+      "scene": "C2.2"
+    },
+    "c2_2_court": {
+      "speaker": "collegue",
+      "text": "La fusée s'est arrêtée sur la case {stop}. La balise est encore devant : il manque {k} cases.",
+      "source": "provisoire",
+      "scene": "C2.2"
+    },
+    "c2_2_court_1": {
+      "speaker": "collegue",
+      "text": "La fusée s'est arrêtée sur la case {stop}. La balise est encore devant : il manque une case.",
+      "source": "provisoire",
+      "scene": "C2.2"
+    },
+    "c2_2_long": {
+      "speaker": "collegue",
+      "text": "La fusée est allée jusqu'à la case {stop}. Elle a dépassé la balise de {k} cases.",
+      "source": "provisoire",
+      "scene": "C2.2"
+    },
+    "c2_2_long_1": {
+      "speaker": "collegue",
+      "text": "La fusée est allée jusqu'à la case {stop}. Elle a dépassé la balise d'une case.",
+      "source": "provisoire",
+      "scene": "C2.2"
+    },
+    "c2_2_aide_1": {
+      "speaker": "collegue",
+      "text": "On part de la case {from}. On veut arriver sur la case {to}. Combien de cases faut-il avancer ?",
+      "source": "provisoire",
+      "scene": "C2.2"
+    },
+    "c2_2_aide_2": {
+      "speaker": "collegue",
+      "text": "Regarde : j'éclaire le chemin jusqu'à la balise.",
+      "source": "provisoire",
+      "scene": "C2.2"
+    },
+    "c2_2_aide_2_fin": {
+      "speaker": "collegue",
+      "text": "Regarde : j'éclaire le chemin jusqu'à la balise. Une ligne entière, c'est dix cases.",
+      "source": "provisoire",
+      "scene": "C2.2"
+    },
+    "c2_2_aide_4": {
+      "speaker": "collegue",
+      "text": "Il faut avancer de {answer} cases. Choisis {answer}, puis appuie sur la grande coche.",
+      "source": "provisoire",
+      "scene": "C2.2"
+    },
+    "c2_2_bravo": {
+      "speaker": "collegue",
+      "text": "Bravo ! Tu viens de corriger un bug ! C'est exactement ce que font les programmeurs !",
+      "source": "repris",
+      "scene": "C2.2"
+    },
+    "c2_3_voyage": {
+      "speaker": "collegue",
+      "text": "Cette fois, nous allons essayer tout le voyage.",
+      "source": "propose",
+      "scene": "C2.3"
+    },
+    "c2_3_plein": {
+      "speaker": "collegue",
+      "text": "Avant le décollage, on fait le plein de la fusée. Le premier réservoir contient {a} unités de carburant. Le deuxième en contient {b}. Combien d'unités en tout dans la fusée ?",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_plein_peu": {
+      "speaker": "collegue",
+      "text": "Tu as choisi {n}. Il reste encore {k} unités dans les réservoirs.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_plein_peu_1": {
+      "speaker": "collegue",
+      "text": "Tu as choisi {n}. Il reste encore une unité dans les réservoirs.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_plein_trop": {
+      "speaker": "collegue",
+      "text": "Tu as choisi {n}. Il n'y a pas assez de carburant : regarde les {k} places vides.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_plein_trop_1": {
+      "speaker": "collegue",
+      "text": "Tu as choisi {n}. Il n'y a pas assez de carburant : regarde la place vide.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_aide_1_plein": {
+      "speaker": "collegue",
+      "text": "On verse les {a} unités du premier réservoir et les {b} unités du deuxième dans la fusée.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_aide_2_plein": {
+      "speaker": "collegue",
+      "text": "Regarde les deux réservoirs : je montre les groupes de cinq.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_aide_2_plein_fin": {
+      "speaker": "collegue",
+      "text": "Regarde les deux réservoirs : je montre les dizaines.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_aide_3_plein": {
+      "speaker": "collegue",
+      "text": "On part de {a}, et on continue à compter avec le deuxième réservoir.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_aide_4_plein": {
+      "speaker": "collegue",
+      "text": "{a} et {b}, cela fait {answer}. Choisis {answer}, puis appuie sur la grande coche.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_radio": {
+      "speaker": "collegue",
+      "text": "Houston nous appelle sur le canal {total}. Notre radio est sur le canal {deja}. De combien de crans faut-il tourner le bouton ?",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_radio_court": {
+      "speaker": "collegue",
+      "text": "La radio grésille encore : il manque {k} crans pour arriver sur le canal de Houston.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_radio_court_1": {
+      "speaker": "collegue",
+      "text": "La radio grésille encore : il manque un cran pour arriver sur le canal de Houston.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_radio_long": {
+      "speaker": "collegue",
+      "text": "Trop loin ! L'aiguille a dépassé le canal de Houston de {k} crans.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_radio_long_1": {
+      "speaker": "collegue",
+      "text": "Trop loin ! L'aiguille a dépassé le canal de Houston d'un cran.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_aide_1_radio": {
+      "speaker": "collegue",
+      "text": "L'aiguille doit aller du canal {deja} jusqu'au canal {total}.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_aide_2_radio": {
+      "speaker": "collegue",
+      "text": "Regarde le chemin de l'aiguille jusqu'au repère vert.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_aide_4_radio": {
+      "speaker": "collegue",
+      "text": "Il faut tourner de {answer} crans. Choisis {answer}, puis appuie sur la grande coche.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_houston": {
+      "speaker": "houston",
+      "text": "Ici Houston. Nous vous entendons très bien !",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_etoiles": {
+      "speaker": "collegue",
+      "text": "Pour ne pas se perdre, la fusée passe par des étoiles repères, de la plus petite à la plus grande. Relie-les dans l'ordre.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_etoiles_erreur": {
+      "speaker": "collegue",
+      "text": "Oh, la fusée fait un détour ! Il faut aller de la plus petite étoile à la plus grande.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_aide_1_etoiles": {
+      "speaker": "collegue",
+      "text": "On commence par l'étoile du plus petit nombre.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_aide_2_etoiles_fin": {
+      "speaker": "collegue",
+      "text": "Regarde les dizaines sous chaque étoile.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_aide_4_etoiles": {
+      "speaker": "collegue",
+      "text": "Voici le bon chemin. Appuie sur la grande coche.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_freinage": {
+      "speaker": "collegue",
+      "text": "Nous arrivons près de la Lune. Pour freiner, le moteur a brûlé {minus} unités de carburant. Il y en avait {total}. Combien en reste-t-il ?",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_freinage_peu": {
+      "speaker": "collegue",
+      "text": "Tu en as compté {n}. Il en reste encore {k} dans la jauge.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_freinage_peu_1": {
+      "speaker": "collegue",
+      "text": "Tu en as compté {n}. Il en reste encore une dans la jauge.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_freinage_trop": {
+      "speaker": "collegue",
+      "text": "Tu en as compté {n}. Il n'en reste pas autant : regarde les {k} places vides.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_freinage_trop_1": {
+      "speaker": "collegue",
+      "text": "Tu en as compté {n}. Il n'en reste pas autant : regarde la place vide.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_aide_1_freinage": {
+      "speaker": "collegue",
+      "text": "Il y avait {total} unités. Le moteur en a brûlé {minus}. Combien en reste-t-il dans la jauge ?",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_aide_2_freinage": {
+      "speaker": "collegue",
+      "text": "Regarde : je montre les unités qui restent dans la jauge.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_aide_4_freinage": {
+      "speaker": "collegue",
+      "text": "Il reste {answer} unités. Choisis {answer}, puis appuie sur la grande coche.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_suite": {
+      "speaker": "collegue",
+      "text": "Le voyage continue. Nouveau contrôle !",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_aide_2_reperes": {
+      "speaker": "collegue",
+      "text": "Regarde les petits carrés sous chaque nombre.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_aide_3_reperes": {
+      "speaker": "collegue",
+      "text": "Écoute bien chaque nombre.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    },
+    "c2_3_fonctionne": {
+      "speaker": "collegue",
+      "text": "Margaret ! Ça fonctionne ! Notre ordinateur commence à être prêt pour une véritable mission spatiale !",
+      "source": "repris",
+      "scene": "C2.3"
+    },
+    "c2_3_nasa": {
+      "speaker": "houston",
+      "text": "Mission Apollo 11 — préparatifs du lancement.",
+      "source": "repris",
+      "scene": "C2.3"
+    },
+    "c2_3_ellipse": {
+      "speaker": "narrateur",
+      "text": "Il faudra encore beaucoup d'essais, et le travail de nombreuses équipes, pour préparer cette mission.",
+      "source": "provisoire",
+      "scene": "C2.3"
+    }
+  }
+}

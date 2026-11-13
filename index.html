@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <meta name="theme-color" content="#101a33" />
+    <meta name="description" content="Avec Margaret Hamilton, prépare la mission Apollo 11 en résolvant des problèmes de maths." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <title>Mathgaret</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #101a33;
+        overflow: hidden;
+        overscroll-behavior: none;
+        touch-action: none;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+      #game {
+        position: fixed;
+        inset: 0;
+      }
+      #boot-message {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        color: #b9c3e6;
+        font: 600 4vh system-ui, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="boot-message">Chargement…</div>
+    <div id="game"></div>
+    <noscript>Ce jeu a besoin de JavaScript.</noscript>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

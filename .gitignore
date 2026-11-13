@@ -1,0 +1,33 @@
+# Dépendances et builds
+node_modules/
+dist/
+dev-dist/
+dist-subpath/
+*.tsbuildinfo
+
+# Secrets : JAMAIS dans git
+.env
+.env.*
+!.env.example
+
+# Tests
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+
+# Audio : le manifeste est reconstruit par Vite à chaque lancement
+public/audio/manifest.json
+public/audio/*.tmp
+
+# Éditeurs / OS
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea/
+Thumbs.db
+
+# Documents de travail : restent sur la machine (dépôt public)
+/Mathgaret-document-de-reference.md
+/docs/
+.vite/

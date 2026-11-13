@@ -1,0 +1,31 @@
+{
+  "_comment": "Bruitages et musiques que le jeu sait jouer depuis un fichier (public/audio/sons/<nom>.mp3, public/audio/musique/<nom>.mp3). Sans fichier, le jeu synthétise un son provisoire. La commande à ChatGPT (docs/audio/prompt-chatgpt.md) reprend cette liste.",
+  "sons": {
+    "selection": { "boucle": false, "description": "la sélection passe d'un bouton à l'autre" },
+    "appui": { "boucle": false, "description": "appui sur un bouton" },
+    "plus": { "boucle": false, "description": "le nombre choisi augmente d'un" },
+    "moins": { "boucle": false, "description": "le nombre choisi diminue d'un" },
+    "note": { "boucle": false, "description": "un objet s'allume ou est compté (le jeu monte la note à chaque rang)" },
+    "reussite": { "boucle": false, "description": "bonne réponse" },
+    "accord": { "boucle": false, "description": "fin d'une scène réussie" },
+    "erreur_douce": { "boucle": false, "description": "réponse à corriger (jamais un buzzer)" },
+    "bip": { "boucle": false, "description": "un bip d'ordinateur (le jeu le répète)" },
+    "bips_etranges": { "boucle": false, "description": "l'ordinateur se trompe" },
+    "imprimante": { "boucle": true, "description": "imprimante à listings" },
+    "papier": { "boucle": false, "description": "froissement de papier" },
+    "whoosh": { "boucle": false, "description": "transition, objet qui file" },
+    "ronronnement": { "boucle": true, "description": "ambiance de la salle des ordinateurs" },
+    "bobines": { "boucle": true, "description": "bobines de bande magnétique qui tournent" },
+    "alarme": { "boucle": false, "description": "alarme de la simulation" },
+    "grondement": { "boucle": false, "description": "moteur de fusée qui décolle" },
+    "souvenir": { "boucle": false, "description": "on entre dans un souvenir" },
+    "cran": { "boucle": false, "description": "cran du bouton d'une radio" },
+    "gresillement": { "boucle": true, "description": "radio mal réglée" }
+  },
+  "musiques": {
+    "mystere": { "description": "menu, arrivée au laboratoire, souvenir : curiosité" },
+    "leger": { "description": "travail au laboratoire, entre les problèmes" },
+    "calme": { "description": "pendant que l'enfant réfléchit" },
+    "ample": { "description": "réussite, révélation, fin de chapitre" }
+  }
+}

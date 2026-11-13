@@ -1,0 +1,8 @@
+Fichiers audio livrés (voir docs/voix.md et docs/audio/prompt-chatgpt.md).
+
+  voix/      répliques et nombres, noms exacts de docs/audio/commande-voix.csv
+  sons/      bruitages (liste : src/content/audio-catalogue.json)
+  musique/   musiques en boucle (idem)
+
+manifest.json est reconstruit tout seul par npm run dev et npm run build.
+npm run audio affiche ce qui manque.

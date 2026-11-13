@@ -1,0 +1,36 @@
+{
+  "name": "mathgaret",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Dessin animé interactif de maths pour le CP : avec Margaret Hamilton, préparer la mission Apollo 11.",
+  "type": "module",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p tsconfig.node.json",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "check": "npm run typecheck && npm test && npm run test:e2e",
+    "icons": "node tools/make-icons.mjs",
+    "repliques": "node tools/export-repliques.mjs",
+    "commande-audio": "node tools/commande-audio.mjs",
+    "audio": "node tools/manifeste-audio.mjs"
+  },
+  "dependencies": {
+    "@fontsource/fredoka": "^5.3.0",
+    "phaser": "^3.90.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.0",
+    "@types/node": "^24.19.2",
+    "typescript": "~5.9.3",
+    "vite": "^8.3.8",
+    "vite-plugin-pwa": "^2.0.0",
+    "vitest": "^4.1.12",
+    "workbox-window": "^7.4.1"
+  }
+}
