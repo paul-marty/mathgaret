@@ -1,5 +1,5 @@
 import { devices } from '@playwright/test';
-import { expect, FAST, test, until } from './helpers';
+import { expect, FAST, gameToPage, open, state, test, until } from './helpers';
 
 test.use({ hasTouch: true, isMobile: true, userAgent: devices['iPhone 13'].userAgent });
 
@@ -66,4 +66,39 @@ test('le toucher active le son après fermeture et réouverture de la page', asy
   expect(await sessionType()).toBe('playback');
   const unlocked = (await audioTime())!;
   await expect.poll(audioTime).toBeGreaterThan(unlocked);
+});
+
+test('le cadran de Houston répond après des verrouillages successifs', async ({ page, consoleErrors }) => {
+  void consoleErrors;
+  await page.route('**/audio/manifest.json', (route) => route.fulfill({
+    json: { voix: { nombre_0: 'voix/nombre_0.mp3', nombre_1: 'voix/nombre_1.mp3' } },
+  }));
+  await open(page, 'vitesse=12&niveau=debut&scene=c2.3');
+  const tap = async (x: number, y: number) => {
+    const point = await gameToPage(page, x, y);
+    await page.touchscreen.tap(point.x, point.y);
+  };
+  await tap(960, 540); // premier geste, pour démarrer le moteur audio
+  await until(page, (s) => s.problem?.index === 0 && s.answering && !s.busy, 'question sur le plein');
+  await page.evaluate(() => (window as unknown as { __mathgaret: { solve: () => void } }).__mathgaret.solve());
+  await until(page, (s) => s.problem?.index === 1 && s.answering && !s.busy, 'question sur le cadran de Houston');
+
+  for (const [x, number] of [[1120, 1], [680, 0], [1120, 1], [680, 0]]) {
+    await page.evaluate(() => {
+      // iOS peut suspendre les images avant que Phaser ait traité la demande de pause.
+      for (const hidden of [true, false]) {
+        Object.defineProperty(document, 'hidden', { value: hidden, configurable: true });
+        document.dispatchEvent(new Event('visibilitychange'));
+      }
+    });
+    const audioTime = () => page.evaluate(() => {
+      const debug = (window as unknown as { __mathgaret: { services: { audio: { ctx: AudioContext } } } }).__mathgaret;
+      return debug.services.audio.ctx.currentTime;
+    });
+    const resumedAt = await audioTime();
+    await expect.poll(audioTime).toBeGreaterThan(resumedAt);
+    expect((await state(page)).scenes).toContain('Story');
+    await tap(x, 940);
+    await expect.poll(async () => (await state(page)).voiceLast.at(-1)).toMatchObject({ id: `nombre_${number}`, via: 'fichier' });
+  }
 });

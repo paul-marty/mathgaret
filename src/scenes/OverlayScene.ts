@@ -195,7 +195,9 @@ export class OverlayScene extends Phaser.Scene implements OverlayApi {
     services.clock.paused = true;
     services.voice.pause();
     services.audio.pause();
-    if (this.scene.isActive(SCENES.Story)) this.scene.pause(SCENES.Story);
+    // La prochaine image peut n'arriver qu'au retour : appliquer la pause maintenant.
+    const story = services.ui.story?.sys;
+    if (story?.isActive()) story.pause();
   }
 
   private thaw(): void {
@@ -204,7 +206,8 @@ export class OverlayScene extends Phaser.Scene implements OverlayApi {
     this.hiddenAt = null;
     services.audio.resume();
     services.clock.paused = false;
-    if (this.scene.isPaused(SCENES.Story)) this.scene.resume(SCENES.Story);
+    const story = services.ui.story?.sys;
+    if (story?.isPaused()) story.resume();
     services.voice.resume();
     services.ui.story?.afterAbsence(away);
   }
