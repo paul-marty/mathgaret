@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { AudioEngine } from '../../src/audio/AudioEngine';
+import { AudioEngine, type BrowserAudioSession } from '../../src/audio/AudioEngine';
 
-function audioWithContext(state: AudioContextState | 'interrupted') {
-  const audio = new AudioEngine();
+function audioWithContext(state: AudioContextState | 'interrupted', session?: BrowserAudioSession) {
+  const audio = new AudioEngine(session);
   const context = {
     state,
     currentTime: 4,
@@ -62,5 +62,20 @@ describe('reprise du moteur audio', () => {
     await vi.runAllTimersAsync();
     expect(context.resume).toHaveBeenCalledOnce();
     expect(context.state).toBe('suspended');
+  });
+
+  it('rétablit la catégorie de lecture au retour même si Safari annonce déjà une lecture', async () => {
+    vi.useFakeTimers();
+    const session: BrowserAudioSession = { type: 'playback' };
+    const { audio, context } = audioWithContext('running', session);
+    audio.pause();
+    expect(session.type).toBe('auto');
+
+    context.state = 'running';
+    audio.resume();
+    await vi.runAllTimersAsync();
+    expect(session.type).toBe('playback');
+    expect(context.suspend).toHaveBeenCalledOnce();
+    expect(context.resume).toHaveBeenCalledOnce();
   });
 });

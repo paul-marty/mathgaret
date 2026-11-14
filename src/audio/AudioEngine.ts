@@ -14,6 +14,8 @@ export interface Volumes {
   sfx: number;
 }
 
+export type BrowserAudioSession = { type: 'auto' | 'playback' };
+
 /** Rampe douce vers une valeur, sans saut même si une autre rampe était en cours. */
 export function glide(param: AudioParam, target: number, now: number, timeConstant: number): void {
   param.cancelScheduledValues(now);
@@ -42,8 +44,11 @@ export class AudioEngine {
   private resolveReady!: (ctx: AudioContext) => void;
   private readonly ready = new Promise<AudioContext>((resolve) => (this.resolveReady = resolve));
 
+  constructor(private readonly audioSession?: BrowserAudioSession) {}
+
   /** À appeler dans un gestionnaire de geste utilisateur (touche, clic). */
   unlock(): void {
+    if (this.paused) return;
     if (!this.ctx) {
       const Ctor =
         window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
@@ -52,6 +57,7 @@ export class AudioEngine {
       this.buses = this.buildGraph(this.ctx);
       this.resolveReady(this.ctx);
     }
+    this.setAudioSessionType('playback');
     if (!this.running) this.resumeContext();
   }
 
@@ -103,6 +109,7 @@ export class AudioEngine {
     this.paused = true;
     this.resumeAttempt++;
     this.ctx?.suspend().catch(() => undefined);
+    if (this.ctx) this.setAudioSessionType('auto');
   }
 
   resume(): void {
@@ -110,12 +117,22 @@ export class AudioEngine {
     const ctx = this.ctx;
     if (!ctx || ctx.state === 'closed') return;
     const attempt = ++this.resumeAttempt;
+    // Réapplique la catégorie de lecture au retour, même si Safari annonce déjà « running ».
+    this.setAudioSessionType('playback');
     this.resumeContext();
 
     // Safari peut encore être interrompu quand la page redevient visible.
     setTimeout(() => {
       if (attempt === this.resumeAttempt && !this.running) this.resumeContext();
     }, 350);
+  }
+
+  private setAudioSessionType(type: BrowserAudioSession['type']): void {
+    try {
+      if (this.audioSession && this.audioSession.type !== type) this.audioSession.type = type;
+    } catch {
+      // La politique du navigateur peut refuser le changement de catégorie.
+    }
   }
 
   private resumeContext(): void {

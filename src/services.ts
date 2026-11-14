@@ -1,4 +1,4 @@
-import { AudioEngine } from './audio/AudioEngine';
+import { AudioEngine, type BrowserAudioSession } from './audio/AudioEngine';
 import { Music } from './audio/Music';
 import { Sfx } from './audio/Sfx';
 import { Voice } from './audio/Voice';
@@ -24,7 +24,9 @@ export interface OverlayApi {
 const input = new InputHub();
 const gamepad = new GamepadSource(input);
 const clock = new GameClock(URLP.speed);
-const audio = new AudioEngine();
+const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const audioSession = ios ? (navigator as Navigator & { audioSession?: BrowserAudioSession }).audioSession : undefined;
+const audio = new AudioEngine(audioSession);
 const diag = new Diag();
 
 /** Services partagés par toutes les scènes. */
