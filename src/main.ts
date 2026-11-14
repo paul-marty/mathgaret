@@ -35,8 +35,11 @@ function toggleFullscreen(): void {
 function setupInteractions(): void {
   const unlock = (e: Event) => {
     if (!e.isTrusted) return;
-    // Sur écran tactile, l'activation navigateur arrive au relâchement du doigt.
-    if (e.type === 'pointerdown' && (e as PointerEvent).pointerType !== 'mouse') return;
+    const pointerType = (e as PointerEvent).pointerType;
+    if (e.type === 'pointerdown' && pointerType !== 'mouse') return;
+    // Un toucher peut émettre pointerup, touchend et click avant que Web Audio ait démarré.
+    if (e.type === 'pointerup' && (pointerType === 'mouse' || (pointerType === 'touch' && 'ontouchend' in window))) return;
+    if (e.type === 'click' && (e as MouseEvent).detail > 0) return;
     services.audio.unlock();
     services.back.arm();
   };

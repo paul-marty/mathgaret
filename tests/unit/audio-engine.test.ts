@@ -33,13 +33,13 @@ describe('reprise du moteur audio', () => {
     expect(audio.running).toBe(true);
   });
 
-  it('réveille un contexte qui se dit actif avec une horloge figée', async () => {
+  it('ne suspend pas un contexte actif si la reprise est lente', async () => {
     vi.useFakeTimers();
     const { audio, context } = audioWithContext('running');
     audio.resume();
     await vi.runAllTimersAsync();
-    expect(context.suspend).toHaveBeenCalledOnce();
-    expect(context.resume).toHaveBeenCalledTimes(2);
+    expect(context.suspend).not.toHaveBeenCalled();
+    expect(context.resume).toHaveBeenCalledOnce();
     expect(audio.running).toBe(true);
   });
 
