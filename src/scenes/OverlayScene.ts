@@ -59,7 +59,17 @@ export class OverlayScene extends Phaser.Scene implements OverlayApi {
       if (intent.type === 'shortcut') services.ui.story?.request(intent.name);
     });
 
-    document.addEventListener('visibilitychange', () => (document.hidden ? this.freeze() : this.thaw()));
+    const freeze = () => this.freeze();
+    const syncVisibility = () => (document.hidden ? this.freeze() : this.thaw());
+    document.addEventListener('visibilitychange', syncVisibility);
+    window.addEventListener('pagehide', freeze);
+    window.addEventListener('pageshow', syncVisibility);
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      document.removeEventListener('visibilitychange', syncVisibility);
+      window.removeEventListener('pagehide', freeze);
+      window.removeEventListener('pageshow', syncVisibility);
+    });
+    syncVisibility();
   }
 
   override update(_time: number, delta: number): void {

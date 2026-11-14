@@ -35,6 +35,8 @@ function toggleFullscreen(): void {
 function setupInteractions(): void {
   const unlock = (e: Event) => {
     if (!e.isTrusted) return;
+    // Sur écran tactile, l'activation navigateur arrive au relâchement du doigt.
+    if (e.type === 'pointerdown' && (e as PointerEvent).pointerType !== 'mouse') return;
     services.audio.unlock();
     services.back.arm();
   };

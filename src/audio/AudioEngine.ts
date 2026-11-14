@@ -35,6 +35,7 @@ export class AudioEngine {
   duckTarget = 1;
 
   private paused = false;
+  private resumeAttempt = 0;
   private buffers = new Map<string, Promise<AudioBuffer | null>>();
   private noiseCache = new Map<string, AudioBuffer>();
   private volumes: Volumes = { music: 0.7, voice: 1, sfx: 0.8 };
@@ -50,10 +51,10 @@ export class AudioEngine {
       this.ctx = new Ctor({ latencyHint: 'interactive' });
       this.buses = this.buildGraph(this.ctx);
       this.resolveReady(this.ctx);
+      if (!this.paused) this.resume();
+      return;
     }
-    if (this.ctx.state === 'suspended' && !this.paused) {
-      this.ctx.resume().catch(() => undefined);
-    }
+    if (!this.running) this.resumeContext();
   }
 
   get running(): boolean {
@@ -102,12 +103,34 @@ export class AudioEngine {
   /** Pause du jeu : tout le son est gelé (et reprend exactement au même endroit). */
   pause(): void {
     this.paused = true;
+    this.resumeAttempt++;
     this.ctx?.suspend().catch(() => undefined);
   }
 
   resume(): void {
     this.paused = false;
-    this.ctx?.resume().catch(() => undefined);
+    const ctx = this.ctx;
+    if (!ctx || ctx.state === 'closed') return;
+    const attempt = ++this.resumeAttempt;
+    const before = ctx.currentTime;
+    this.resumeContext();
+
+    // Safari peut annoncer « running » au retour au premier plan alors que l'horloge audio est figée.
+    setTimeout(() => {
+      if (attempt !== this.resumeAttempt || ctx.state === 'closed') return;
+      if (ctx.state !== 'running') {
+        this.resumeContext();
+      } else if (ctx.currentTime === before) {
+        void ctx.suspend().then(() => {
+          if (attempt === this.resumeAttempt) this.resumeContext();
+        }).catch(() => undefined);
+      }
+    }, 350);
+  }
+
+  private resumeContext(): void {
+    const ctx = this.ctx;
+    if (!this.paused && ctx && ctx.state !== 'closed') void ctx.resume().catch(() => undefined);
   }
 
   /** Bruit pré-calculé (blanc ou « brun », plus grave) de 2 s, en boucle. */
