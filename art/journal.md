@@ -1171,3 +1171,188 @@ Style à respecter pour TOUTES les images :
 
 Deux petits vaisseaux spatiaux des années 1960 attachés l'un à l'autre, en dessin animé, vus de profil, qui volent vers la droite : à gauche, un module de commande en forme de cône argenté prolongé par un cylindre argenté avec une tuyère ; à droite, accroché à la pointe du cône, un module lunaire doré et anguleux avec quatre pieds repliés. Aucun texte, aucun drapeau. Fond transparent, objets seuls. Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale largeur ≤ 900 px.
 ```
+
+## Série 5
+
+### `src/assets/images/decors/lune_surface.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+La surface de la Lune vue d'en haut, en plongée, comme depuis un vaisseau qui descend, en dessin animé doux. Tout en haut, une mince bande de ciel noir avec quelques étoiles au-dessus d'un horizon légèrement courbé. Le reste de l'image : une immense plaine grise, poudreuse, semée de cratères ronds de toutes tailles (plus petits et plus aplatis vers l'horizon, plus grands au premier plan) et de quelques cailloux. IMPORTANT : au centre de l'image, un peu en dessous du milieu, une zone plate et dégagée, sans cratère ni rocher (le jeu y fait se poser le module). Couleurs : gris chaud, ombres gris foncé, lumière rasante venant de la gauche. Aucun vaisseau, aucun personnage, aucune inscription. Format 16:9. Décor plein cadre opaque. Compose exactement au format paysage 16:9. Aucun texte, aucune lettre, aucune signalétique lisible.
+```
+
+### `src/assets/images/decors/lune_sol.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Un paysage lunaire vu de côté, au ras du sol, en dessin animé doux. La moitié haute de l'image : un ciel noir profond avec de petites étoiles. La moitié basse : le sol gris et poudreux de la Lune, presque plat, avec de légères ondulations à l'horizon (vers le milieu de la hauteur), quelques petits cratères et cailloux. Le sol au premier plan est plat et dégagé, surtout à gauche et au centre (le jeu y pose le module et les astronautes). Pas de Terre dans le ciel (le jeu l'ajoute), aucun vaisseau, aucun personnage, aucune inscription. Format 16:9. Décor plein cadre opaque. Compose exactement au format paysage 16:9. Aucun texte, aucune lettre, aucune signalétique lisible.
+```
+
+### `src/assets/images/decors/salle_controle.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Une grande salle de contrôle de mission spatiale de la fin des années 1960, en dessin animé chaleureux, vue depuis le fond de la salle. Au mur du fond, un très grand écran sombre où une ligne pointillée verte relie une petite Terre bleue à une petite Lune grise. Devant, trois rangées de longs pupitres gris-vert en gradins, couverts de petits écrans verts, de boutons et de voyants. Quelques contrôleurs de dos ou de trois quarts, silhouettes simples en chemise blanche, casques-micros, tous fictifs. Lumière tamisée bleutée. Aucun texte lisible, aucun logo. Format 16:9. Décor plein cadre opaque. Compose exactement au format paysage 16:9. Aucun texte, aucune lettre, aucune signalétique lisible.
+```
+
+### `src/assets/images/objets/eagle.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Un module lunaire des années 1960, en dessin animé, vu de trois quarts : un étage du bas octogonal recouvert de feuille dorée, posé sur quatre longs pieds écartés terminés par des semelles rondes ; un étage du haut gris-argent, anguleux, avec deux hublots triangulaires sombres, une petite antenne et une petite tuyère sous l'étage doré. Pas de drapeau, aucun texte. Les semelles touchent le bas de l'image. Fond transparent, objet seul. Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale largeur ≤ 1120 px.
+```
+
+### `src/assets/images/objets/columbia.png`
+
+Références — `columbia_eagle.png`.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+columbia_eagle Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale largeur ≤ 920 px.
+```
+
+Régénération — columbia_eagle.png.
+
+```text
+Éditer l’image de référence. Supprimer complètement tout le véhicule doré à droite, y compris ses pieds, son hublot et le raccord. À sa place, laisser la transparence. Garder uniquement le vaisseau ARGENTÉ de gauche, avec son cône pointant vers la droite, son cylindre, son antenne et la tuyère en cloche à gauche. Une pointe argentée fermée remplace le raccord de la pointe du cône. Recentrer le vaisseau argenté seul dans une toile paysage, silhouette entièrement visible, fond transparent. Aucune partie dorée à droite, aucun second engin, aucun texte ni drapeau. Conserver le trait brun, le grain papier et les mêmes teintes argentées et crème.
+```
+
+### `src/assets/images/objets/rochers.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Un groupe de gros rochers lunaires gris et ronds, de tailles différentes, serrés les uns contre les autres, vus d'en haut en légère plongée, avec leurs ombres portées sombres vers la droite. Dessin animé doux. Fond transparent, objets seuls. Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale largeur ≤ 1520 px.
+```
+
+### `src/assets/images/objets/echelle_eagle.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Gros plan sur le pied d'un module lunaire posé sur la Lune, en dessin animé doux : en haut de l'image, le bord de l'étage du bas recouvert de feuille dorée et une petite plateforme de sortie ; de là, une échelle métallique verticale à barreaux descend le long d'une jambe du module jusqu'à une grande semelle ronde posée sur le sol gris, en bas de l'image. L'échelle est verticale, un peu à gauche du milieu de l'image, et va du haut (15 % de la hauteur) jusqu'au-dessus de la semelle (75 %). Personne sur l'échelle. Fond transparent autour (pas de ciel). Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale hauteur ≤ 1400 px.
+```
+
+Régénération — première génération de echelle_eagle.png.
+
+```text
+Éditer cette vue du module et repositionner les barreaux. L’axe des barreaux verticaux est à 42 % de la largeur du fichier détouré, donc presque au milieu. Le haut de la série de barreaux est à 16 % de la hauteur, le dernier barreau à 74 %, le dessous de la semelle est à 90 % avec une petite bande de terrain gris visible sous la semelle. L’échelle est grande et nette, personne dessus, même trait papier et métal doré, transparence autour de l’objet, pas de ciel ni de texte.
+```
+
+### `src/assets/images/objets/astronaute_dos.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Un astronaute de dessin animé de la fin des années 1960 vu de dos, en pied : combinaison spatiale blanche épaisse, grand sac à dos blanc rectangulaire, casque rond fermé, bottes grises, les deux bras levés au-dessus de lui comme s'il tenait les barreaux d'une échelle. On ne voit pas son visage. Aucun drapeau, aucun écusson, aucun texte. Fond transparent, personnage seul. Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale hauteur ≤ 900 px.
+```
+
+### `src/assets/images/objets/terre.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+La Terre vue depuis la Lune, en dessin animé doux : un disque bleu avec des continents verts et des nuages blancs, dont la moitié droite est dans l'ombre (presque noire), avec un fin halo bleu clair autour. Fond transparent, objet seul. Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale toile fixe 512 × 512.
+```
