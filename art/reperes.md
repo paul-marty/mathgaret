@@ -17,3 +17,11 @@ Mesures sur les PNG finaux après mise au format. Les coordonnées vont de 0 à 
 | `echelle_eagle` | Axe, haut, bas, sol sous la semelle | x 0,42, haut y 0,16, bas y 0,74, sol y 0,90 | Axe x 0,36, haut des montants y 0,23, dernier barreau y 0,70, fin des montants y 0,77, semelle y 0,98 |
 
 Les écarts supérieurs à 0,03 ont fait l’objet d’une nouvelle génération. Les valeurs restantes servent au repositionnement des éléments dessinés par le jeu. Le PNG `saturn_v` mesure 1 732 px de haut après détourage. Cette hauteur provient du rendu source sans agrandissement d’objet.
+
+## Chapitre 5 — Le grand retour sur Terre (lot 6)
+
+| Image | Repère mesuré sur le PNG final |
+|---|---|
+| `orbite_lune` | Sommet de la courbe lunaire y 0,80 |
+| `ocean` | Horizon y 0,55 |
+| `module_service` | Coupe à x 0,70 dans `columbia.png`, soit 644 sur 920 px |

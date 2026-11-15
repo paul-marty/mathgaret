@@ -1356,3 +1356,84 @@ Style à respecter pour TOUTES les images :
 
 La Terre vue depuis la Lune, en dessin animé doux : un disque bleu avec des continents verts et des nuages blancs, dont la moitié droite est dans l'ombre (presque noire), avec un fin halo bleu clair autour. Fond transparent, objet seul. Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale toile fixe 512 × 512.
 ```
+
+## Chapitre 5 — Le grand retour sur Terre (lot 6)
+
+Neuf illustrations générées avec ImageGen intégré à Codex. Les références sont données par rapport à `src/assets/images/`. Quatre décors mis au format 1920 × 1080. Les sprites générés restent transparents.
+
+### `orbite_lune.png`
+
+Référence — decors/lune_sol.png.
+
+```text
+Mathgaret educational Apollo 11 game for children, match supplied existing game art as style reference. Warm 1960s mid-century 2D cartoon illustration, soft finely grained flat colors, simple forms, thin dark brown contours, gentle top-left light, warm and reassuring. Navy #1d2b4f, sky blue #7fb8d8, orange #f08a3c, cream #f6ecd9. No lettering, digits, insignia, logos, flags or watermarks. 16:9 background, black space with a sparse field of small stars. Along the bottom edge, the powdery grey cratered lunar ground rises in a broad subtle convex curve; the curve peaks exactly at y=80% of canvas (lots of empty dark space above). Tiny blue-white Earth near upper right, no spacecraft, no characters.
+```
+
+### `rentree_ciel.png`
+
+Référence — decors/lune_sol.png.
+
+```text
+Mathgaret educational Apollo 11 game for children, match supplied existing game art as style reference. Warm 1960s mid-century 2D cartoon illustration, soft finely grained flat colors, simple forms, thin dark brown contours, gentle top-left light, warm and reassuring. Navy #1d2b4f, sky blue #7fb8d8, orange #f08a3c, cream #f6ecd9. No lettering, digits, insignia, logos, flags or watermarks. 16:9 background from very high above Earth, sky grades from midnight navy at top with a few faint stars to pale blue at bottom. Bottom only: softly curved pale blue earth horizon and rounded cream-white clouds. Open spacious clear center. No fire, no spacecraft.
+```
+
+### `ocean.png`
+
+Référence — decors/lune_sol.png.
+
+```text
+Mathgaret educational Apollo 11 game for children, match supplied existing game art as style reference. Warm 1960s mid-century 2D cartoon illustration, soft finely grained flat colors, simple forms, thin dark brown contours, gentle top-left light, warm and reassuring. Navy #1d2b4f, sky blue #7fb8d8, orange #f08a3c, cream #f6ecd9. No lettering, digits, insignia, logos, flags or watermarks. 16:9 calm Pacific ocean recovery scene background. Clear rounded clouds high in a cheerful pale blue sky. Straight uninterrupted ocean horizon exactly 55 percent down the canvas. Below horizon the deep blue sea has a few small pale wave marks, calm clear middle for a capsule sprite to overlay. No land, ships, vehicles or characters.
+```
+
+### `mars.png`
+
+Référence — decors/lune_sol.png.
+
+```text
+Mathgaret educational Apollo 11 game for children, match supplied existing game art as style reference. Warm 1960s mid-century 2D cartoon illustration, soft finely grained flat colors, simple forms, thin dark brown contours, gentle top-left light, warm and reassuring. Navy #1d2b4f, sky blue #7fb8d8, orange #f08a3c, cream #f6ecd9. No lettering, digits, insignia, logos, flags or watermarks. 16:9 deep black space with small sparse stars. Mars disc centered horizontally, center at 55% height, diameter 60% of height, warm muted orange-red with flat darker dusty markings and tiny creamy north polar cap, fine orange glow. No other planet, spacecraft or characters.
+```
+
+### `helicoptere.png`
+
+Référence — objets/columbia.png.
+
+```text
+Mathgaret educational Apollo 11 game for children, match supplied existing game art as style reference. Warm 1960s mid-century 2D cartoon illustration, soft finely grained flat colors, simple forms, thin dark brown contours, gentle top-left light, warm and reassuring. Navy #1d2b4f, sky blue #7fb8d8, orange #f08a3c, cream #f6ecd9. No lettering, digits, insignia, logos, flags or watermarks. Single isolated sprite, wide 7:3 silhouette. Late-1960s gray-blue naval helicopter, exact side view facing right, rounded cockpit with large windows to the right, narrow tail to left and small tail rotor, long horizontal main rotor blades. Transparent background, no shadow, no pilot visible.
+```
+
+### `navire.png`
+
+Référence — objets/columbia.png.
+
+```text
+Mathgaret educational Apollo 11 game for children, match supplied existing game art as style reference. Warm 1960s mid-century 2D cartoon illustration, soft finely grained flat colors, simple forms, thin dark brown contours, gentle top-left light, warm and reassuring. Navy #1d2b4f, sky blue #7fb8d8, orange #f08a3c, cream #f6ecd9. No lettering, digits, insignia, logos, flags or watermarks. Single isolated sprite. Very wide low 4:1 silhouette of late 1960s gray aircraft carrier seen in exact side profile from afar, long flat empty flight deck and a compact island on the right with a few aerials. Straight horizontal waterline forms the lowest edge. Transparent background. No sea, no aircraft, no symbols.
+```
+
+### `equipe_fete.png`
+
+Référence — decors/labo.png.
+
+```text
+Mathgaret educational Apollo 11 game for children, match supplied existing game art as style reference. Warm 1960s mid-century 2D cartoon illustration, soft finely grained flat colors, simple forms, thin dark brown contours, gentle top-left light, warm and reassuring. Navy #1d2b4f, sky blue #7fb8d8, orange #f08a3c, cream #f6ecd9. No lettering, digits, insignia, logos, flags or watermarks. Single wide 7:3 game sprite, six diverse fictional late-1960s laboratory engineers, women and men, in a tight single row waist-up, cheering, raised arms, one clapping, one with joyful raised fist, animated warm smiles. Period shirts, fine ties, dresses and cardigans. Show nobody from the reference, which is style only. All torsos meet same bottom edge. All hands and heads fit comfortably above. Transparent background, no furniture or objects.
+```
+
+### `capsule.png`
+
+Référence — objets/columbia.png.
+
+```text
+undefined Edit the attached Columbia sprite into a single isolated command module only, maintaining the exact outlines, silver-and-cream paneling and three blue windows of the cone on the right of the input. Remove the cylindrical service module, nozzle and antennas completely. Rotate the cone so its pointed tip faces straight up, lateral side view. Along its full width at very bottom add the gently convex dark bronze scorched heat shield. 4:3 frame with transparent corners, tight framing. Real transparency.
+```
+
+### `capsule_parachutes.png`
+
+Référence — objets/capsule.png (rendu brut de la capsule utilisé comme référence).
+
+```text
+Mathgaret educational Apollo 11 game for children, match supplied existing game art as style reference. Warm 1960s mid-century 2D cartoon illustration, soft finely grained flat colors, simple forms, thin dark brown contours, gentle top-left light, warm and reassuring. Navy #1d2b4f, sky blue #7fb8d8, orange #f08a3c, cream #f6ecd9. No lettering, digits, insignia, logos, flags or watermarks. Square 1:1 isolated sprite. EXACTLY THREE enormous distinct inflated orange-and-cream vertically striped circular parachutes across the upper area, center one slightly higher, separate side by side. Hair-thin taut suspension lines link the three canopies down to a small silver command capsule at bottom center, tip up with dark bronze curved heat shield, faithful miniature of the attached reference. Everything within the square and no floor or backdrop. Genuine transparent background.
+```
+
+### Découpes sur les PNG existants
+
+- `eagle_montee.png` et `eagle_base.png` — `objets/eagle.png` séparé à la jonction cabine/base, sur deux toiles de 1120 × 1033 px. Aucun redessin. La recomposition restitue tous les pixels visibles et l’alpha.
+- `module_service.png` — `objets/columbia.png` recadré aux 644 premières colonnes, sur toute sa hauteur de 540 px. Aucun redessin.
