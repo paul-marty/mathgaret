@@ -427,3 +427,403 @@ Style à respecter pour TOUTES les images :
 
 Reprends exactement le personnage de l’image de référence jointe, en pied, de trois-quarts face, un peu gênée, une main derrière la tête, petit sourire embarrassé, les épaules rentrées. Fond transparent, rien d'autre dans l'image. Une seule pose isolée, toile verticale 2:3. Tout le corps est visible, chaussures comprises. Réserve environ 12 % de hauteur au-dessus de la tête, garde les pieds presque au bord inférieur. Aucune ombre au sol, aucun liseré, aucun motif de fond. Centre le bassin et l’appui des pieds. Même taille de tête, même longueur des jambes, mêmes vêtements, même cadrage dans toutes les poses. Pour une pose penchée, conserve l’échelle du corps, la tête peut naturellement descendre.
 ```
+
+## Série 2
+
+### `src/assets/images/decors/c1_ville.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Décor de dessin animé, sans aucun personnage. Une rue d'une ville universitaire américaine à la fin des années 1960, un matin ensoleillé : bâtiments en briques rouges, arbres, quelques voitures arrondies d'époque garées. Au centre de l'image, la façade d'un grand bâtiment de laboratoire avec une large porte d'entrée bien visible, vers laquelle la caméra va zoomer. Format 16:9. Décor plein cadre opaque. Compose exactement au format paysage 16:9. Aucun texte, aucune lettre, aucune signalétique lisible.
+```
+
+### `src/assets/images/decors/labo.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Décor de dessin animé, sans aucun personnage. L'intérieur d'un laboratoire informatique de la fin des années 1960, vu de face. À gauche et à droite, de grandes armoires d'ordinateur grises avec des bandes magnétiques et de petits voyants. Au fond, une grande fenêtre qui donne sur un ciel bleu de jour, et des tables couvertes de papiers listing. Le sol est dégagé au premier plan au centre : des personnages et des objets y seront posés. Les écrans sont éteints ou montrent des motifs abstraits. Lumière douce et chaleureuse. Format 16:9. Décor plein cadre opaque. Compose exactement au format paysage 16:9. Aucun texte, aucune lettre, aucune signalétique lisible.
+```
+
+### `src/assets/images/decors/labo_soir.png`
+
+Références — `labo.png`.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Reprends exactement ce décor, avec le même cadrage et les mêmes meubles, mais le soir : la lumière intérieure est tamisée et dorée, les machines sont calmes, et par la grande fenêtre du fond on voit un ciel bleu nuit étoilé avec une grande pleine Lune bien visible. Aucun personnage. Décor plein cadre opaque. Compose exactement au format paysage 16:9. Aucun texte, aucune lettre, aucune signalétique lisible.
+```
+
+### `src/assets/images/objets/poste_travail.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Un poste de travail informatique de la fin des années 1960 : un bureau en métal avec une console à écran rond vert-gris (écran vide, sans texte), une rangée de gros boutons colorés et un clavier mécanique. Vu de trois-quarts face. Fond transparent, objet seul. Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale ≤ 840 px.
+```
+
+### `src/assets/images/objets/armoire_bandes.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Une armoire d'ordinateur des années 1960 avec deux grandes bobines de bande magnétique en façade, vue de face. Les deux emplacements des bobines sont vides (deux cercles creux, l'un au quart supérieur, l'autre un peu au-dessous du milieu) : les bobines seront ajoutées séparément. Fond transparent, objet seul. Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale hauteur ≤ 1040 px.
+```
+
+Régénération — première génération de armoire_bandes.png.
+
+```text
+Modifier la forme du meuble pour supprimer complètement la colonne de commandes à droite et centrer les DEUX cavités de bobines sur l’axe horizontal central du meuble. Les centres des cavités sont précisément à mi-largeur, à 23 % puis à 60 % depuis le haut du fichier détouré. Diamètre égal à 55 % de la largeur du meuble. Cavités intérieures vides en retrait, pas de bobines présentes. Meuble haut, vue strictement de face, commandes abstraites seulement tout en bas, contour brun fin, gris rétro et grain papier. Fond transparent.
+```
+
+### `src/assets/images/objets/bobine.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Une bobine de bande magnétique seule, vue parfaitement de face, parfaitement circulaire et centrée, avec des rayons et des trous bien visibles pour qu'on voie qu'elle tourne. Fond transparent, objet seul. Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale toile fixe 400 × 400.
+```
+
+### `src/assets/images/objets/imprimante.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Une grande imprimante à listings des années 1960, posée sur pieds, vue de trois-quarts face, avec une fente de sortie du papier sur le dessus (sans papier qui en sort). Fond transparent, objet seul. Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale ≤ 720 px.
+```
+
+### `src/assets/images/objets/panneau.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Un grand panneau de contrôle rétro en métal crème, vu parfaitement de face, avec un cadre arrondi et des rivets. La surface du panneau est vide et unie : aucun voyant, aucun bouton, aucune inscription (des voyants seront ajoutés par-dessus). Fond transparent, objet seul. Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale largeur ≤ 1400 px.
+```
+
+### `src/assets/images/objets/voyant_eteint.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Un voyant lumineux rond rétro des années 1960, éteint : ampoule bombée gris-vert terne dans une bague en métal chromé, vu parfaitement de face, centré. Fond transparent, objet seul. Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale toile fixe 256 × 256.
+```
+
+### `src/assets/images/objets/voyant_vert.png`
+
+Références — `voyant_eteint.png`.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+voyant_eteint Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale toile fixe 256 × 256.
+```
+
+Régénération — voyant_eteint.png.
+
+```text
+Édition de l’icône source. Change uniquement la couleur du verre gris-vert au milieu pour un verre vert émeraude allumé. La zone centrale est une ampoule bombée ronde, remplie d’une couleur verte homogène avec un reflet simple en haut à gauche. Conserve exactement les 4 vis, la bague de métal, sa géométrie, sa taille, son cadrage carré et le fond transparent. Aucun décor, motif, reflet figuratif, dessin dans le verre, personnage ni texte. Un seul voyant, même diamètre et même centre que la source.
+```
+
+### `src/assets/images/objets/voyant_orange.png`
+
+Références — `voyant_eteint.png`.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+voyant_eteint Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale toile fixe 256 × 256.
+```
+
+Régénération — voyant_eteint.png.
+
+```text
+Édition de l’icône source. Change uniquement la couleur du verre gris-vert au milieu pour un verre orange ambre allumé. La zone centrale est une ampoule bombée ronde, remplie d’une couleur orange homogène avec un reflet simple en haut à gauche. Conserve exactement les 4 vis, la bague de métal, sa géométrie, sa taille, son cadrage carré et le fond transparent. Aucun décor, motif, reflet figuratif, dessin dans le verre, personnage ni texte. Un seul voyant, même diamètre et même centre que la source.
+```
+
+### `src/assets/images/objets/maquette_saturn.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Une maquette de la fusée Saturn V posée sur un petit socle en bois, très élancée, blanche avec des bandes noires, vue de face, entière de la pointe au socle. Aucune inscription sur la fusée. Fond transparent, objet seul. Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale hauteur ≤ 1200 px.
+```
+
+### `src/assets/images/objets/petite_fusee.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Une petite fusée de dessin animé toute ronde et mignonne, blanche et orange, avec un hublot et une petite flamme, légèrement inclinée comme si elle s'envolait. Fond transparent, objet seul. Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale ≤ 440 px.
+```
+
+### `src/assets/images/objets/jeton.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Un jeton de jeu rond et épais, orange, avec une petite étoile en relief au centre, vu parfaitement de face, centré. Fond transparent, objet seul. Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale toile fixe 256 × 256.
+```
+
+### `src/assets/images/objets/eq_casque.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Un casque d'astronaute blanc des années 1960 avec visière dorée, icône simple et très lisible, vue de face, centré. Fond transparent, objet seul. Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale toile fixe 320 × 320.
+```
+
+### `src/assets/images/objets/eq_batterie.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Une grosse pile électrique rétro, jaune moutarde et grise, icône simple et très lisible, vue de face, centrée. Fond transparent, objet seul. Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale toile fixe 320 × 320.
+```
+
+### `src/assets/images/objets/eq_antenne.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Une petite antenne parabolique rétro sur pied, bleu ciel, icône simple et très lisible, vue de face, centrée. Fond transparent, objet seul. Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale toile fixe 320 × 320.
+```
+
+### `src/assets/images/objets/eq_gyroscope.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Un gyroscope doré avec ses anneaux, icône simple et très lisible, vue de face, centré. Fond transparent, objet seul. Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale toile fixe 320 × 320.
+```
+
+### `src/assets/images/objets/eq_oxygene.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Une bouteille d'oxygène vert d'eau avec un robinet, icône simple et très lisible, vue de face, centrée. Fond transparent, objet seul. Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale toile fixe 320 × 320.
+```
+
+### `src/assets/images/objets/eq_boussole.png`
+
+Références — aucune.
+
+```text
+Tu vas produire les images d'un jeu éducatif pour une enfant de 6 ans, qui raconte la mission Apollo 11 vue depuis l'équipe d'ingénieurs logiciels du MIT, en 1969.
+
+Style à respecter pour TOUTES les images :
+- illustration 2D de dessin animé, inspirée de l'animation et des affiches des années 1960 (style « mid-century ») ;
+- formes simples et arrondies, contours fins brun foncé, aplats de couleur avec une légère texture de grain ;
+- éclairage doux venant d'en haut à gauche ;
+- palette : bleu nuit #1d2b4f, bleu ciel #7fb8d8, orange #f08a3c, jaune moutarde #f2c14e, vert d'eau #8fd1b5, crème #f6ecd9, rouge brique #c4553a ;
+- ambiance chaleureuse, rassurante et drôle, jamais effrayante ;
+- AUCUNE lettre, AUCUN mot, AUCUN chiffre dans l'image : les écrans, papiers et panneaux portent seulement des motifs abstraits (traits, points, ondes) ;
+- aucun logo, aucune marque, aucun drapeau.
+
+Une boussole ronde rétro rouge brique, icône simple et très lisible, vue de face, centrée. Fond transparent, objet seul. Image de jeu isolée sur fond réellement transparent, contours nets, aucune ombre au sol, aucune typographie, aucun emblème ou drapeau. Format adapté à la silhouette en laissant tout l’objet visible. Préparation finale toile fixe 320 × 320.
+```
