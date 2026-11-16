@@ -36,3 +36,16 @@ Les écarts supérieurs à 0,03 ont fait l’objet d’une nouvelle génération
 | `orbite_lune` | Sommet de la courbe lunaire y 0,80 |
 | `ocean` | Horizon y 0,55 |
 | `module_service` | Coupe à x 0,70 dans `columbia.png`, soit 644 sur 920 px |
+
+## Terre vue de près — 16 novembre 2026
+
+Mesure du contour extérieur de l’atmosphère par ajustement d’un cercle sur le PNG final. Les coordonnées du centre sont rapportées à la largeur et à la hauteur, le rayon à la hauteur.
+
+| Repère | Attendu | Mesuré |
+|---|---|---|
+| centre_x | 0.780 | 0.777 |
+| centre_y | 1.160 | 1.164 |
+| rayon | 0.700 | 0.702 |
+| bord_haut | 0.460 | 0.462 |
+
+Les quatre écarts restent sous 0,03.

@@ -1437,3 +1437,37 @@ Mathgaret educational Apollo 11 game for children, match supplied existing game 
 
 - `eagle_montee.png` et `eagle_base.png` — `objets/eagle.png` séparé à la jonction cabine/base, sur deux toiles de 1120 × 1033 px. Aucun redessin. La recomposition restitue tous les pixels visibles et l’alpha.
 - `module_service.png` — `objets/columbia.png` recadré aux 644 premières colonnes, sur toute sa hauteur de 540 px. Aucun redessin.
+
+## Terre vue de près — chapitre 5, 16 novembre 2026
+
+ImageGen intégré à Codex. Références de style provenant de `src/assets/images/decors/orbite_lune.png` et `src/assets/images/objets/terre.png`. Les générations successives ont été mesurées pour respecter la tolérance de 0,03. Le dernier rendu est retenu. Mise au format 1920 × 1080 et compression PNG.
+
+### Génération 1
+
+```text
+L'espace tout près de la Terre, en dessin animé doux. Fond noir profond avec de petites étoiles. En bas à droite, un grand morceau du disque de la Terre, vue de l'espace : océans bleus, continents verts et ocre, nuages blancs arrondis, et un fin halo bleu clair tout autour (l'atmosphère). Le cercle de la Terre a son centre hors de l'image, en bas à droite (à 78 % de la largeur et 116 % de la hauteur) ; son rayon vaut 70 % de la hauteur de l'image : son bord le plus haut arrive vers 46 % de la hauteur, et à gauche il commence vers 39 % de la largeur. Toute la moitié gauche et le haut de l'image restent vides et sombres (le jeu y fait voler le vaisseau). Aucun vaisseau, aucune inscription, aucun personnage. Format 16:9.
+
+Référence 1 : reprendre uniquement le style du ciel étoilé de orbite_lune.png, sans sol lunaire ni petite Terre supplémentaire. Référence 2 : reprendre le style de la planète de terre.png, continents verts et ocre, mers bleues et nuages crème arrondis, texture légère et contours fins brun foncé. Illustration 2D mid-century chaleureuse pour enfant. Aucun chiffre, texte, logo ou drapeau.
+
+Contrainte géométrique essentielle pour le décor final 1920 × 1080 : cercle parfait de rayon 756 pixels, centre (1498,1253), donc centre sous le bord bas. Le sommet du disque est (1498,497). Au bord inférieur de l'image, la Terre commence vers x=762. La planète sort largement du cadre en bas et à droite, la moitié gauche reste sombre. Respecter ces proportions à la génération. Le disque visible n'est pas une ellipse.
+```
+
+### Génération 2
+
+```text
+Correct the composition of this game background, preserving its exact mid-century cartoon illustration style, colors, grain, Earth continents and clouds. The current Earth extends TOO HIGH AND TOO FAR LEFT. Move Earth DOWN and RIGHT and reduce its diameter. The output is 16:9, 1920x1080 intended. Mandatory geometry: a mathematically circular Earth centered at pixel (1498,1253), radius 756px. Therefore its HIGHEST point must be at (1498,497), 46 percent down the image; absolutely no part of Earth or atmosphere higher than y=490. The image upper 46 percent is entirely dark starry sky. The Earth intersects the bottom edge starting at x=762 (39.7 percent of width), and intersects the right edge at y=625 (58 percent of height). Earth fills only the lower-right portion, occupies roughly one-third of canvas area. The center of the circle is BELOW the image by 173 pixels. If rendering at 1672x941, scale these coordinates: center=(1304,1092), radius=659, highest point=(1304,433), left intersection at bottom x=664, right intersection y=545. Keep the same star field look. No other planets, no moon or ground, no ships or characters, no text or diagram labels.
+```
+
+### Génération 3
+
+```text
+Edit this illustration precisely. Keep the dark star field style and the drawing style of the Earth. Change ONLY Earth's scale and position to get a flatter, wider arc. Current Earth circle measured center=(1231,978), radius=565 pixels in this 1672x941 image. REQUIRED NEW Earth circle center=(1304,1092), radius=659 pixels. Increase Earth radius by 16.6% and move center 73 pixels to right and 114 pixels DOWN. This is an expansion of the circle toward the bottom and right. Its top is at y=433 (46% height) and x=1304 (78% width), its center below the bottom at 116% height. Left intersection with bottom edge x=663. Right intersection with right edge y=545, importantly this right intersection must be HIGHER than it is in the reference. Mathematically circular contour. Fill with the same stylized blue seas, green and ochre continents and rounded cream clouds. Thin atmospheric rim. Entire canvas is 16:9 with warm mid-century grain. No text, labels, spacecraft, additional planets or people.
+```
+
+### Génération 4
+
+```text
+Use IMAGE 1 as a STRICT locked geometric composition mask. Paint it as an illustrated Earth-from-space game background. The light blue region becomes Earth and the navy region becomes the starry sky. Precisely preserve the curve separating the two regions, preserve all its endpoints and its highest point. Do not shift, enlarge, shrink or recenter the Earth region. Paint detailed but simple mid-century cartoon blue oceans, green and ochre continents and soft rounded cream clouds INSIDE the light blue region. Add a thin light blue atmospheric rim inside its boundary. Image 2 is reference ONLY for the star field background appearance, without its moon ground or tiny planet. Image 3 is reference for the colors, subtle grain, outlines and drawing of continents and clouds on Earth. The geometric layout of image 1 has priority over composition in any other image. The Earth disk is centered at 78% width and 116% height, radius 70% height, top at 46% height. Exactly keep the image-1 circular silhouette and 16:9 frame. Warm reassuring 2D children's illustration. No spaceship, no additional planets, no characters, no text, no digits, no logos or flags.
+```
+
+La génération 4 emploie aussi un guide géométrique 1672 × 941, disque de centre (1304, 1092) et rayon 659, dessiné sur fond uni. Le guide fixe la composition et les deux PNG du jeu fixent le style.
