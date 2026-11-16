@@ -66,7 +66,7 @@ function setSpeed(game: Phaser.Game, n: number): void {
 
 function startStory(game: Phaser.Game, chapterId: string, sceneIndex: number): void {
   const mgr = game.scene;
-  for (const key of [SCENES.Title, SCENES.Menu, SCENES.Bilan, SCENES.Story]) {
+  for (const key of [SCENES.Title, SCENES.Menu, SCENES.Bilan, SCENES.Finale, SCENES.Story]) {
     if (mgr.isActive(key) || mgr.isPaused(key) || mgr.isSleeping(key)) mgr.stop(key);
   }
   mgr.start(SCENES.Story, { chapterId, sceneIndex });
@@ -78,6 +78,7 @@ export function installConsole(game: Phaser.Game): void {
   let autoTimer: number | null = null;
   let target: string | null = null;
   let before: { speed: number; silent: boolean } | null = null;
+  let exerciseTarget: { reached: () => boolean; unsubscribe: () => void } | null = null;
 
   const story = () => services.ui.story;
   const sceneId = () => (story() ? (services.debug.scene as string | undefined) ?? null : null);
@@ -92,6 +93,8 @@ export function installConsole(game: Phaser.Game): void {
     if (autoTimer !== null) window.clearInterval(autoTimer);
     autoTimer = null;
     target = null;
+    exerciseTarget?.unsubscribe();
+    exerciseTarget = null;
     if (before) {
       setSpeed(game, before.speed);
       services.voice.silent = before.silent;
@@ -101,8 +104,11 @@ export function installConsole(game: Phaser.Game): void {
   };
 
   const autoStep = () => {
-    if (target && sceneId() === target) return stopAuto(`scène ${target} atteinte`);
     if (game.scene.isActive(SCENES.Bilan)) return stopAuto('bilan du chapitre');
+    if (game.scene.isActive(SCENES.Finale)) return stopAuto('fin de la mission');
+    if (services.clock.paused) return;
+    if (target && sceneId() === target) return stopAuto(`scène ${target} atteinte`);
+    if (exerciseTarget?.reached()) return stopAuto('prochain exercice atteint');
     const st = story();
     if (!st) return;
     const solve = services.debug.solve as ((wrong?: boolean) => void) | undefined;
@@ -110,6 +116,35 @@ export function installConsole(game: Phaser.Game): void {
     if (st.answering && !st.busy && solve) solve(false);
     else if (press) press(0);
   };
+
+  const startFastForward = (vitesse: number) => {
+    before ??= { speed: URLP.speed, silent: services.voice.silent };
+    setSpeed(game, vitesse);
+    services.voice.silent = true;
+    if (services.voice.current) services.voice.stop();
+    if (autoTimer === null) autoTimer = window.setInterval(autoStep, 250);
+  };
+
+  services.input.on((intent) => {
+    if (intent.type !== 'next-exercise' || exerciseTarget || services.clock.paused) return;
+    const st = story();
+    if (!st) return;
+    stopAuto();
+    const currentProblem = st.answering ? services.debug.problem : undefined;
+    const instructions = () => stopAuto('prochain exercice atteint');
+    const shutdown = () => stopAuto();
+    st.events.once('exercise-instructions', instructions);
+    st.events.once('shutdown', shutdown);
+    exerciseTarget = {
+      // Si la consigne était déjà en cours, rendre la main dès que les boutons apparaissent.
+      reached: () => st.answering && services.debug.problem !== currentProblem,
+      unsubscribe: () => {
+        st.events.off('exercise-instructions', instructions);
+        st.events.off('shutdown', shutdown);
+      },
+    };
+    startFastForward(Math.max(URLP.speed, 20));
+  });
 
   const mg = {
     aide() {
@@ -237,12 +272,9 @@ export function installConsole(game: Phaser.Game): void {
       if (!found) return `Scène inconnue « ${id} ». Voir mg.scenes().`;
       const wanted = SCRIPTS[found.chapterId].scenes[found.sceneIndex].id;
       if (!story()) return 'Lancer d’abord une partie (ou mg.aller).';
-      before ??= { speed: URLP.speed, silent: services.voice.silent };
-      setSpeed(game, vitesse);
-      services.voice.silent = true;
-      if (services.voice.busy) services.voice.stop();
+      if (exerciseTarget) stopAuto();
       target = wanted;
-      if (autoTimer === null) autoTimer = window.setInterval(autoStep, 250);
+      startFastForward(vitesse);
       return `pilote automatique jusqu’à ${wanted} (vitesse ${vitesse}, sans voix)`;
     },
 
@@ -282,7 +314,7 @@ export function installConsole(game: Phaser.Game): void {
         muet: services.voice.silent,
         reponse_attendue: st?.answering ? problem?.answer : undefined,
         probleme: st?.answering ? problem?.params : undefined,
-        pilote: autoTimer !== null ? (target ? `jusqu’à ${target}` : 'actif') : 'arrêté',
+        pilote: exerciseTarget ? 'jusqu’au prochain exercice' : autoTimer !== null ? (target ? `jusqu’à ${target}` : 'actif') : 'arrêté',
       };
     },
   };

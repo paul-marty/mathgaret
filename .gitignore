@@ -31,3 +31,7 @@ Thumbs.db
 /Mathgaret-document-de-reference.md
 /docs/
 .vite/
+
+# Photographie d'archive de Margaret : publiée seulement quand ses droits auront été validés
+# (sans elle, le Narrateur parle sur la fête, C5.5). Retirer cette ligne pour la publier.
+/src/assets/images/photos/

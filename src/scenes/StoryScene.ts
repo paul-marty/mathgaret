@@ -3,6 +3,7 @@ import { CHAPTERS, chapterById, TOTAL_WEIGHT } from '../chapters/plan';
 import { SCRIPTS } from '../chapters';
 import type { ChapterScript } from '../chapters/types';
 import { C, SCENES, URLP } from '../config';
+import { installTripleTap } from '../core/input';
 import { pick } from '../core/rng';
 import type { RunState } from '../core/save';
 import type { AnswerUI } from '../engine/answers';
@@ -16,7 +17,6 @@ import { cover, fit } from '../view/assets';
 import { Character, type CharacterId } from '../view/Character';
 import { FocusLayer, type Focusable } from '../view/focus';
 import { tweenAsync } from '../view/tweens';
-import { TokenTray } from '../view/widgets';
 
 /** Erreur interne : la partie a été quittée ou la scène relancée, l'ancien script s'arrête. */
 class Abort extends Error {}
@@ -49,7 +49,6 @@ export class StoryScene extends Phaser.Scene {
   layer = new FocusLayer('story');
   actions = new ActionQueue();
   chars: Partial<Record<CharacterId, Character>> = {};
-  tokens!: TokenTray;
   /** Micro-surprises disponibles dans le décor courant (P16). */
   surprises: { id: string; play: () => Promise<void> }[] = [];
   answering = false;
@@ -97,9 +96,6 @@ export class StoryScene extends Phaser.Scene {
     this.time.timeScale = URLP.speed;
     this.cameras.main.setBackgroundColor(C.nightDeep);
     this.cameras.main.fadeIn(400 / URLP.speed);
-    this.tokens = new TokenTray(this);
-    this.tokens.setDepth(60);
-    for (const b of this.tokens.buttons) b.setDepth(61);
 
     services.focus.push(this.layer);
     this.layer.onDigit = (d) => this.currentUi?.onDigit?.(d);
@@ -108,6 +104,7 @@ export class StoryScene extends Phaser.Scene {
     services.clock.activeMs = this.run.activeMs;
     services.ui.story = this;
     services.ui.overlay?.setHud('story');
+    installTripleTap(this, () => services.input.handle({ type: 'next-exercise' }, 'pointer'));
 
     this.offVoice = services.voice.on((e, spoken) => {
       if (spoken.kind !== 'line') return;
@@ -240,7 +237,7 @@ export class StoryScene extends Phaser.Scene {
         d.run.sceneIndex = 0;
       } else d.run = null;
     });
-    this.scene.start(SCENES.Bilan, { chapterId: id, rate, firstMission });
+    this.scene.start(SCENES.Bilan, { chapterId: id, rate, firstMission, records: [...this.run.records] });
   }
 
   private goBilan(firstMission: boolean): void {
@@ -357,7 +354,7 @@ export class StoryScene extends Phaser.Scene {
     this.currentUi = ui as AnswerUI<unknown>;
     this.answering = true;
     this.actions.clear();
-    this.layer.add(...ui.focusables(), ...this.tokens.focusables);
+    this.layer.add(...ui.focusables());
     services.ui.overlay?.setHud('challenge');
     services.focus.focus(ui.first(), { silent: true });
     this.setBusy(false);
@@ -394,15 +391,9 @@ export class StoryScene extends Phaser.Scene {
     if (this.answering && !this.busy && awayMs > 20_000) this.actions.push({ type: 'reorient' });
   }
 
-  toggleTokens(): void {
-    const on = !this.tokens.visible;
-    this.tokens.show(on);
-    if (on) services.focus.focus(this.tokens.buttons[1], { silent: true });
-    else services.focus.ensureFocus(this.layer);
-  }
-
-  /** Explications des outils, au moment où ils deviennent utiles (P7, P8, P17). */
+  /** Explications des outils, au moment où ils deviennent utiles (P7, P8). */
   async tutorialsBeforeConsigne(): Promise<void> {
+    this.events.emit('exercise-instructions');
     const told = services.save.data.told;
     const overlay = services.ui.overlay;
     if (!told.reecoute) {
@@ -410,12 +401,6 @@ export class StoryScene extends Phaser.Scene {
       overlay?.pulse('reecouter');
       await this.say('tuto_reecoute');
       services.save.update((d) => (d.told.reecoute = true));
-    }
-    if (!told.jetons) {
-      overlay?.setHud('challenge');
-      overlay?.pulse('jetons');
-      await this.say(services.save.data.settings.tokensReady ? 'tuto_jetons_prets' : 'tuto_jetons');
-      services.save.update((d) => (d.told.jetons = true));
     }
     overlay?.pulse(null);
   }

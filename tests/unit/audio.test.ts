@@ -14,7 +14,7 @@ const docs = import.meta.glob<string>('../../docs/audio/*.{csv,md}', { query: '?
 const csvRaw = docs['../../docs/audio/commande-voix.csv'];
 const promptRaw = docs['../../docs/audio/prompt-chatgpt.md'];
 
-const lines: Record<string, { speaker: string; text: string }> = linesData.lines;
+const lines: Record<string, { speaker: string; text: string; scene?: string; variante_de?: string }> = linesData.lines;
 
 /** Lignes de docs/audio/commande-voix.csv : fichier → texte à dire. */
 function commande(): Map<string, string> {
@@ -116,6 +116,60 @@ describe('manifeste audio', () => {
     expect(voice.clipsFor('c1_2_trop', lines.c1_2_trop.text, { n: 9, k: 3 })?.map((c) => c.url)).toEqual(['u/t1', 'u/9', 'u/t2', 'u/3', 'u/t3']);
     // Un nombre manque : toute la réplique passe par la synthèse (pas de trou au milieu).
     expect(voice.clipsFor('c1_2_trop', lines.c1_2_trop.text, { n: 9, k: 4 })).toBeUndefined();
+  });
+
+  it('variantes : le texte de base d’abord, puis au hasard sans répétition, sans mélanger fichier livré et synthèse', () => {
+    const voice = new Voice({} as AudioEngine, {} as GameClock, {} as Diag, true);
+    const group = ['gen_bravo_1', ...Object.keys(lines).filter((id) => lines[id].variante_de === 'gen_bravo_1')];
+    expect(group.length).toBeGreaterThanOrEqual(6);
+    // Rien de livré : toutes les variantes sont possibles.
+    expect(voice.chooseVariant('gen_bravo_1')).toBe('gen_bravo_1');
+    const seen = new Set<string>();
+    let last = 'gen_bravo_1';
+    for (let i = 0; i < 200; i++) {
+      const v = voice.chooseVariant('gen_bravo_1');
+      expect(group).toContain(v);
+      expect(v).not.toBe(last);
+      seen.add(v);
+      last = v;
+    }
+    expect(seen.size).toBe(group.length);
+    // Une réplique sans variante reste elle-même.
+    expect(voice.chooseVariant('c1_1_intro')).toBe('c1_1_intro');
+
+    // La base et une seule variante livrées : on alterne entre les deux, jamais la synthèse.
+    const v2 = new Voice({} as AudioEngine, {} as GameClock, {} as Diag, true);
+    v2.files = { gen_bravo_1: 'u/b1', gen_bravo_2: 'u/b2' };
+    const said = Array.from({ length: 6 }, () => v2.chooseVariant('gen_bravo_1'));
+    expect(said).toEqual(['gen_bravo_1', 'gen_bravo_2', 'gen_bravo_1', 'gen_bravo_2', 'gen_bravo_1', 'gen_bravo_2']);
+  });
+
+  it('un morceau identique déjà enregistré (même voix, même texte) sert aux autres répliques', () => {
+    const voice = new Voice({} as AudioEngine, {} as GameClock, {} as Diag, true);
+    // « Il en reste {answer}. Choisis {answer}, puis appuie sur la grande coche. » : les trois morceaux du chapitre 2.
+    voice.files = { 'c2_1_aide_4#1': 'u/reste', 'c2_1_aide_4#2': 'u/choisis', 'c2_1_aide_4#3': 'u/coche', nombre_4: 'u/4' };
+    expect(lines.c5_1_aide_4.text).toBe(lines.c2_1_aide_4.text);
+    expect(voice.clipsFor('c5_1_aide_4', lines.c5_1_aide_4.text, { answer: 4 })?.map((c) => c.url)).toEqual(['u/reste', 'u/4', 'u/choisis', 'u/4', 'u/coche']);
+    // Le fichier propre à la réplique, s'il est livré, passe avant.
+    voice.files['c5_1_aide_4#3'] = 'u/coche-c5';
+    expect(voice.clipsFor('c5_1_aide_4', lines.c5_1_aide_4.text, { answer: 4 })?.at(-1)?.url).toBe('u/coche-c5');
+    // Pas d'échange entre personnages ni entre réplique entière et morceau.
+    expect(voice.fileFor('menu_continuer')).toBeUndefined();
+    voice.files.menu_continuer = 'u/continuer';
+    expect(voice.fileFor('fin_continuer')).toBe('u/continuer');
+    expect(voice.fileFor('c3_2_aide_1#1')).toBeUndefined();
+  });
+
+  it('chaque variante a la voix et la scène de sa réplique de base, sans nombre', () => {
+    for (const [id, l] of Object.entries(lines)) {
+      if (!l.variante_de) continue;
+      const base = lines[l.variante_de];
+      expect(base, id).toBeDefined();
+      expect(base.variante_de, `${id} : la base n'est pas elle-même une variante`).toBeUndefined();
+      expect(l.speaker, id).toBe(base.speaker);
+      expect(l.scene, id).toBe(base.scene);
+      expect(l.text.includes('{'), id).toBe(base.text.includes('{'));
+    }
   });
 
   it.skipIf(!promptRaw)('chaque bruitage et chaque musique du catalogue figure dans la commande à ChatGPT', () => {

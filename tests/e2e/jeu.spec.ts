@@ -124,7 +124,7 @@ test('pas de pause : ni bouton ni Retour ; l’application en arrière-plan se f
   void consoleErrors;
   await open(page, 'vitesse=4&niveau=debut&scene=c1.2');
   let s = await waitAnswer(page);
-  expect(s.hud).toEqual(['reecouter', 'aide', 'jetons']); // plus de bouton pause
+  expect(s.hud).toEqual(['reecouter', 'aide']); // ni pause ni jetons
 
   // « Retour » (Échap, comme B ou la touche Retour de la télécommande) : rien ne s'arrête.
   await page.keyboard.press('Escape');
@@ -258,7 +258,7 @@ test('voix livrées : le fichier du manifeste remplace la synthèse, y compris p
   await open(page, 'vitesse=4&niveau=debut&scene=c1.2');
   await waitAnswer(page);
   // Toucher « Réécouter » : premier geste (le navigateur autorise alors le son), la consigne est redite.
-  const hp = await gameToPage(page, 1480, 110);
+  const hp = await gameToPage(page, 1625, 110); // bouton « Réécouter »
   await page.mouse.click(hp.x, hp.y);
   const s = await until(page, (st) => st.voiceLog.filter((id) => id === 'c1_2_consigne').length >= 2 && !st.busy, 'consigne redite');
   expect(s.voiceFiles).toContain('c1_2_consigne');
@@ -270,7 +270,7 @@ test('audio livré (vrais fichiers) : consigne assemblée avec ses nombres, nomb
   await open(page, 'vitesse=4&niveau=debut&scene=c1.2');
   await waitAnswer(page);
   // Premier geste : le son est autorisé, la consigne est redite depuis les fichiers.
-  const hp = await gameToPage(page, 1480, 110);
+  const hp = await gameToPage(page, 1625, 110); // bouton « Réécouter »
   await page.mouse.click(hp.x, hp.y);
   const s = await until(page, (st) => st.voiceLog.filter((id) => id === 'c1_2_consigne').length >= 2 && !st.busy, 'consigne redite', 60_000);
   expect(s.voiceParts.c1_2_consigne).toBe(5); // 3 morceaux + 2 nombres

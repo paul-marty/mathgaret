@@ -7,16 +7,16 @@ import { face, limb, SKIN, type G } from './drawkit';
  * de l'image dans `ZONES` : le jeu y dessine son contenu, que l'image soit provisoire ou livrée.
  */
 
-/** Zones utiles des images, en fractions de la largeur et de la hauteur (centre et taille). */
+/** Zones utiles des images, en fractions de la largeur et de la hauteur (centre et taille), mesurées sur les images livrées (art/reperes.md). */
 export const ZONES = {
   /** Écran de l'écran de simulation. */
-  ecran: { cx: 0.5, cy: 0.4, w: 0.78, h: 0.62 },
+  ecran: { cx: 0.5, cy: 0.4, w: 0.83, h: 0.63 },
   /** Intérieur du compartiment ouvert. */
-  compartiment: { cx: 0.5, cy: 0.6, w: 0.82, h: 0.62 },
+  compartiment: { cx: 0.5, cy: 0.66, w: 0.83, h: 0.49 },
   /** Gros bouton orange du pupitre du simulateur. */
-  bouton: { cx: 0.5, cy: 0.45, w: 0.16, h: 0.2 },
+  bouton: { cx: 0.5, cy: 0.4, w: 0.16, h: 0.24 },
   /** Lampe au sommet de la balise. */
-  lampe: { cx: 0.5, cy: 0.12, w: 0.5, h: 0.2 },
+  lampe: { cx: 0.49, cy: 0.12, w: 0.68, h: 0.21 },
 } as const;
 
 const HAIR_L = 0x8a5a32;

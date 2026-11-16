@@ -119,7 +119,7 @@ export default defineConfig({
       },
       workbox: {
         // Tout est mis en cache pour jouer hors ligne, voix comprises.
-        globPatterns: ['**/*.{js,css,html,png,svg,webp,mp3,ogg,json,woff,woff2}'],
+        globPatterns: ['**/*.{js,css,html,png,jpg,svg,webp,mp3,ogg,json,woff,woff2}'],
         maximumFileSizeToCacheInBytes: 20 * 1024 * 1024,
         cleanupOutdatedCaches: true,
         // Dès la première visite, la page est servie par le cache (jouable si le réseau tombe).

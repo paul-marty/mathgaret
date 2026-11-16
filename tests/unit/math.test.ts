@@ -5,6 +5,17 @@ import {
   add,
   ADD_MAX,
   advance,
+  approach,
+  approachFollowUp,
+  capacity,
+  capacityFollowUp,
+  type CapacityParams,
+  CONTROLS_PLAN,
+  freeBefore,
+  GAUGE_MAX,
+  TRAY,
+  TRAY_MAX,
+  WAITING,
   compare,
   complement,
   match,
@@ -13,14 +24,27 @@ import {
   RADIO_MAX,
   remove,
   removeFollowUp,
+  signal,
+  signalFollowUp,
+  signalOptions,
+  SYSTEM_MAX,
+  systems,
+  SYSTEMS_PLAN,
   TRACK_MAX,
   voyage,
   VOYAGE_PLAN,
   type Family,
   type GenContext,
   type Profile,
+  DEPART_MAX,
+  departure,
+  orbitWindow,
+  rendezvous,
+  wave,
+  WAVE_MAX,
+  waveFollowUp,
 } from '../../src/math/families';
-import { chapterRate, globalRate, RereadCounter, starsFromRate, type ProblemRecord } from '../../src/math/scoring';
+import { chapterRate, globalRate, progressOf, RereadCounter, starsFromRate, type ProblemRecord } from '../../src/math/scoring';
 
 function series<P, A>(family: Family<P, A>, profile: Profile, n: number, seed = 1, easierAt = -1): P[] {
   const used = new Set<string>();
@@ -213,6 +237,78 @@ describe('familles du chapitre 2', () => {
   });
 });
 
+describe('familles du chapitre 3', () => {
+  it('vérifications : premier problème = exemple du document, puis un système à la fois', () => {
+    expect(series(systems, 'debut', 1)[0]).toMatchObject({ total: 6, deja: 2 });
+    expect(series(systems, 'milieu', 1)[0]).toMatchObject({ total: 12, deja: 7 });
+    expect(series(systems, 'fin', 1)[0]).toMatchObject({ total: 40, deja: 25 });
+    expect(series(systems, 'milieu', 4).map((p) => p.kind)).toEqual(SYSTEMS_PLAN);
+    expect(new Set(SYSTEMS_PLAN)).toEqual(new Set(['communications', 'alimentation', 'navigation', 'guidage']));
+  });
+
+  it.each(PROFILES)('vérifications (%s) : au moins deux déjà vérifiés, au moins deux à faire, dans le domaine', (profile) => {
+    for (const seed of [1, 2, 3, 4, 5, 6, 7, 8]) {
+      const ps = series(systems, profile, 4, seed, 2);
+      expect(new Set(ps.map((p) => systems.key(p))).size).toBe(ps.length);
+      for (const p of ps) {
+        expect(p.total).toBeLessThanOrEqual(SYSTEM_MAX[profile]);
+        expect(p.deja).toBeGreaterThanOrEqual(2);
+        expect(systems.answer(p)).toBeGreaterThanOrEqual(2);
+        expect(systems.check(p, p.total - p.deja)).toBe(true);
+      }
+    }
+  });
+
+  it('vérifications (fin) : dizaines entières au deuxième problème et après une erreur', () => {
+    for (const seed of [1, 2, 3, 4, 5]) {
+      const ps = series(systems, 'fin', 4, seed, 3);
+      for (const i of [1, 3]) {
+        expect(ps[i].total % 10).toBe(0);
+        expect(ps[i].deja % 10).toBe(0);
+      }
+    }
+  });
+
+  it('signal : premier problème = exemple du document (7 − 2, 16 − 6, 50 − 20 − 5)', () => {
+    expect(series(signal, 'debut', 1)[0]).toMatchObject({ total: 7, minus: 2 });
+    expect(series(signal, 'milieu', 1)[0]).toMatchObject({ total: 16, minus: 6 });
+    const p = series(signal, 'fin', 1)[0];
+    expect(p).toMatchObject({ total: 50, minus: 20, then: 5 });
+    expect(p.options[signal.answer(p)]).toBe(30);
+    const next = signalFollowUp(p, makeRng(3))!;
+    expect(next).toMatchObject({ total: 30, minus: 5 });
+    expect(next.options).toContain(25);
+    expect(signalFollowUp(next, makeRng(3))).toBeNull();
+  });
+
+  it.each(PROFILES)('signal (%s) : trois batteries différentes, une seule juste, aucune plus grande que la réserve', (profile) => {
+    for (const seed of [1, 2, 3, 4, 5, 6, 7, 8]) {
+      for (const p of series(signal, profile, 4, seed, 2)) {
+        expect(p.options).toHaveLength(3);
+        expect(new Set(p.options).size).toBe(3);
+        const right = p.options.filter((_, i) => signal.check(p, i));
+        expect(right).toEqual([p.total - p.minus]);
+        for (const v of p.options) expect(v).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it('signal : les batteries proposées restent plausibles (écart d’une unité, d’une dizaine ou erreur typique)', () => {
+    const rng = makeRng(9);
+    for (let i = 0; i < 200; i++) {
+      const total = 3 + (i % 48);
+      const minus = 1 + (i % (total - 1));
+      const opts = signalOptions(total, minus, rng);
+      const answer = total - minus;
+      expect(opts).toContain(answer);
+      for (const v of opts.filter((v) => v !== answer)) {
+        const plausible = [1, 2, 10].includes(Math.abs(v - answer)) || v === total || v === minus;
+        expect(plausible).toBe(true);
+      }
+    }
+  });
+});
+
 describe('étoiles (P8)', () => {
   const rec = (efficient: boolean, chapterId = 'c1'): ProblemRecord => ({
     chapterId,
@@ -296,5 +392,186 @@ describe('durée (P9)', () => {
     expect(estimateNext(h, 'completer', 'debut')).toBe(40);
     expect(estimateNext(h, 'comparer', 'debut')).toBe(35);
     expect(estimateNext(h, 'comparer', 'fin')).toBe(120_000);
+  });
+});
+
+describe('familles du chapitre 4', () => {
+  it('prévoir : premier problème = exemple du document (8 − 3, 15 − 5, 60 − 20 − 10)', () => {
+    expect(series(approach, 'debut', 1)[0]).toMatchObject({ total: 8, minus: 3 });
+    expect(series(approach, 'milieu', 1)[0]).toMatchObject({ total: 15, minus: 5 });
+    const p = series(approach, 'fin', 1)[0];
+    expect(p).toMatchObject({ total: 60, minus: 20, then: 10 });
+    const next = approachFollowUp(p)!;
+    expect(next).toMatchObject({ total: 40, minus: 10 });
+    expect(approach.answer(next)).toBe(30);
+    // Le deuxième contrôle n'est pas le même que le premier.
+    expect(next.control).not.toBe(p.control);
+    expect(approachFollowUp(next)).toBeNull();
+  });
+
+  it.each(PROFILES)('prévoir (%s) : la jauge contient la réserve, il reste toujours au moins une unité', (profile) => {
+    for (let seed = 1; seed <= 40; seed++) {
+      const ps = series(approach, profile, 4, seed, 2);
+      expect(new Set(ps.map((p) => approach.key(p))).size).toBe(ps.length);
+      for (const p of ps) {
+        expect(CONTROLS_PLAN).toContain(p.control);
+        expect(p.total).toBeLessThanOrEqual(GAUGE_MAX[profile]);
+        expect(p.minus).toBeGreaterThanOrEqual(2);
+        let step: typeof p | null = p;
+        while (step) {
+          expect(approach.answer(step)).toBeGreaterThanOrEqual(1);
+          expect(approach.check(step, step.total - step.minus)).toBe(true);
+          step = approachFollowUp(step);
+        }
+      }
+    }
+  });
+
+  /** Toutes les étapes d'un problème du plateau. */
+  const steps = (p: CapacityParams): CapacityParams[] => {
+    const out: CapacityParams[] = [];
+    for (let s: CapacityParams | null = p; s; s = capacityFollowUp(s)) out.push(s);
+    return out;
+  };
+
+  it('capacité : premier problème = exemple du document (5 − 3, 10 − 6, 50 − 20 − 15), puis le choix', () => {
+    const debut = steps(series(capacity, 'debut', 1)[0]);
+    expect(debut.map((s) => s.stage)).toEqual(['reste', 'choix']);
+    expect(capacity.answer(debut[0])).toBe(2);
+    const milieu = steps(series(capacity, 'milieu', 1)[0]);
+    expect(milieu[0]).toMatchObject({ cap: 10, task: 'guidage', units: 6 });
+    expect(capacity.answer(milieu[0])).toBe(4);
+    const fin = steps(series(capacity, 'fin', 1)[0]);
+    expect(fin.map((s) => [s.stage, s.task])).toEqual([
+      ['reste', 'guidage'],
+      ['reste', 'controle'],
+      ['choix', 'rapport'],
+    ]);
+    expect(capacity.answer(fin[0])).toBe(30);
+    expect(capacity.answer(fin[1])).toBe(15);
+    // Le premier rapport ne tient pas : il va dans la zone d'attente.
+    for (const s of [debut, milieu, fin]) expect(capacity.answer(s[s.length - 1])).toBe(WAITING);
+  });
+
+  it.each(PROFILES)('capacité (%s) : plateau à sa taille, au moins deux places libres, une vraie comparaison au choix', (profile) => {
+    let fits = 0;
+    let waits = 0;
+    for (let seed = 1; seed <= 60; seed++) {
+      const ps = series(capacity, profile, 3, seed, 2);
+      expect(new Set(ps.map((p) => capacity.key(p))).size).toBe(ps.length);
+      // Le deuxième problème montre une tâche secondaire qui tient dans le plateau.
+      const second = steps(ps[1]);
+      expect(capacity.answer(second[second.length - 1])).toBe(TRAY);
+      for (const p of ps) {
+        expect(p.cap).toBeLessThanOrEqual(TRAY_MAX[profile]);
+        const all = steps(p);
+        const last = all[all.length - 1];
+        expect(last.stage).toBe('choix');
+        for (const s of all.slice(0, -1)) {
+          expect(s.units).toBeGreaterThanOrEqual(2);
+          expect(capacity.answer(s)).toBeGreaterThanOrEqual(2);
+          expect(capacity.check(s, freeBefore(s) - s.units)).toBe(true);
+        }
+        // La tâche secondaire a besoin d'au moins deux unités, près du nombre de places libres.
+        expect(last.units).toBeGreaterThanOrEqual(2);
+        expect(Math.abs(last.units - freeBefore(last))).toBeLessThanOrEqual(10);
+        if (capacity.answer(last) === TRAY) fits++;
+        else waits++;
+        // Réponse fausse (tests, console) : l'autre option au choix.
+        expect(capacity.wrong!(last)).toBe(1 - capacity.answer(last));
+      }
+    }
+    expect(fits).toBeGreaterThan(0);
+    expect(waits).toBeGreaterThan(0);
+  });
+
+  it('capacité (fin) : dizaines entières d’abord ; après une erreur, une seule tâche indispensable', () => {
+    for (let seed = 1; seed <= 30; seed++) {
+      const ps = series(capacity, 'fin', 3, seed, 2);
+      expect(ps[1].cap % 10).toBe(0);
+      expect(ps[1].units % 10).toBe(0);
+      expect(ps[2].then).toBeUndefined();
+      expect(steps(ps[2])).toHaveLength(2);
+    }
+  });
+});
+
+describe('familles du chapitre 5', () => {
+  it('premiers problèmes = exemples du document (14 et 9, 7 → 12, 50 : 25 puis 15)', () => {
+    expect(series(departure, 'debut', 1)[0]).toEqual({ total: 6, deja: 4 });
+    expect(series(departure, 'milieu', 1)[0]).toEqual({ total: 14, deja: 9 });
+    expect(series(departure, 'fin', 1)[0]).toEqual({ total: 40, deja: 27 });
+    expect(series(rendezvous, 'debut', 1)[0]).toEqual({ from: 2, to: 5 });
+    expect(series(rendezvous, 'milieu', 1)[0]).toEqual({ from: 7, to: 12 });
+    expect(series(rendezvous, 'fin', 1)[0]).toEqual({ from: 35, to: 50 });
+    expect(series(wave, 'debut', 1)[0]).toMatchObject({ stage: 'reste', total: 6, deja: 4 });
+    expect(series(wave, 'milieu', 1)[0]).toMatchObject({ stage: 'reste', total: 15, deja: 9 });
+    const p = series(wave, 'fin', 1)[0];
+    expect(p).toMatchObject({ stage: 'somme', total: 50, a: 25, b: 15 });
+    expect(wave.answer(p)).toBe(40);
+    const next = waveFollowUp(p)!;
+    expect(next).toEqual({ stage: 'reste', total: 50, deja: 40 });
+    expect(wave.answer(next)).toBe(10);
+    expect(waveFollowUp(next)).toBeNull();
+  });
+
+  it.each(PROFILES)('vérifications du départ (%s) : au moins deux lignes prêtes, au moins une à cocher, pages de dix', (profile) => {
+    for (let seed = 1; seed <= 40; seed++) {
+      const ps = series(departure, profile, 4, seed, 2);
+      expect(new Set(ps.map((p) => departure.key(p))).size).toBe(ps.length);
+      for (const p of ps) {
+        expect(p.total).toBeLessThanOrEqual(DEPART_MAX[profile]);
+        expect(p.deja).toBeGreaterThanOrEqual(2);
+        expect(departure.answer(p)).toBeGreaterThanOrEqual(1);
+      }
+    }
+  });
+
+  it.each(PROFILES)('rendez-vous (%s) : départ et repère dans la fenêtre de la piste, écart d’au moins deux', (profile) => {
+    for (let seed = 1; seed <= 40; seed++) {
+      for (const p of series(rendezvous, profile, 4, seed, 2)) {
+        const { lo, hi } = orbitWindow(profile, p.from);
+        expect(p.from).toBeGreaterThanOrEqual(lo);
+        expect(p.to).toBeLessThanOrEqual(hi);
+        expect(rendezvous.answer(p)).toBeGreaterThanOrEqual(2);
+      }
+    }
+  });
+
+  it.each(PROFILES)('onde radio (%s) : sommes sans retenue (hors exemple), il manque toujours au moins un morceau', (profile) => {
+    for (let seed = 1; seed <= 40; seed++) {
+      for (const [i, p] of series(wave, profile, 3, seed, 2).entries()) {
+        expect(p.total).toBeLessThanOrEqual(WAVE_MAX[profile]);
+        if (p.stage === 'somme') {
+          expect(profile).toBe('fin');
+          if (i > 0) expect((p.a! % 10) + (p.b! % 10)).toBeLessThanOrEqual(9);
+          const next = waveFollowUp(p)!;
+          expect(wave.answer(next)).toBeGreaterThanOrEqual(2);
+        } else {
+          expect(p.deja).toBeGreaterThanOrEqual(2);
+          expect(wave.answer(p)).toBeGreaterThanOrEqual(1);
+        }
+      }
+    }
+  });
+
+  it('phrase de progrès : persévérance, puis deux étapes, puis défis réussis sans aide', () => {
+    const r = (o: Partial<ProblemRecord>): ProblemRecord => ({
+      chapterId: 'c1',
+      challengeId: 'a',
+      family: 'f',
+      profile: 'fin',
+      ms: 1000,
+      efficient: true,
+      errors: 0,
+      helps: 0,
+      ...o,
+    });
+    expect(progressOf([])).toBeNull();
+    expect(progressOf([r({ helps: 1 })])).toBeNull();
+    expect(progressOf([r({ challengeId: 'a' }), r({ challengeId: 'b' })])).toBe('autonome');
+    expect(progressOf([r({ challengeId: 'a' }), r({ challengeId: 'b', helps: 1 })])).toBeNull();
+    expect(progressOf([r({ steps: 2 }), r({ challengeId: 'b' })])).toBe('etapes');
+    expect(progressOf([r({ steps: 2 }), r({ errors: 1, helps: 1 })])).toBe('correction');
   });
 });

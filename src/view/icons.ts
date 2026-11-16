@@ -8,7 +8,6 @@ import { C } from '../config';
 export type IconName =
   | 'speaker'
   | 'helper'
-  | 'token'
   | 'pause'
   | 'play'
   | 'check'
@@ -21,7 +20,11 @@ export type IconName =
   | 'clock'
   | 'feather'
   | 'subtitles'
-  | 'cross';
+  | 'cross'
+  | 'up'
+  | 'down'
+  | 'hourglass'
+  | 'tray';
 
 type G = Phaser.GameObjects.Graphics;
 
@@ -61,15 +64,6 @@ export function drawIcon(g: G, name: IconName, s: number, color: number = C.ink,
       g.fillRect(-30 * u, 22 * u, 60 * u, 22 * u);
       g.fillStyle(C.orange, 1);
       g.fillTriangle(-6 * u, 22 * u, 6 * u, 22 * u, 0, 44 * u);
-      break;
-    }
-    case 'token': {
-      g.fillStyle(C.orange, 1);
-      g.fillCircle(0, 0, 36 * u);
-      g.lineStyle(5 * u, C.ink, 1);
-      g.strokeCircle(0, 0, 36 * u);
-      g.fillStyle(C.mustard, 1);
-      star(g, 0, 0, 18 * u, 8 * u);
       break;
     }
     case 'pause':
@@ -146,6 +140,29 @@ export function drawIcon(g: G, name: IconName, s: number, color: number = C.ink,
       g.fillEllipse(0, -4 * u, 34 * u, 70 * u);
       g.lineStyle(5 * u, C.ink, 1);
       g.lineBetween(-12 * u, 40 * u, 10 * u, -32 * u);
+      break;
+    case 'up':
+      g.fillTriangle(-34 * u, 18 * u, 34 * u, 18 * u, 0, -30 * u);
+      break;
+    case 'down':
+      g.fillTriangle(-34 * u, -18 * u, 34 * u, -18 * u, 0, 30 * u);
+      break;
+    case 'hourglass':
+      // Sablier : la tâche attend son tour.
+      g.fillRoundedRect(-30 * u, -42 * u, 60 * u, 10 * u, 4 * u);
+      g.fillRoundedRect(-30 * u, 32 * u, 60 * u, 10 * u, 4 * u);
+      g.lineStyle(6 * u, color, 1);
+      g.strokeTriangle(-22 * u, -32 * u, 22 * u, -32 * u, 0, 0);
+      g.strokeTriangle(-22 * u, 32 * u, 22 * u, 32 * u, 0, 0);
+      g.fillStyle(C.mustard, 1);
+      g.fillTriangle(-14 * u, 30 * u, 14 * u, 30 * u, 0, 12 * u);
+      break;
+    case 'tray':
+      // Plateau de places : une grille de cases.
+      g.lineStyle(6 * u, color, 1);
+      g.strokeRoundedRect(-40 * u, -30 * u, 80 * u, 60 * u, 8 * u);
+      for (let r = 0; r < 2; r++)
+        for (let c = 0; c < 3; c++) g.fillRoundedRect(-32 * u + c * 23 * u, -22 * u + r * 24 * u, 18 * u, 18 * u, 3 * u);
       break;
     case 'subtitles':
       g.lineStyle(7 * u, color, 1);

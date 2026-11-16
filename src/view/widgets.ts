@@ -2,8 +2,6 @@ import * as Phaser from 'phaser';
 import { C, textStyle } from '../config';
 import { services } from '../services';
 import { fit } from './assets';
-import { Button } from './Button';
-import type { Focusable } from './focus';
 import { tweenAsync } from './tweens';
 
 const wait = (ms: number) => services.clock.wait(ms);
@@ -253,80 +251,3 @@ export function drawTensUnits(scene: Phaser.Scene, value: number, width: number)
   return g;
 }
 
-// ---------------------------------------------------------------------------
-// Jetons numériques (P17) : deux cadres de dix, + et −. Gratuit, sans effet sur les étoiles.
-// ---------------------------------------------------------------------------
-
-export class TokenTray extends Phaser.GameObjects.Container {
-  value = 0;
-  readonly buttons: Button[];
-  private tokens: Phaser.GameObjects.Image[] = [];
-  private cells: { x: number; y: number }[] = [];
-
-  constructor(scene: Phaser.Scene) {
-    super(scene, 360, 300);
-    const bg = scene.add.graphics();
-    bg.fillStyle(0x000000, 0.25);
-    bg.fillRoundedRect(-262, -152, 530, 300, 28);
-    bg.fillStyle(0x6b4a33, 1);
-    bg.fillRoundedRect(-266, -160, 530, 300, 28);
-    bg.lineStyle(6, C.ink, 1);
-    bg.strokeRoundedRect(-266, -160, 530, 300, 28);
-    this.add(bg);
-    // deux cadres de dix (2 × 5)
-    const cell = 72;
-    for (let f = 0; f < 2; f++) {
-      for (let i = 0; i < 10; i++) {
-        const x = -220 + (i % 5) * cell + 36;
-        const y = -140 + f * 160 + Math.floor(i / 5) * cell + 36;
-        this.cells.push({ x, y });
-        bg.lineStyle(3, C.cream, 0.7);
-        bg.strokeRect(x - cell / 2, y - cell / 2, cell, cell);
-      }
-    }
-    const minus = new Button(scene, { x: 360 + 330, y: 300 - 70, w: 110, h: 110, icon: 'minus', iconSize: 60, onPress: () => this.change(-1) });
-    const plus = new Button(scene, { x: 360 + 330, y: 300 + 60, w: 110, h: 110, icon: 'plus', iconSize: 60, onPress: () => this.change(1) });
-    this.buttons = [minus, plus];
-    scene.add.existing(this);
-    this.setVisible(false);
-    for (const b of this.buttons) b.setVisible(false);
-  }
-
-  get focusables(): Focusable[] {
-    return this.buttons;
-  }
-
-  show(on: boolean): void {
-    this.setVisible(on);
-    for (const b of this.buttons) b.setVisible(on);
-  }
-
-  change(d: number): void {
-    const next = Phaser.Math.Clamp(this.value + d, 0, 20);
-    if (next === this.value) return;
-    if (d > 0) {
-      const p = this.cells[this.value];
-      const img = this.scene.add.image(p.x, p.y - 40, 'jeton');
-      fit(img, 60, 60);
-      this.add(img);
-      this.tokens.push(img);
-      this.scene.tweens.add({ targets: img, y: p.y, duration: 200, ease: 'Bounce.Out' });
-    } else {
-      this.tokens.pop()?.destroy();
-    }
-    this.value = next;
-    services.sfx.pop(next);
-    void services.voice.sayNumber(next);
-  }
-
-  clear(): void {
-    for (const t of this.tokens) t.destroy();
-    this.tokens = [];
-    this.value = 0;
-  }
-
-  override destroy(fromScene?: boolean): void {
-    for (const b of this.buttons) b.destroy();
-    super.destroy(fromScene);
-  }
-}

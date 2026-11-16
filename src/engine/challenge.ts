@@ -1,4 +1,3 @@
-import { pick } from '../core/rng';
 import { estimateNext } from '../math/budget';
 import type { Family } from '../math/families';
 import { RereadCounter, type ProblemRecord } from '../math/scoring';
@@ -43,7 +42,15 @@ export interface ChallengeSpec<P, A> {
   followUp?(p: P, a: A): P | null;
 }
 
-export type Gesture = 'tuto_reponse' | 'tuto_choix' | 'tuto_ordre';
+export type Gesture =
+  | 'tuto_reponse'
+  | 'tuto_choix'
+  | 'tuto_ordre'
+  | 'tuto_clavier'
+  | 'tuto_batterie'
+  | 'tuto_jauge'
+  | 'tuto_compteur'
+  | 'tuto_plateau';
 
 export type Action = { type: 'validate' | 'reecouter' | 'aide' | 'reorient' };
 
@@ -111,6 +118,7 @@ export async function runChallenge<P, A>(s: StoryScene, spec: ChallengeSpec<P, A
       efficient: tally.efficient,
       errors: tally.errors,
       helps: tally.helps,
+      steps: step,
     };
     index++;
     s.recordProblem(record, spec.id, index);
@@ -150,7 +158,7 @@ async function solveStep<P, A>(s: StoryScene, spec: ChallengeSpec<P, A>, p: P): 
   // Raccourci pour les tests et la console (mg.resoudre) : répond juste ou faux, puis valide.
   services.debug.solve = (wrong = false) => {
     const right = spec.family.answer(p);
-    ui.set((wrong ? wrongAnswer(right) : right) as A);
+    ui.set(wrong ? (spec.family.wrong?.(p) ?? (wrongAnswer(right) as A)) : right);
     s.actions.push({ type: 'validate' });
   };
   services.debug.validate = ui.validateButton.bounds();
@@ -202,7 +210,6 @@ async function solveStep<P, A>(s: StoryScene, spec: ChallengeSpec<P, A>, p: P): 
       services.sfx.softError();
       if (errors === 1) await s.say('gen_erreur');
       await spec.error(p, a);
-      if (errors === 1 && services.save.data.settings.tokensReady) await s.say('gen_jetons');
       // Retour à un état corrigeable, puis l'aide (la dernière montre la solution : elle doit rester affichée).
       spec.resetAfterError(p, ui);
       level = Math.min(4, level + 1);
@@ -221,7 +228,7 @@ async function solveStep<P, A>(s: StoryScene, spec: ChallengeSpec<P, A>, p: P): 
   // Étape intermédiaire : son résultat est gardé, on passe à la suivante.
   if (spec.followUp?.(p, right)) await s.say('gen_etape');
   else if (errors > 0) await s.say('gen_correction');
-  else await s.say(pick(services.rng, ['gen_bravo_1', 'gen_bravo_2', 'gen_bravo_3']));
+  else await s.say('gen_bravo_1'); // et ses variantes, tirées par la voix
   return { answer: right, errors, helps, efficient: rereads.efficient };
 }
 

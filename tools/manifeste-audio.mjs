@@ -55,7 +55,8 @@ function expectedVoices(root) {
   const map = new Map();
   for (const line of readFileSync(csv, 'utf8').replace(/^﻿/, '').split(/\r?\n/).slice(1)) {
     const m = /^"(\d+)";"([^"]+)"/.exec(line);
-    if (m) map.set(m[2], Number(m[1]));
+    // Facultatif : même texte et même voix qu'un autre fichier, que le jeu réutilise (commande-audio.mjs).
+    if (m) map.set(m[2], line.includes('"facultatif : ') ? `${m[1]}?` : Number(m[1]));
   }
   return map;
 }
@@ -126,6 +127,7 @@ export function buildAudioManifest(root) {
 
   const lots = {};
   for (const [file, lot] of expected) {
+    if (typeof lot === 'string') continue; // facultatif : le jeu réutilise un enregistrement identique
     lots[lot] ??= { attendus: 0, livres: 0, manquants: [] };
     lots[lot].attendus++;
     if (delivered.has(file)) lots[lot].livres++;

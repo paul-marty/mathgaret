@@ -3,7 +3,7 @@ import { C, SCENES, textStyle, URLP } from '../config';
 import { services, type OverlayApi } from '../services';
 import { Button } from '../view/Button';
 
-type HudName = 'reecouter' | 'aide' | 'jetons';
+type HudName = 'reecouter' | 'aide';
 
 /**
  * Scène toujours au premier plan : boutons d'aide, cadre de sélection, sous-titres.
@@ -29,12 +29,11 @@ export class OverlayScene extends Phaser.Scene implements OverlayApi {
 
   create(): void {
     services.ui.overlay = this;
-    const mk = (x: number, icon: 'speaker' | 'helper' | 'token', label: string, onPress: () => void) =>
+    const mk = (x: number, icon: 'speaker' | 'helper', label: string, onPress: () => void) =>
       new Button(this, { x, y: 110, w: 124, h: 124, icon, iconSize: 84, label, onPress }).setDepth(10);
     this.hud = {
-      reecouter: mk(1480, 'speaker', 'hud_reecouter', () => services.ui.story?.request('reecouter')),
-      aide: mk(1625, 'helper', 'hud_aide', () => services.ui.story?.request('aide')),
-      jetons: mk(1770, 'token', 'hud_jetons', () => services.ui.story?.toggleTokens()),
+      reecouter: mk(1625, 'speaker', 'hud_reecouter', () => services.ui.story?.request('reecouter')),
+      aide: mk(1770, 'helper', 'hud_aide', () => services.ui.story?.request('aide')),
     };
     this.setHud('hidden');
 
@@ -114,7 +113,6 @@ export class OverlayScene extends Phaser.Scene implements OverlayApi {
     const visible: Record<HudName, boolean> = {
       reecouter: mode === 'challenge',
       aide: mode === 'challenge',
-      jetons: mode === 'challenge',
     };
     for (const name of Object.keys(this.hud) as HudName[]) {
       const b = this.hud[name];
@@ -124,7 +122,6 @@ export class OverlayScene extends Phaser.Scene implements OverlayApi {
         else story.layer.remove(b);
       }
     }
-    if (mode !== 'challenge') story?.tokens.show(false);
   }
 
   visibleHud(): string[] {
@@ -136,7 +133,7 @@ export class OverlayScene extends Phaser.Scene implements OverlayApi {
     this.hud.aide.setEnabled(!on);
   }
 
-  pulse(name: 'reecouter' | 'aide' | 'jetons' | null): void {
+  pulse(name: 'reecouter' | 'aide' | null): void {
     this.pulseTween?.stop();
     for (const b of Object.values(this.hud)) b.setScale(1);
     if (!name) return;

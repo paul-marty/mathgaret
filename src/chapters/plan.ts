@@ -49,10 +49,10 @@ export const CHAPTERS: ChapterPlan[] = [
     number: 3,
     title: 'Apollo 11, le grand décollage',
     weight: 10,
-    essentialMs: 5 * 60_000,
+    essentialMs: 0, // calculé à partir des scènes réalisées
     challenges: [
-      { id: 'c3_verifications', family: 'completer' },
-      { id: 'c3_signal', family: 'retirer' },
+      { id: 'c3_verifications', family: 'systemes' },
+      { id: 'c3_signal', family: 'signal' },
     ],
   },
   {
@@ -60,9 +60,9 @@ export const CHAPTERS: ChapterPlan[] = [
     number: 4,
     title: 'Alerte sur la Lune !',
     weight: 16,
-    essentialMs: 6 * 60_000,
+    essentialMs: 0, // calculé à partir des scènes réalisées
     challenges: [
-      { id: 'c4_approche', family: 'retirer' },
+      { id: 'c4_approche', family: 'prevoir' },
       { id: 'c4_taches', family: 'capacite' },
     ],
   },
@@ -71,11 +71,11 @@ export const CHAPTERS: ChapterPlan[] = [
     number: 5,
     title: 'Le grand retour sur Terre',
     weight: 12,
-    essentialMs: 7 * 60_000,
+    essentialMs: 0, // calculé à partir des scènes réalisées
     challenges: [
-      { id: 'c5_depart', family: 'completer' },
-      { id: 'c5_rendezvous', family: 'ecart' },
-      { id: 'c5_silence', family: 'completer' },
+      { id: 'c5_depart', family: 'verifier' },
+      { id: 'c5_rendezvous', family: 'rejoindre' },
+      { id: 'c5_silence', family: 'onde' },
     ],
   },
 ];

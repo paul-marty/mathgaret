@@ -9,6 +9,7 @@ import { loadAudioManifest } from './audio/manifest';
 import { HEIGHT, URLP, WIDTH } from './config';
 import { installKeyboard } from './core/input';
 import { BilanScene } from './scenes/BilanScene';
+import { FinaleScene } from './scenes/FinaleScene';
 import { BootScene } from './scenes/BootScene';
 import { MenuScene } from './scenes/MenuScene';
 import { OverlayScene } from './scenes/OverlayScene';
@@ -86,6 +87,8 @@ function exposeDebug(game: Phaser.Game): void {
       budget: services.debug.budget,
       voice: services.voice.current,
       voiceLog: services.voice.log.map((l) => l.id),
+      /** Variantes dites à la place de la réplique de base (répliques qui reviennent souvent). */
+      voiceVariants: services.voice.log.filter((l) => l.variant).map((l) => l.variant as string),
       voiceFiles: services.voice.log.filter((l) => l.via === 'fichier').map((l) => l.id),
       /** Répliques assemblées à partir de plusieurs fichiers (morceaux et nombres) : id → nombre de fichiers. */
       voiceParts: Object.fromEntries(services.voice.log.filter((l) => (l.parts ?? 0) > 1).map((l) => [l.id, l.parts])),
@@ -133,7 +136,7 @@ function start(): void {
     // Le son passe par notre moteur Web Audio (ducking, effet radio) ; les entrées par notre couche unifiée.
     audio: { noAudio: true },
     input: { keyboard: false, gamepad: false },
-    scene: [BootScene, TitleScene, MenuScene, StoryScene, BilanScene, OverlayScene],
+    scene: [BootScene, TitleScene, MenuScene, StoryScene, BilanScene, FinaleScene, OverlayScene],
   });
   exposeDebug(game);
   installConsole(game);

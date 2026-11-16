@@ -43,6 +43,7 @@ export const SCENES = {
   Menu: 'Menu',
   Story: 'Story',
   Bilan: 'Bilan',
+  Finale: 'Finale',
   Overlay: 'Overlay',
 } as const;
 

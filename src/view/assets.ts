@@ -1,8 +1,10 @@
 import type * as Phaser from 'phaser';
 import { C, HEIGHT, WIDTH } from '../config';
-import { star } from './icons';
 import { face, HAIR_C, HAIR_M, limb, SKIN, vGradient, type G } from './drawkit';
 import { drawC2Object, drawLauren } from './placeholders-c2';
+import { drawC3Decor, drawC3Object } from './placeholders-c3';
+import { drawC4Decor, drawC4Object } from './placeholders-c4';
+import { drawC5Decor, drawC5Object } from './placeholders-c5';
 
 /**
  * Images du jeu. Chaque identifiant correspond à un fichier produit avec ChatGPT
@@ -32,7 +34,21 @@ export const IMAGES = {
     'lauren_appuie',
     'lauren_gene',
   ],
-  decors: ['c1_ville', 'labo', 'labo_soir'],
+  decors: [
+    'c1_ville',
+    'labo',
+    'labo_soir',
+    'kennedy_aube',
+    'lune_surface',
+    'lune_sol',
+    'salle_controle',
+    // Chapitre 5
+    'orbite_lune',
+    'terre_proche',
+    'rentree_ciel',
+    'ocean',
+    'mars',
+  ],
   objets: [
     'poste_travail',
     'armoire_bandes',
@@ -44,7 +60,6 @@ export const IMAGES = {
     'voyant_orange',
     'maquette_saturn',
     'petite_fusee',
-    'jeton',
     'eq_casque',
     'eq_batterie',
     'eq_antenne',
@@ -59,19 +74,45 @@ export const IMAGES = {
     'balise',
     'compartiment',
     'pupitre_simulateur',
+    // Chapitre 3
+    'saturn_v',
+    'carte_usa',
+    'astronaute_1',
+    'astronaute_2',
+    'astronaute_3',
+    'ingenieur',
+    'columbia_eagle',
+    // Chapitre 4
+    'eagle',
+    'columbia',
+    'rochers',
+    'echelle_eagle',
+    'astronaute_dos',
+    'terre',
+    // Chapitre 5
+    'eagle_montee',
+    'eagle_base',
+    'module_service',
+    'capsule',
+    'capsule_parachutes',
+    'helicoptere',
+    'navire',
+    'equipe_fete',
   ],
+  /** Photographies d'archive (pas de forme provisoire : le fichier est dans le dépôt). */
+  photos: ['photo_margaret'],
 } as const;
 
 export type ImageId = (typeof IMAGES)[keyof typeof IMAGES][number];
 export const EQUIPMENT: ImageId[] = ['eq_batterie', 'eq_casque', 'eq_antenne', 'eq_gyroscope', 'eq_oxygene', 'eq_boussole'];
 
-const files = import.meta.glob('../assets/images/**/*.png', { eager: true, query: '?url', import: 'default' }) as Record<
+const files = import.meta.glob('../assets/images/**/*.{png,jpg}', { eager: true, query: '?url', import: 'default' }) as Record<
   string,
   string
 >;
 
 export function imageUrl(id: string): string | undefined {
-  const key = Object.keys(files).find((k) => k.endsWith(`/${id}.png`));
+  const key = Object.keys(files).find((k) => k.endsWith(`/${id}.png`) || k.endsWith(`/${id}.jpg`));
   return key ? files[key] : undefined;
 }
 
@@ -541,15 +582,6 @@ function drawObject(g: G, id: string): { w: number; h: number } {
       g.fillTriangle(90, 172, 130, 172, 110, 215);
       return { w: 220, h: 220 };
     }
-    case 'jeton': {
-      g.fillStyle(0xb05a20, 1);
-      g.fillCircle(60, 64, 54);
-      g.fillStyle(C.orange, 1);
-      g.fillCircle(60, 58, 54);
-      g.fillStyle(C.mustard, 1);
-      star(g, 60, 58, 26, 11);
-      return { w: 120, h: 120 };
-    }
     case 'eq_casque':
       g.fillStyle(C.white, 1);
       g.fillCircle(70, 66, 54);
@@ -629,13 +661,13 @@ export function makePlaceholders(scene: Phaser.Scene): void {
   for (const id of IMAGES.decors) {
     if (scene.textures.exists(id)) continue;
     g.clear();
-    drawDecor(g, id);
+    if (!drawC3Decor(g, id) && !drawC4Decor(g, id) && !drawC5Decor(g, id)) drawDecor(g, id);
     g.generateTexture(id, WIDTH, HEIGHT);
   }
   for (const id of IMAGES.objets) {
     if (scene.textures.exists(id)) continue;
     g.clear();
-    const { w, h } = drawC2Object(g, id) ?? drawObject(g, id);
+    const { w, h } = drawC5Object(g, id) ?? drawC4Object(g, id) ?? drawC3Object(g, id) ?? drawC2Object(g, id) ?? drawObject(g, id);
     g.generateTexture(id, w, h);
   }
   g.destroy();

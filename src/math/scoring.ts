@@ -4,7 +4,7 @@ import type { Profile } from './families';
  * Barème P8.
  * - Étoile de mission : une par chapitre terminé, une seule fois.
  * - Efficacité : un point par problème terminé si chaque consigne n'a été réécoutée
- *   qu'une fois au plus (la première réécoute est gratuite). Erreurs, aides, jetons et
+ *   qu'une fois au plus (la première réécoute est gratuite). Erreurs, aides et
  *   temps de réflexion n'y changent rien.
  */
 export interface ProblemRecord {
@@ -17,6 +17,25 @@ export interface ProblemRecord {
   efficient: boolean;
   errors: number;
   helps: number;
+  /** Nombre d'étapes du problème (2 : problème en deux étapes, fin de CP). */
+  steps?: number;
+}
+
+/** Progrès observables cités au bilan de la mission (validés le 15/11, point 12). */
+export type Progress = 'correction' | 'etapes' | 'autonome';
+
+/**
+ * La phrase de progrès du bilan final, d'après les événements enregistrés pendant la partie.
+ * Les progrès (persévérance, méthode) passent avant la réussite brute ; null s'il n'y a rien à citer.
+ */
+export function progressOf(records: ProblemRecord[]): Progress | null {
+  if (records.some((r) => r.errors > 0)) return 'correction';
+  if (records.some((r) => (r.steps ?? 1) >= 2)) return 'etapes';
+  // « Plusieurs défis toute seule » : au moins deux challenges dont aucun problème n'a demandé d'aide.
+  const byChallenge = new Map<string, boolean>();
+  for (const r of records) byChallenge.set(r.challengeId, (byChallenge.get(r.challengeId) ?? true) && r.helps === 0);
+  if ([...byChallenge.values()].filter(Boolean).length >= 2) return 'autonome';
+  return null;
 }
 
 /** Taux d'efficacité d'un chapitre, ou null s'il n'a encore aucun problème terminé (« en cours »). */

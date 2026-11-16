@@ -20,12 +20,22 @@
     "grondement": { "boucle": false, "description": "moteur de fusée qui décolle" },
     "souvenir": { "boucle": false, "description": "on entre dans un souvenir" },
     "cran": { "boucle": false, "description": "cran du bouton d'une radio" },
-    "gresillement": { "boucle": true, "description": "radio mal réglée" }
+    "respiration": { "boucle": true, "description": "respiration calme d'un astronaute dans son casque (inspiration, expiration, lente)" },
+    "applaudissements": { "boucle": false, "description": "une petite équipe applaudit et se réjouit dans un laboratoire (3 à 4 s)" },
+    "gresillement": { "boucle": true, "description": "radio mal réglée" },
+    "envol": { "boucle": false, "description": "le haut d'Eagle décolle de la Lune : un souffle de moteur bref et feutré, sans grondement de grosse fusée (2,5 s)" },
+    "clac": { "boucle": false, "description": "deux vaisseaux s'amarrent : un « clac » métallique sourd, comme entendu de l'intérieur à travers la structure (1 s)" },
+    "rentree": { "boucle": true, "description": "la capsule traverse l'atmosphère : souffle de feu grave et régulier, impressionnant mais jamais effrayant ; boucle sans à-coup (6 s)" },
+    "parachutes": { "boucle": false, "description": "trois grands parachutes s'ouvrent et se gonflent : un claquement de toile puis un souffle qui ralentit (2 s)" },
+    "plouf": { "boucle": false, "description": "la capsule tombe dans l'océan : un grand « plouf » rond et joyeux, avec un peu d'éclaboussures (1,5 s)" },
+    "vagues": { "boucle": true, "description": "l'océan calme au large : petites vagues et vent léger ; boucle sans à-coup (8 s)" },
+    "helicoptere": { "boucle": true, "description": "un hélicoptère approche au loin : rotor régulier, pas trop fort ; boucle sans à-coup (4 s)" }
   },
   "musiques": {
     "mystere": { "description": "menu, arrivée au laboratoire, souvenir : curiosité" },
     "leger": { "description": "travail au laboratoire, entre les problèmes" },
     "calme": { "description": "pendant que l'enfant réfléchit" },
-    "ample": { "description": "réussite, révélation, fin de chapitre" }
+    "ample": { "description": "réussite, révélation, fin de chapitre" },
+    "theme": { "description": "thème de Margaret, version finale : célébration, bilan de la mission et générique" }
   }
 }

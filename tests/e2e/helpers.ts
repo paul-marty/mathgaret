@@ -8,6 +8,8 @@ export interface GameState {
   budget: { challengeId: string; offer: boolean; availableMs: number; shareMs: number } | null;
   voice: { id: string; kind: string } | null;
   voiceLog: string[];
+  /** Variantes dites à la place de la réplique de base. */
+  voiceVariants: string[];
   /** Répliques jouées depuis un fichier audio livré (et non par la synthèse provisoire). */
   voiceFiles: string[];
   voiceParts: Record<string, number>;
@@ -17,7 +19,7 @@ export interface GameState {
   focus: { x: number; y: number; width: number; height: number } | null;
   layers: string[];
   save: {
-    settings: { profile: string; durationMin: number; tokensReady: boolean; gentle: boolean; subtitles: boolean };
+    settings: { profile: string; durationMin: number; gentle: boolean; subtitles: boolean; firstName?: string };
     run: {
       chapterId: string;
       sceneIndex: number;
@@ -135,4 +137,53 @@ export async function tap(page: Page, button: number): Promise<void> {
   await page.waitForTimeout(100);
   await set(false);
   await page.waitForTimeout(100);
+}
+
+type Mg = Record<string, (...args: unknown[]) => unknown>;
+
+/** Console de développement `mg` (src/dev/console.ts). */
+export function mg(page: Page, cmd: string, ...args: unknown[]): Promise<unknown> {
+  return page.evaluate(([c, a]) => (window as unknown as { mg: Mg }).mg[c as string](...(a as unknown[])), [cmd, args] as const);
+}
+
+/** Répond au problème en cours (juste, ou faux), comme le ferait l'enfant puis « Valider ». */
+export const solve = (page: Page, wrong: boolean) =>
+  page.evaluate((w) => (window as unknown as { __mathgaret: { solve: (w: boolean) => void } }).__mathgaret.solve(w), wrong);
+
+/** Joue jusqu'au bilan : la première réponse est fausse, les autres justes ; les objets proposés sont touchés à OK. */
+export async function playToBilan(page: Page): Promise<GameState> {
+  let first = true;
+  for (;;) {
+    const s = await until(
+      page,
+      (st) => (st.answering && !st.busy) || st.scenes.includes('Bilan') || st.scenes.includes('Finale') || st.diag.waiting,
+      'action suivante',
+      120_000,
+    );
+    // Après le dernier chapitre, le bilan est celui de la mission (FinaleScene).
+    if (s.scenes.includes('Bilan') || s.scenes.includes('Finale')) return s;
+    if (s.answering) {
+      await solve(page, first);
+      first = false;
+      await page.waitForTimeout(300);
+      await until(page, (st) => !st.answering || st.busy || st.scenes.includes('Bilan'), 'réponse prise en compte');
+    } else {
+      await page.keyboard.press('Enter'); // l'objet à toucher est sélectionné d'office
+      await until(page, (st) => !st.diag.waiting, 'objet touché', 10_000);
+    }
+  }
+}
+
+/** Déplace la sélection aux flèches jusqu'à l'élément qui contient le point (x, y) du jeu. */
+export async function arrowsTo(page: Page, x: number, y: number, label: string): Promise<void> {
+  for (let i = 0; i < 16; i++) {
+    const f = (await state(page)).focus;
+    if (!f) throw new Error(`aucune sélection (${label})`);
+    const dx = x - (f.x + f.width / 2);
+    const dy = y - (f.y + f.height / 2);
+    if (Math.abs(dx) <= f.width / 2 && Math.abs(dy) <= f.height / 2) return;
+    await page.keyboard.press(Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'ArrowRight' : 'ArrowLeft') : dy > 0 ? 'ArrowDown' : 'ArrowUp');
+    await page.waitForTimeout(60);
+  }
+  throw new Error(`${label} n'est pas atteignable aux flèches`);
 }

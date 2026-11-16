@@ -37,6 +37,15 @@ export function segmentTexts(text: string): string[] {
     .filter((p) => p !== '');
 }
 
+/**
+ * Clé des enregistrements interchangeables : même personnage, même sorte (réplique entière ou morceau), même texte
+ * (apostrophes et espaces normalisés, majuscules et ponctuation gardées : elles changent l'intonation).
+ * Même règle dans tools/commande-audio.mjs, qui ne commande pas deux fois le même enregistrement.
+ */
+export function sameTextKey(speaker: string, kind: 'entiere' | 'morceau', text: string): string {
+  return `${speaker}|${kind}|${text.replace(/[’‘]/g, "'").replace(/\s+/g, ' ').trim()}`;
+}
+
 /** Valeur dite avec un fichier nombre_N : un entier de 0 à 100, sinon rien. */
 export function numberValue(v: string | number | undefined): number | null {
   const n = typeof v === 'number' ? v : typeof v === 'string' && /^\d+$/.test(v) ? Number(v) : NaN;

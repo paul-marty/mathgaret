@@ -2,7 +2,7 @@ import * as Phaser from 'phaser';
 import { SCRIPTS } from '../chapters';
 import { CHAPTERS, chapterById } from '../chapters/plan';
 import { C, SCENES, textStyle, URLP } from '../config';
-import { starsFromRate } from '../math/scoring';
+import { starsFromRate, type ProblemRecord } from '../math/scoring';
 import { services } from '../services';
 import { cover } from '../view/assets';
 import { Button } from '../view/Button';
@@ -15,6 +15,8 @@ export interface BilanData {
   firstMission: boolean;
   /** Le chapitre demandé n'est pas encore réalisé. */
   unavailable?: boolean;
+  /** Problèmes de la partie, pour le bilan de la mission après le dernier chapitre. */
+  records?: ProblemRecord[];
 }
 
 /**
@@ -30,6 +32,11 @@ export class BilanScene extends Phaser.Scene {
   }
 
   create(data: BilanData): void {
+    // Après le dernier chapitre, le bilan est celui de toute la mission (C5.6), suivi du diplôme et du générique.
+    if (!data.unavailable && data.chapterId === CHAPTERS[CHAPTERS.length - 1].id) {
+      this.scene.start(SCENES.Finale, { records: data.records ?? [] });
+      return;
+    }
     this.tweens.timeScale = URLP.speed;
     this.layer = new FocusLayer('bilan');
     services.focus.push(this.layer);

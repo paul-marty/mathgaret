@@ -9,8 +9,8 @@ export type DurationMin = 30 | 45 | 60;
 export interface Settings {
   profile: Profile;
   durationMin: DurationMin;
-  /** « Mes jetons sont prêts » : active seulement des suggestions orales (P17). */
-  tokensReady: boolean;
+  /** Prénom écrit sur le diplôme (facultatif, réglé par les parents). */
+  firstName?: string;
   /** Intensité douce (P15) : moins de secousses, de flashs, alertes atténuées. */
   gentle: boolean;
   /** Sous-titres (pour l'adulte) : désactivés par défaut, l'enfant ne lit pas. */
@@ -44,14 +44,14 @@ export interface SaveData {
   /** Durées observées des problèmes, pour estimer les suivants (P9). */
   times: TimeObservation[];
   chapters: Record<string, ChapterProgress>;
-  /** Explications déjà données (réécoute gratuite, jetons, gestes…). */
+  /** Explications déjà données (réécoute gratuite, gestes…). */
   told: Record<string, boolean>;
 }
 
 export function defaultSave(): SaveData {
   return {
     version: 1,
-    settings: { profile: 'debut', durationMin: 60, tokensReady: false, gentle: false, subtitles: false },
+    settings: { profile: 'debut', durationMin: 60, gentle: false, subtitles: false },
     run: null,
     times: [],
     chapters: {},

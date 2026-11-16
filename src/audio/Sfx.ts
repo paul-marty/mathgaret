@@ -363,6 +363,172 @@ export class Sfx {
     src.stop(t + seconds + 0.05);
   }
 
+  /** Respiration calme dans un casque d'astronaute (boucle d'ambiance, C4.1 et C4.5). */
+  breathing(): LoopHandle {
+    const fromFile = this.file('respiration', { bus: 'ambience', fadeIn: 1, gain: 0.9 });
+    if (fromFile) return fromFile;
+    const ctx = this.ctx;
+    const noise = this.audio.noise('white');
+    if (!ctx || !noise || !this.audio.buses) return NOOP;
+    const t = ctx.currentTime;
+    const src = ctx.createBufferSource();
+    src.buffer = noise;
+    src.loop = true;
+    const bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.frequency.value = 700;
+    bp.Q.value = 0.7;
+    // Souffle lent : le volume monte et descend toutes les quatre secondes environ.
+    const g = ctx.createGain();
+    g.gain.value = 0.03 * this.level;
+    const lfo = ctx.createOscillator();
+    lfo.frequency.value = 0.24;
+    const depth = ctx.createGain();
+    depth.gain.value = 0.03 * this.level;
+    lfo.connect(depth).connect(g.gain);
+    const out = ctx.createGain();
+    out.gain.setValueAtTime(0, t);
+    out.gain.linearRampToValueAtTime(1, t + 1);
+    src.connect(bp).connect(g).connect(out).connect(this.audio.buses.ambience);
+    src.start(t);
+    lfo.start(t);
+    let stopped = false;
+    return {
+      stop: () => {
+        if (stopped) return;
+        stopped = true;
+        const now = ctx.currentTime;
+        out.gain.setTargetAtTime(0, now, 0.3);
+        src.stop(now + 1.5);
+        lfo.stop(now + 1.5);
+      },
+    };
+  }
+
+  // -------------------------------------------------------------------------
+  // Chapitre 5 : le retour
+  // -------------------------------------------------------------------------
+
+  /** Le haut d'Eagle décolle de la Lune : un souffle de moteur bref (C5.1). */
+  liftoff(): void {
+    if (this.file('envol')) return;
+    this.noiseOnce('brown', 'lowpass', 500, 0.28, 2.4, 0.2);
+  }
+
+  /** « Clac ! » : les deux vaisseaux s'amarrent (C5.2). */
+  dock(): void {
+    if (this.file('clac')) return;
+    this.tone(140, 0.25, 0.22, 'square');
+    this.tone(90, 0.4, 0.18, 'sine', 0.02);
+    this.noiseOnce('white', 'bandpass', 2500, 0.12, 0.08);
+  }
+
+  /** La capsule traverse l'atmosphère : souffle de feu grave, en boucle (C5.4). */
+  reentry(): LoopHandle {
+    return this.file('rentree', { bus: 'ambience', fadeIn: 1.5, gain: 0.9 }) ?? this.noiseLoop('brown', 'lowpass', 380, 0.22, 0.4);
+  }
+
+  /** Trois parachutes s'ouvrent (C5.4). */
+  chutes(): void {
+    if (this.file('parachutes')) return;
+    this.noiseOnce('white', 'bandpass', 900, 0.2, 0.25);
+    this.noiseOnce('white', 'lowpass', 500, 0.12, 1.6, 0.2);
+  }
+
+  /** « Plouf ! » : la capsule touche l'océan (C5.4). */
+  splash(): void {
+    if (this.file('plouf')) return;
+    const ctx = this.ctx;
+    if (!ctx || !this.audio.buses) return;
+    const t = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(420, t);
+    osc.frequency.exponentialRampToValueAtTime(70, t + 0.35);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.3 * this.level, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.45);
+    osc.connect(g).connect(this.audio.buses.sfx);
+    osc.start(t);
+    osc.stop(t + 0.5);
+    this.noiseOnce('white', 'lowpass', 3000, 0.12, 1.2, 0.05);
+  }
+
+  /** L'océan calme, en boucle (C5.4). */
+  waves(): LoopHandle {
+    return this.file('vagues', { bus: 'ambience', fadeIn: 1, gain: 0.8 }) ?? this.noiseLoop('brown', 'lowpass', 900, 0.06, 0.15);
+  }
+
+  /** Un hélicoptère au loin, en boucle (C5.4). */
+  helicopter(): LoopHandle {
+    return this.file('helicoptere', { bus: 'ambience', fadeIn: 1.5, gain: 0.7 }) ?? this.noiseLoop('brown', 'lowpass', 300, 0.08, 6);
+  }
+
+  /** Bruit filtré joué une fois (sons provisoires). */
+  private noiseOnce(type: 'white' | 'brown', filter: BiquadFilterType, freq: number, level: number, seconds: number, delay = 0): void {
+    const ctx = this.ctx;
+    const noise = this.audio.noise(type);
+    if (!ctx || !noise || !this.audio.buses) return;
+    const t = ctx.currentTime + delay;
+    const src = ctx.createBufferSource();
+    src.buffer = noise;
+    src.loop = true;
+    const f = ctx.createBiquadFilter();
+    f.type = filter;
+    f.frequency.value = freq;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(level * this.level, t + Math.min(0.08, seconds / 3));
+    g.gain.exponentialRampToValueAtTime(0.0001, t + seconds);
+    src.connect(f).connect(g).connect(this.audio.buses.sfx);
+    src.start(t);
+    src.stop(t + seconds + 0.05);
+  }
+
+  /** Bruit filtré en boucle, le volume ondulant à `lfoHz` (ambiances provisoires). */
+  private noiseLoop(type: 'white' | 'brown', filter: BiquadFilterType, freq: number, level: number, lfoHz: number): LoopHandle {
+    const ctx = this.ctx;
+    const noise = this.audio.noise(type);
+    if (!ctx || !noise || !this.audio.buses) return NOOP;
+    const t = ctx.currentTime;
+    const src = ctx.createBufferSource();
+    src.buffer = noise;
+    src.loop = true;
+    const f = ctx.createBiquadFilter();
+    f.type = filter;
+    f.frequency.value = freq;
+    const g = ctx.createGain();
+    g.gain.value = level * this.level;
+    const lfo = ctx.createOscillator();
+    lfo.frequency.value = lfoHz;
+    const depth = ctx.createGain();
+    depth.gain.value = level * 0.4 * this.level;
+    lfo.connect(depth).connect(g.gain);
+    const out = ctx.createGain();
+    out.gain.setValueAtTime(0, t);
+    out.gain.linearRampToValueAtTime(1, t + 1);
+    src.connect(f).connect(g).connect(out).connect(this.audio.buses.ambience);
+    src.start(t);
+    lfo.start(t);
+    let stopped = false;
+    return {
+      stop: () => {
+        if (stopped) return;
+        stopped = true;
+        const now = ctx.currentTime;
+        out.gain.setTargetAtTime(0, now, 0.3);
+        src.stop(now + 1.5);
+        lfo.stop(now + 1.5);
+      },
+    };
+  }
+
+  /** Le laboratoire applaudit. */
+  applause(): void {
+    if (this.file('applaudissements')) return;
+    for (let i = 0; i < 40; i++) this.noiseBurst(0.05, 1500 + Math.random() * 2500, 0.05 + Math.random() * 0.04, Math.random() * 2.6);
+  }
+
   /** Entrée dans un souvenir : quelques notes de harpe qui montent. */
   memory(): void {
     if (this.file('souvenir')) return;
@@ -386,11 +552,11 @@ export class Sfx {
     osc.stop(t + duration + 0.02);
   }
 
-  private noiseBurst(duration: number, cutoff: number, level: number): void {
+  private noiseBurst(duration: number, cutoff: number, level: number, delay = 0): void {
     const ctx = this.ctx;
     const noise = this.audio.noise('white');
     if (!ctx || !noise || !this.audio.buses) return;
-    const t = ctx.currentTime;
+    const t = ctx.currentTime + delay;
     const src = ctx.createBufferSource();
     src.buffer = noise;
     const hp = ctx.createBiquadFilter();

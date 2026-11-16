@@ -54,6 +54,10 @@ ${Object.entries(SOURCE)
   .map(([k, v]) => `| ${k === 'provisoire' ? '**provisoire**' : k} | ${v} |`)
   .join('\n')}
 
+## Variantes
+
+Les répliques qui reviennent à chaque exercice (félicitations, transitions, erreurs, aides, bilans) ont plusieurs façons d'être dites. La première fois, le jeu dit la réplique de base ; ensuite il tire une variante au hasard, jamais la même deux fois de suite. Les variantes sont marquées « variante de … ».
+
 ## Variables
 
 Certaines répliques contiennent un nombre qui change selon le niveau et la variante. Elles sont écrites avec des accolades : \`{total}\`. Voir la question 1 de \`docs/questions-scenaristes.md\` pour la manière d'enregistrer ces répliques.
@@ -78,7 +82,8 @@ for (const [scene, list] of byScene) {
   for (const id of list) {
     const l = lines[id];
     const src = l.source === 'provisoire' ? '**provisoire**' : l.source;
-    md += `| \`${id}\` | ${speakers[l.speaker]?.name ?? l.speaker} | ${cell(l.text)} | ${src} |\n`;
+    const variante = l.variante_de ? ` (variante de \`${l.variante_de}\`, tirée au hasard)` : '';
+    md += `| \`${id}\` | ${speakers[l.speaker]?.name ?? l.speaker} | ${cell(l.text)} | ${src}${variante} |\n`;
   }
 }
 

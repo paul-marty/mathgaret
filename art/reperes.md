@@ -18,6 +18,17 @@ Mesures sur les PNG finaux après mise au format. Les coordonnées vont de 0 à 
 
 Les écarts supérieurs à 0,03 ont fait l’objet d’une nouvelle génération. Les valeurs restantes servent au repositionnement des éléments dessinés par le jeu. Le PNG `saturn_v` mesure 1 732 px de haut après détourage. Cette hauteur provient du rendu source sans agrandissement d’objet.
 
+## Reporté dans le jeu (15/11)
+
+| Image | Constante | Valeur retenue |
+|---|---|---|
+| `armoire_bandes` | bobines dans `src/chapters/c1.ts` | y 0,27 et 0,61 ; diamètre 0,49 |
+| `ecran_simulation`, `compartiment`, `pupitre_simulateur`, `balise` | `ZONES` (`src/view/placeholders-c2.ts`) | les mesures ci-dessus |
+| `kennedy_aube` | `PAD` (`src/view/placeholders-c3.ts`) | axe de la fusée x 0,835 (contre les bras de la tour), pied y 0,855, hauteur 0,50 |
+| `carte_usa` | `MAP_PINS` | les mesures ci-dessus |
+| `lune_surface`, `lune_sol` | `LANDING`, `GROUND` | inchangés |
+| `echelle_eagle` | `LADDER` (`src/view/placeholders-c4.ts`) | x 0,36 ; haut 0,23 ; bas 0,70 ; sol 0,95 (les pieds de l'astronaute sur la semelle) |
+
 ## Chapitre 5 — Le grand retour sur Terre (lot 6)
 
 | Image | Repère mesuré sur le PNG final |

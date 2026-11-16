@@ -16,7 +16,7 @@ import { FocusManager } from './view/focus';
 export interface OverlayApi {
   setHud(mode: 'hidden' | 'story' | 'challenge'): void;
   setBusy(on: boolean): void;
-  pulse(name: 'reecouter' | 'aide' | 'jetons' | null): void;
+  pulse(name: 'reecouter' | 'aide' | null): void;
   /** Boutons d'aide affichés (tests). */
   visibleHud(): string[];
 }
@@ -50,5 +50,8 @@ export const services = {
   /** Données exposées aux tests (?debug). */
   debug: {} as Record<string, unknown>,
 };
+
+// Variantes des répliques : leur propre flux, reproductible avec la graine des tests, sans décaler celui des problèmes.
+services.voice.random = makeRng(((URLP.seed ?? Date.now()) ^ 0x5eed) >>> 0);
 
 export type Services = typeof services;

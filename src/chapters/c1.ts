@@ -41,10 +41,10 @@ function lab(s: StoryScene, opts: { asleep?: boolean } = {}): Lab {
   if (existing) return existing;
   void s.setBg('labo');
   const armoire = s.prop('armoire_bandes', 1215, 520, 220, 380, 9);
-  // Bobines posées sur les emplacements prévus par le prompt de l'armoire (à ajuster si l'image livrée diffère).
-  const reels = [0.23, 0.6].map((ry) => {
+  // Bobines posées dans les deux cavités de l'armoire (mesurées sur l'image livrée, art/reperes.md).
+  const reels = [0.27, 0.61].map((ry) => {
     const r = s.add.image(armoire.x, armoire.y - armoire.displayHeight / 2 + armoire.displayHeight * ry, 'bobine').setDepth(10);
-    return fit(r, armoire.displayWidth * 0.55, armoire.displayWidth * 0.55);
+    return fit(r, armoire.displayWidth * 0.49, armoire.displayWidth * 0.49);
   });
   const maquette = s.prop('maquette_saturn', 960, 590, 130, 430, 9);
   const poste = s.prop('poste_travail', 600, 700, 380, 320, 11);

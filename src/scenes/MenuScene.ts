@@ -1,6 +1,7 @@
 import * as Phaser from 'phaser';
 import { SCRIPTS } from '../chapters';
 import { CHAPTERS } from '../chapters/plan';
+import { NOTE_PARENTS } from '../content/note-parents';
 import { C, SCENES, textStyle, URLP } from '../config';
 import type { DurationMin, RunState } from '../core/save';
 import type { Profile } from '../math/families';
@@ -11,22 +12,25 @@ import { Button } from '../view/Button';
 import { FocusLayer } from '../view/focus';
 import { star } from '../view/icons';
 
-type Screen = 'main' | 'config' | 'replay';
+type Screen = 'main' | 'config' | 'replay' | 'parents' | 'chapitre';
 
 /**
  * Accueil (P2) : Nouvelle mission, Continuer, Rejouer, avec pictogrammes et lecture vocale.
- * La configuration (niveau, durée, jetons, intensité) précède une nouvelle mission (section 4.1).
+ * La configuration (niveau, durée, intensité) précède une nouvelle mission (section 4.1).
  */
 export class MenuScene extends Phaser.Scene {
   private layer = new FocusLayer('menu');
   private screen: Screen = 'main';
+  private notePage = 0;
   private items: Phaser.GameObjects.GameObject[] = [];
+  /** Chapitre de départ d'une nouvelle mission : le premier, sauf par l'accès caché de l'écran de lancement. */
+  private startChapter = 'c1';
 
   constructor() {
     super(SCENES.Menu);
   }
 
-  create(): void {
+  create(data: { screen?: Screen } = {}): void {
     this.tweens.timeScale = URLP.speed;
     this.layer = new FocusLayer('menu');
     services.focus.push(this.layer);
@@ -41,7 +45,7 @@ export class MenuScene extends Phaser.Scene {
       offBack();
       services.focus.pop(this.layer);
     });
-    this.show('main');
+    this.show(data.screen ?? 'main');
   }
 
   private clear(): void {
@@ -68,6 +72,8 @@ export class MenuScene extends Phaser.Scene {
     this.clear();
     if (screen === 'main') this.showMain();
     else if (screen === 'config') this.showConfig();
+    else if (screen === 'parents') this.showParents();
+    else if (screen === 'chapitre') this.showStartChapter();
     else this.showReplay();
     services.focus.ensureFocus(this.layer);
   }
@@ -75,18 +81,23 @@ export class MenuScene extends Phaser.Scene {
   private showMain(): void {
     const run = services.save.data.run;
     const canContinue = Boolean(run && SCRIPTS[run.chapterId]);
+    this.startChapter = 'c1';
     const canReplay = CHAPTERS.some((c) => services.save.data.chapters[c.id]?.missionStar);
     const nouvelle = this.button({ x: 960, y: 470, w: 760, h: 190, icon: 'rocket', iconSize: 140, text: 'Nouvelle mission', textSize: 56, fill: C.mustard, label: 'menu_nouvelle', onPress: () => this.show('config') });
     const cont = this.button({ x: 960, y: 690, w: 760, h: 160, icon: 'play', iconSize: 100, text: 'Continuer', textSize: 52, label: 'menu_continuer', onPress: () => this.continueRun() });
     cont.setEnabled(canContinue);
     const replay = this.button({ x: 960, y: 880, w: 760, h: 160, icon: 'replay', iconSize: 100, text: 'Rejouer un chapitre', textSize: 52, label: 'menu_rejouer', onPress: () => this.show('replay') });
     replay.setEnabled(canReplay);
+    // Pour les parents : la note historique et le prénom du diplôme, à l'écart du parcours de l'enfant.
+    this.button({ x: 1700, y: 1010, w: 380, h: 100, icon: 'helper', iconSize: 60, text: 'Pour les parents', textSize: 30, label: 'menu_parents', onPress: () => this.show('parents') });
     services.focus.focus(canContinue ? cont : nouvelle, { silent: true });
   }
 
   /** Réglages de la mission : pensés pour l'adulte, mais lus à voix haute si l'enfant les parcourt. */
   private showConfig(): void {
     const s = services.save.data.settings;
+    const start = CHAPTERS.find((c) => c.id === this.startChapter);
+    if (start && start.number > 1) this.text(960, 196, `Départ : chapitre ${start.number}, « ${start.title} »`, 32).setColor('#f2c14e');
     const rowLabel = (y: number, label: string) => {
       const t = this.add.text(250, y, label, textStyle(40)).setOrigin(0, 0.5);
       this.items.push(t);
@@ -123,17 +134,17 @@ export class MenuScene extends Phaser.Scene {
     for (const { m, b } of durButtons) b.setSelected(m === s.durationMin);
 
     rowLabel(680, 'Options');
-    const toggle = (x: number, icon: 'token' | 'feather' | 'subtitles', text: string, key: 'tokensReady' | 'gentle' | 'subtitles', lines: [string, string]) => {
+    const toggle = (x: number, icon: 'feather' | 'subtitles', text: string, key: 'gentle' | 'subtitles', lines: [string, string]) => {
       const b = this.button({
         x,
         y: 680,
         w: 330,
         h: 140,
         icon,
-        iconSize: 80,
+        iconSize: 60,
         iconColor: icon === 'feather' ? C.sky : C.ink,
         text,
-        textSize: 32,
+        textSize: 28,
         label: services.save.data.settings[key] ? lines[0] : lines[1],
         onPress: () => {
           services.save.update((d) => (d.settings[key] = !d.settings[key]));
@@ -147,13 +158,39 @@ export class MenuScene extends Phaser.Scene {
       });
       b.setSelected(services.save.data.settings[key]);
     };
-    toggle(720, 'token', 'Jetons prêts', 'tokensReady', ['cfg_jetons_oui', 'cfg_jetons_non']);
-    toggle(1080, 'feather', 'Ambiance douce', 'gentle', ['cfg_doux_oui', 'cfg_doux_non']);
-    toggle(1440, 'subtitles', 'Sous-titres', 'subtitles', ['cfg_st_oui', 'cfg_st_non']);
+    toggle(720, 'feather', 'Ambiance douce', 'gentle', ['cfg_doux_oui', 'cfg_doux_non']);
+    toggle(1080, 'subtitles', 'Sous-titres', 'subtitles', ['cfg_st_oui', 'cfg_st_non']);
 
     this.button({ x: 640, y: 900, w: 300, h: 150, icon: 'home', iconSize: 90, text: 'Retour', textSize: 40, label: 'menu_retour', onPress: () => this.show('main') });
     const go = this.button({ x: 1200, y: 900, w: 560, h: 170, icon: 'play', iconSize: 110, iconColor: C.white, text: 'C’est parti !', textSize: 52, fill: C.green, label: 'cfg_go', onPress: () => this.newMission() });
     services.focus.focus(go, { silent: true });
+  }
+
+  /** Accès caché (code de l'écran de lancement) : commencer une nouvelle mission à n'importe quel chapitre. */
+  private showStartChapter(): void {
+    this.text(960, 250, 'Commencer au chapitre…', 56);
+    const buttons = CHAPTERS.map((ch, i) => {
+      const x = 360 + i * 300;
+      const b = this.button({
+        x,
+        y: 540,
+        w: 260,
+        h: 300,
+        text: String(ch.number),
+        textSize: 120,
+        label: undefined,
+        onPress: () => {
+          this.startChapter = ch.id;
+          this.show('config');
+        },
+      });
+      b.setEnabled(Boolean(SCRIPTS[ch.id]));
+      const t = this.add.text(x, 715, ch.title, textStyle(26, { align: 'center', wordWrap: { width: 260 } })).setOrigin(0.5, 0);
+      this.items.push(t);
+      return b;
+    });
+    this.button({ x: 960, y: 960, w: 300, h: 130, icon: 'home', iconSize: 80, text: 'Retour', textSize: 40, label: 'menu_retour', onPress: () => this.show('main') });
+    services.focus.focus(buttons[0], { silent: true });
   }
 
   private showReplay(): void {
@@ -189,6 +226,53 @@ export class MenuScene extends Phaser.Scene {
     this.button({ x: 960, y: 960, w: 300, h: 130, icon: 'home', iconSize: 80, text: 'Retour', textSize: 40, label: 'menu_retour', onPress: () => this.show('main') });
   }
 
+  /** Note aux parents, page par page, et prénom écrit sur le diplôme. */
+  private showParents(): void {
+    const page = NOTE_PARENTS[this.notePage];
+    const panel = this.add.graphics();
+    panel.fillStyle(C.nightDeep, 0.85);
+    panel.fillRoundedRect(150, 220, 1620, 640, 30);
+    this.items.push(panel);
+    this.text(960, 270, page.title, 46).setColor('#f2c14e');
+    const body = this.add.text(200, 330, page.paragraphs.join('\n\n'), textStyle(29, { wordWrap: { width: 1520 }, lineSpacing: 6 })).setOrigin(0, 0);
+    this.items.push(body);
+    this.text(960, 830, `${this.notePage + 1} / ${NOTE_PARENTS.length}`, 28);
+
+    const go = (d: number) => {
+      this.notePage = Math.max(0, Math.min(NOTE_PARENTS.length - 1, this.notePage + d));
+      this.show('parents');
+    };
+    const prev = this.button({ x: 360, y: 960, w: 300, h: 120, icon: 'up', iconSize: 60, text: 'Précédente', textSize: 32, label: 'parents_precedente', onPress: () => go(-1) });
+    prev.setEnabled(this.notePage > 0);
+    const next = this.button({ x: 700, y: 960, w: 300, h: 120, icon: 'down', iconSize: 60, text: 'Suivante', textSize: 32, label: 'parents_suivante', onPress: () => go(1) });
+    next.setEnabled(this.notePage < NOTE_PARENTS.length - 1);
+    const name = services.save.data.settings.firstName?.trim();
+    this.button({
+      x: 1150,
+      y: 960,
+      w: 480,
+      h: 120,
+      icon: 'star',
+      iconSize: 60,
+      text: name ? `Diplôme : ${name}` : 'Prénom pour le diplôme',
+      textSize: 30,
+      label: 'cfg_prenom',
+      onPress: () => this.askFirstName(),
+    });
+    this.button({ x: 1600, y: 960, w: 280, h: 120, icon: 'home', iconSize: 70, text: 'Retour', textSize: 36, label: 'menu_retour', onPress: () => this.show('main') });
+    services.focus.focus(this.notePage < NOTE_PARENTS.length - 1 ? next : prev, { silent: true });
+  }
+
+  /** Le prénom écrit sur le diplôme (facultatif) : la boîte de saisie du navigateur, avec le clavier de l'appareil. */
+  private askFirstName(): void {
+    const current = services.save.data.settings.firstName ?? '';
+    const answer = window.prompt('Prénom écrit sur le diplôme (laisser vide pour une ligne à remplir à la main) :', current);
+    if (answer === null) return;
+    const firstName = answer.trim().slice(0, 30);
+    services.save.update((d) => (d.settings.firstName = firstName || undefined));
+    this.show('parents');
+  }
+
   private startRun(run: RunState, resumed = false): void {
     services.save.update((d) => (d.run = run));
     this.goStory({ chapterId: run.chapterId, sceneIndex: run.sceneIndex, resumed });
@@ -210,7 +294,7 @@ export class MenuScene extends Phaser.Scene {
       durationMin: s.durationMin,
       targetMs: s.durationMin * 60_000,
       activeMs: 0,
-      chapterId: 'c1',
+      chapterId: this.startChapter,
       sceneIndex: 0,
       records: [],
       challengeDone: {},

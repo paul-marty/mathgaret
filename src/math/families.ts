@@ -20,6 +20,8 @@ export interface Family<P, A> {
   answer(p: P): A;
   check(p: P, answer: A): boolean;
   key(p: P): string;
+  /** Une réponse fausse plausible (tests et console) ; par défaut, une de plus ou une de moins. */
+  wrong?(p: P): A;
 }
 
 /** Tire jusqu'à obtenir une variante inédite (ou renonce après quelques essais). */
@@ -233,6 +235,111 @@ export const remove = makeRemove(
   { debut: { total: 5, minus: 2 }, milieu: { total: 8, minus: 3 }, fin: { total: 30, minus: 12, then: 8 } },
   { twoSteps: true, finMax: 40 },
 );
+
+// ---------------------------------------------------------------------------
+// C3.2 — Les dernières vérifications : un système à la fois, chacun avec son objet
+// (« il y a `total` contrôles, `deja` sont vérifiés, combien en reste-t-il ? »).
+// ---------------------------------------------------------------------------
+
+export type SystemKind = 'communications' | 'alimentation' | 'navigation' | 'guidage';
+/** Les instruments de navigation d'abord : la consigne reprise du document (« douze instruments… ») les concerne. */
+export const SYSTEMS_PLAN: SystemKind[] = ['navigation', 'communications', 'alimentation', 'guidage'];
+
+export interface SystemParams {
+  kind: SystemKind;
+  total: number;
+  deja: number;
+}
+
+/** Plus grand nombre de contrôles d'un système : 10, 20, 40. */
+export const SYSTEM_MAX: Record<Profile, number> = { debut: 10, milieu: 20, fin: 40 };
+
+export const systems: Family<SystemParams, number> = {
+  id: 'systemes',
+  key: (p) => `${p.total}-${p.deja}`,
+  answer: (p) => p.total - p.deja,
+  check: (p, a) => a === p.total - p.deja,
+  generate(profile, ctx) {
+    const { rng } = ctx;
+    const kind = SYSTEMS_PLAN[ctx.index % SYSTEMS_PLAN.length];
+    // Exemples du document : 6 − 2 (début), 12 − 7 (milieu), 40 − 25 (fin de CP).
+    const firsts: Record<Profile, { total: number; deja: number }> = {
+      debut: { total: 6, deja: 2 },
+      milieu: { total: 12, deja: 7 },
+      fin: { total: 40, deja: 25 },
+    };
+    if (ctx.index === 0 && !ctx.used.has(systems.key({ kind, ...firsts[profile] }))) return { kind, ...firsts[profile] };
+    const p = fresh(ctx, systems.key, () => {
+      // « {deja} sont vérifiés » : au moins deux ; au moins deux contrôles restent.
+      switch (profile) {
+        case 'debut': {
+          const total = randInt(rng, 4, ctx.easier ? 6 : 10);
+          return { kind, total, deja: randInt(rng, 2, total - 2) };
+        }
+        case 'milieu': {
+          const total = randInt(rng, ctx.easier ? 8 : 10, ctx.easier ? 12 : 20);
+          const rest = randInt(rng, 2, Math.min(9, total - 2));
+          return { kind, total, deja: total - rest };
+        }
+        case 'fin': {
+          // Dizaines entières d'abord (et après une erreur), puis dizaines et unités.
+          if (ctx.easier || ctx.index < 2) {
+            const total = 10 * randInt(rng, 2, 4);
+            return { kind, total, deja: 10 * randInt(rng, 1, total / 10 - 1) };
+          }
+          const total = 10 * randInt(rng, 3, 4);
+          return { kind, total, deja: randInt(rng, 11, total - 5) };
+        }
+      }
+    });
+    return { ...p, kind };
+  },
+};
+
+// ---------------------------------------------------------------------------
+// C3.3 — Le signal mystérieux : la réserve d'énergie après un test (retirer), à choisir
+// parmi trois batteries (« choisir un résultat cohérent à partir de quantités visibles »).
+// En fin de CP, deux retraits successifs : 50, puis 20 et 5 utilisés.
+// ---------------------------------------------------------------------------
+
+export interface SignalParams extends RemoveParams {
+  /** Niveaux des trois batteries proposées, dans l'ordre d'affichage. */
+  options: number[];
+}
+
+const signalRemove = makeRemove(
+  'signal',
+  { debut: { total: 7, minus: 2 }, milieu: { total: 16, minus: 6 }, fin: { total: 50, minus: 20, then: 5 } },
+  { twoSteps: true, finMax: 50 },
+);
+
+/** Deux batteries plausibles à côté de la bonne : un écart d'une unité (ou d'une dizaine), et une erreur typique. */
+export function signalOptions(total: number, minus: number, rng: Rng): number[] {
+  const answer = total - minus;
+  const near = [answer + 1, answer - 1, ...(total >= 20 ? [answer + 10, answer - 10] : [])];
+  const typical = [total, minus, answer + 2, answer - 2];
+  const ok = (v: number, taken: number[]) => v > 0 && v <= total && !taken.includes(v);
+  const a = shuffle(rng, near).find((v) => ok(v, [answer])) ?? answer + 1;
+  const b = shuffle(rng, typical).find((v) => ok(v, [answer, a])) ?? answer + 2;
+  return shuffle(rng, [answer, a, b]);
+}
+
+export const signal: Family<SignalParams, number> = {
+  id: 'signal',
+  key: (p) => signalRemove.key(p),
+  answer: (p) => p.options.indexOf(p.total - p.minus),
+  check: (p, a) => p.options[a] === p.total - p.minus,
+  generate(profile, ctx) {
+    const p = signalRemove.generate(profile, ctx);
+    return { ...p, options: signalOptions(p.total, p.minus, ctx.rng) };
+  },
+};
+
+/** Deuxième retrait (fin de CP) : il part de la réserve trouvée à la première étape. */
+export function signalFollowUp(p: SignalParams, rng: Rng): SignalParams | null {
+  const next = removeFollowUp(p);
+  return next ? { ...next, options: signalOptions(next.total, next.minus, rng) } : null;
+}
 
 // ---------------------------------------------------------------------------
 // Avancer sur une piste : « la fusée est sur la case `from`, la balise sur la case `to` » (C2.2).
@@ -480,3 +587,330 @@ export const voyage: Family<VoyageParams, number | number[]> = {
     });
   },
 };
+
+// ---------------------------------------------------------------------------
+// C4.1 — La Lune approche : prévoir ce qui restera dans la jauge d'énergie après le prochain contrôle.
+// Exemples du document : 8 − 3 (début), 15 − 5 (milieu), 60 − 20 puis − 10 (fin de CP, deux contrôles).
+// ---------------------------------------------------------------------------
+
+/** Contrôles fictifs de la descente (un pictogramme chacun). */
+export type ControlKind = 'radar' | 'moteur' | 'antenne' | 'cap';
+export const CONTROLS_PLAN: ControlKind[] = ['radar', 'moteur', 'antenne', 'cap'];
+
+/** Graduation de la jauge : 10 au début, 20 au milieu, 60 en fin de CP. */
+export const GAUGE_MAX: Record<Profile, number> = { debut: 10, milieu: 20, fin: 60 };
+
+export interface ApproachParams extends RemoveParams {
+  control: ControlKind;
+}
+
+const approachRemove = makeRemove(
+  'prevoir',
+  { debut: { total: 8, minus: 3 }, milieu: { total: 15, minus: 5 }, fin: { total: 60, minus: 20, then: 10 } },
+  { twoSteps: true, finMax: 60 },
+);
+
+export const approach: Family<ApproachParams, number> = {
+  id: 'prevoir',
+  key: (p) => approachRemove.key(p),
+  answer: (p) => p.total - p.minus,
+  check: (p, a) => a === p.total - p.minus,
+  generate(profile, ctx) {
+    const p = approachRemove.generate(profile, ctx);
+    return { ...p, control: CONTROLS_PLAN[ctx.index % CONTROLS_PLAN.length] };
+  },
+};
+
+/** Deuxième contrôle (fin de CP) : il part de ce qui restait après le premier. */
+export function approachFollowUp(p: ApproachParams): ApproachParams | null {
+  const next = removeFollowUp(p);
+  if (!next) return null;
+  return { ...next, control: CONTROLS_PLAN[(CONTROLS_PLAN.indexOf(p.control) + 1) % CONTROLS_PLAN.length] };
+}
+
+// ---------------------------------------------------------------------------
+// C4.3 — Sauver les tâches essentielles : le plateau de travail de l'ordinateur.
+// Étape « reste » : la tâche indispensable occupe ses places, combien en reste-t-il ?
+// (fin de CP : le guidage, puis le contrôle du vol). Étape « choix » : une tâche secondaire annoncée
+// tient-elle dans les places libres (plateau), ou va-t-elle dans la zone d'attente ?
+// Exemples du document : 5 − 3 (début), 10 − 6 (milieu), 50 − 20 − 15 (fin de CP).
+// ---------------------------------------------------------------------------
+
+export type EssentialTask = 'guidage' | 'controle';
+export type SecondaryTask = 'rapport' | 'affichage';
+export type TaskKind = EssentialTask | SecondaryTask;
+
+/** Réponse de l'étape « choix » : l'option choisie. */
+export const TRAY = 0;
+export const WAITING = 1;
+
+/** Plus grand plateau : 10 places au début, 20 au milieu, 50 en fin de CP. */
+export const TRAY_MAX: Record<Profile, number> = { debut: 10, milieu: 20, fin: 50 };
+
+export interface CapacityParams {
+  stage: 'reste' | 'choix';
+  /** Places du plateau (unités de travail que l'ordinateur peut effectuer). */
+  cap: number;
+  /** Places déjà occupées par les tâches indispensables avant cette étape. */
+  busy: number;
+  /** La tâche de cette étape et ses unités. */
+  task: TaskKind;
+  units: number;
+  /** Fin de CP : la deuxième tâche indispensable. */
+  then?: { task: EssentialTask; units: number };
+  /** La tâche secondaire annoncée à la dernière étape. */
+  secondary: { task: SecondaryTask; units: number };
+}
+
+/** Places libres avant l'étape. */
+export const freeBefore = (p: CapacityParams): number => p.cap - p.busy;
+
+export const capacity: Family<CapacityParams, number> = {
+  id: 'capacite',
+  key: (p) => `${p.cap}-${p.units}-${p.then?.units ?? 0}-${p.secondary.units}`,
+  answer: (p) => (p.stage === 'reste' ? freeBefore(p) - p.units : p.units <= freeBefore(p) ? TRAY : WAITING),
+  check: (p, a) => a === capacity.answer(p),
+  wrong: (p) => {
+    const right = capacity.answer(p);
+    return p.stage === 'choix' ? 1 - right : right <= 1 ? right + 1 : right - 1;
+  },
+  generate(profile, ctx) {
+    const { rng } = ctx;
+    const firsts: Record<Profile, CapacityParams> = {
+      debut: { stage: 'reste', cap: 5, busy: 0, task: 'guidage', units: 3, secondary: { task: 'rapport', units: 3 } },
+      milieu: { stage: 'reste', cap: 10, busy: 0, task: 'guidage', units: 6, secondary: { task: 'rapport', units: 5 } },
+      fin: {
+        stage: 'reste',
+        cap: 50,
+        busy: 0,
+        task: 'guidage',
+        units: 20,
+        then: { task: 'controle', units: 15 },
+        secondary: { task: 'rapport', units: 20 },
+      },
+    };
+    if (ctx.index === 0 && !ctx.used.has(capacity.key(firsts[profile]))) return firsts[profile];
+    const task: EssentialTask = ctx.index % 2 === 0 ? 'guidage' : 'controle';
+    const secondaryTask: SecondaryTask = ctx.index % 2 === 0 ? 'rapport' : 'affichage';
+    // La deuxième fois, la tâche secondaire tient dans le plateau ; ensuite, au hasard.
+    const wantFits = ctx.index === 1 ? true : ctx.index === 0 ? false : randInt(rng, 0, 1) === 0;
+    /** Unités de la tâche secondaire : au moins deux, juste autour des places libres (vraie comparaison). */
+    const secondaryUnits = (rest: number, spread: number): number =>
+      wantFits && rest >= 2 ? randInt(rng, Math.max(2, rest - spread), rest) : rest + randInt(rng, 1, spread);
+    return fresh(ctx, capacity.key, (): CapacityParams => {
+      switch (profile) {
+        case 'debut': {
+          // Au moins deux places occupées et deux places libres (« une unité » n'est jamais demandée).
+          const cap = randInt(rng, 4, ctx.easier ? 6 : 10);
+          const units = randInt(rng, 2, cap - 2);
+          const rest = cap - units;
+          return { stage: 'reste', cap, busy: 0, task, units, secondary: { task: secondaryTask, units: secondaryUnits(rest, 2) } };
+        }
+        case 'milieu': {
+          const cap = randInt(rng, ctx.easier ? 8 : 10, ctx.easier ? 12 : 20);
+          const rest = randInt(rng, 2, Math.min(9, cap - 2));
+          return { stage: 'reste', cap, busy: 0, task, units: cap - rest, secondary: { task: secondaryTask, units: secondaryUnits(rest, 3) } };
+        }
+        case 'fin': {
+          // Dizaines entières et moitiés de dizaine d'abord, puis dizaines et unités. Après une erreur : une seule tâche indispensable.
+          const tensOnly = ctx.easier || ctx.index < 2;
+          const cap = 10 * randInt(rng, tensOnly ? 3 : 4, 5);
+          const guidage = tensOnly ? 10 * randInt(rng, 1, cap / 10 - 2) : randInt(rng, 11, cap - 20);
+          const rest1 = cap - guidage;
+          if (ctx.easier) {
+            return { stage: 'reste', cap, busy: 0, task: 'guidage', units: guidage, secondary: { task: secondaryTask, units: secondaryUnits(rest1, 10) } };
+          }
+          const controle = tensOnly ? 5 * randInt(rng, 1, (rest1 - 5) / 5) : randInt(rng, 3, Math.min(15, rest1 - 5));
+          return {
+            stage: 'reste',
+            cap,
+            busy: 0,
+            task: 'guidage',
+            units: guidage,
+            then: { task: 'controle', units: controle },
+            secondary: { task: secondaryTask, units: secondaryUnits(rest1 - controle, tensOnly ? 5 : 8) },
+          };
+        }
+      }
+    });
+  },
+};
+
+/** Étape suivante : la deuxième tâche indispensable (fin de CP), puis le choix pour la tâche secondaire. */
+export function capacityFollowUp(p: CapacityParams): CapacityParams | null {
+  if (p.stage === 'choix') return null;
+  const busy = p.busy + p.units;
+  if (p.then) return { ...p, busy, task: p.then.task, units: p.then.units, then: undefined };
+  return { ...p, stage: 'choix', busy, task: p.secondary.task, units: p.secondary.units };
+}
+
+// ---------------------------------------------------------------------------
+// Chapitre 5 — Le grand retour sur Terre
+// ---------------------------------------------------------------------------
+
+/**
+ * C5.1 — Il faut rentrer à la maison : la liste des vérifications du départ d'Eagle (compléter).
+ * Exemples du document : 6 et 4 (début), 14 et 9 (milieu), 40 et 27 (fin de CP).
+ * Au moins deux équipements déjà prêts (« deux sont prêts »).
+ */
+export const DEPART_MAX: Record<Profile, number> = { debut: 10, milieu: 20, fin: 50 };
+
+export const departure: Family<ComplementParams, number> = {
+  id: 'verifier',
+  key: (p) => `${p.total}-${p.deja}`,
+  answer: (p) => p.total - p.deja,
+  check: (p, a) => a === p.total - p.deja,
+  generate(profile, ctx) {
+    const { rng } = ctx;
+    const firsts: Record<Profile, ComplementParams> = {
+      debut: { total: 6, deja: 4 },
+      milieu: { total: 14, deja: 9 },
+      fin: { total: 40, deja: 27 },
+    };
+    if (ctx.index === 0 && !ctx.used.has(departure.key(firsts[profile]))) return firsts[profile];
+    return fresh(ctx, departure.key, () => {
+      switch (profile) {
+        case 'debut': {
+          const total = randInt(rng, 4, ctx.easier ? 6 : 10);
+          return { total, deja: randInt(rng, 2, total - 1) };
+        }
+        case 'milieu': {
+          const total = randInt(rng, ctx.easier ? 8 : 11, ctx.easier ? 12 : 20);
+          const answer = randInt(rng, 2, Math.min(9, total - 2));
+          return { total, deja: total - answer };
+        }
+        case 'fin': {
+          // Pages de dix lignes : dizaines entières après une erreur et au deuxième problème, puis dizaines et unités.
+          if (ctx.easier || ctx.index === 1) {
+            const total = 10 * randInt(rng, 2, 5);
+            return { total, deja: 10 * randInt(rng, 1, total / 10 - 1) };
+          }
+          const total = 10 * randInt(rng, 3, 5);
+          let deja = randInt(rng, 11, total - 4);
+          if (deja % 10 === 0) deja++;
+          return { total, deja };
+        }
+      }
+    });
+  },
+};
+
+/**
+ * C5.2 — Les retrouvailles dans l'espace : une piste de balises sur l'orbite, d'Eagle (`from`)
+ * au repère d'amarrage de Columbia (`to`). Exemples du document : 2 → 5, 7 → 12, 35 → 50.
+ */
+export function orbitWindow(profile: Profile, from: number): { lo: number; hi: number } {
+  if (profile === 'debut') return { lo: 0, hi: 10 };
+  if (profile === 'milieu') return { lo: 0, hi: 20 };
+  const lo = 10 * Math.floor(from / 10);
+  return { lo, hi: lo + 30 };
+}
+
+export const rendezvous: Family<AdvanceParams, number> = {
+  id: 'rejoindre',
+  key: (p) => `${p.from}-${p.to}`,
+  answer: (p) => p.to - p.from,
+  check: (p, a) => a === p.to - p.from,
+  generate(profile, ctx) {
+    const { rng } = ctx;
+    const firsts: Record<Profile, AdvanceParams> = {
+      debut: { from: 2, to: 5 },
+      milieu: { from: 7, to: 12 },
+      fin: { from: 35, to: 50 },
+    };
+    if (ctx.index === 0 && !ctx.used.has(rendezvous.key(firsts[profile]))) return firsts[profile];
+    return fresh(ctx, rendezvous.key, () => {
+      switch (profile) {
+        case 'debut': {
+          const to = randInt(rng, 4, ctx.easier ? 7 : 10);
+          return { from: randInt(rng, 0, to - 2), to };
+        }
+        case 'milieu': {
+          const to = randInt(rng, ctx.easier ? 7 : 10, ctx.easier ? 12 : 20);
+          const jump = randInt(rng, 2, Math.min(ctx.easier ? 6 : 9, to - 1));
+          return { from: to - jump, to };
+        }
+        case 'fin': {
+          // Bonds de dizaines entières après une erreur et au deuxième problème, puis dizaines et unités.
+          if (ctx.easier || ctx.index === 1) {
+            const from = 10 * randInt(rng, 2, 4) + (ctx.easier ? 0 : randInt(rng, 1, 5));
+            return { from, to: from + 10 * randInt(rng, 1, 2) };
+          }
+          const from = randInt(rng, 21, 45);
+          const room = orbitWindow('fin', from).hi - from;
+          return { from, to: from + randInt(rng, 11, Math.min(25, room)) };
+        }
+      }
+    });
+  },
+};
+
+/**
+ * C5.3 — Le grand silence : les morceaux de l'onde radio de la simulation (compléter).
+ * Exemples du document : il en faut 6, il y en a 4 (début) ; 15 et 9 (milieu) ;
+ * fin de CP en deux étapes : 25 puis 15 déjà apportés (combien en tout ?), puis combien pour aller à 50.
+ */
+export interface WaveParams {
+  stage: 'somme' | 'reste';
+  total: number;
+  /** Déjà là (étape « reste »). */
+  deja: number;
+  /** Les deux apports de l'étape « somme » (fin de CP). */
+  a?: number;
+  b?: number;
+}
+
+export const WAVE_MAX: Record<Profile, number> = { debut: 10, milieu: 20, fin: 60 };
+
+export const wave: Family<WaveParams, number> = {
+  id: 'onde',
+  key: (p) => (p.stage === 'somme' ? `${p.total}:${p.a}+${p.b}` : `${p.total}-${p.deja}`),
+  answer: (p) => (p.stage === 'somme' ? p.a! + p.b! : p.total - p.deja),
+  check: (p, a) => a === wave.answer(p),
+  generate(profile, ctx) {
+    const { rng } = ctx;
+    const firsts: Record<Profile, WaveParams> = {
+      debut: { stage: 'reste', total: 6, deja: 4 },
+      milieu: { stage: 'reste', total: 15, deja: 9 },
+      fin: { stage: 'somme', total: 50, deja: 0, a: 25, b: 15 },
+    };
+    if (ctx.index === 0 && !ctx.used.has(wave.key(firsts[profile]))) return firsts[profile];
+    return fresh(ctx, wave.key, () => {
+      switch (profile) {
+        case 'debut': {
+          const total = randInt(rng, 4, ctx.easier ? 6 : 10);
+          return { stage: 'reste', total, deja: randInt(rng, 2, total - 1) };
+        }
+        case 'milieu': {
+          const total = randInt(rng, ctx.easier ? 8 : 11, ctx.easier ? 12 : 20);
+          const answer = randInt(rng, 2, Math.min(9, total - 2));
+          return { stage: 'reste', total, deja: total - answer };
+        }
+        case 'fin': {
+          // Après une erreur : une seule étape, en dizaines entières.
+          if (ctx.easier) {
+            const total = 10 * randInt(rng, 3, 5);
+            return { stage: 'reste', total, deja: 10 * randInt(rng, 1, total / 10 - 1) };
+          }
+          const total = 10 * randInt(rng, 4, 6);
+          if (ctx.index === 1) {
+            const a = 10 * randInt(rng, 1, 2);
+            const b = 10 * randInt(rng, 1, total / 10 - a / 10 - 1);
+            return { stage: 'somme', total, deja: 0, a, b };
+          }
+          // Sans retenue, et au moins deux morceaux à ajouter à la fin.
+          for (;;) {
+            const a = randInt(rng, 12, 35);
+            const b = randInt(rng, 11, 25);
+            if ((a % 10) + (b % 10) <= 9 && a + b <= total - 2 && b <= a) return { stage: 'somme', total, deja: 0, a, b };
+          }
+        }
+      }
+    });
+  },
+};
+
+/** Deuxième étape (fin de CP) : les morceaux apportés sont réunis, combien faut-il en ajouter ? */
+export function waveFollowUp(p: WaveParams): WaveParams | null {
+  return p.stage === 'somme' ? { stage: 'reste', total: p.total, deja: p.a! + p.b! } : null;
+}

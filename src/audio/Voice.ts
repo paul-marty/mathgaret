@@ -1,10 +1,11 @@
 import type { GameClock } from '../core/clock';
 import type { Diag } from '../core/diag';
 import linesData from '../content/lines.json';
+import type { Rng } from '../core/rng';
 import { joinClips } from './assemble';
 import type { AudioEngine } from './AudioEngine';
 import { RadioChain } from './RadioFx';
-import { numberValue, voiceParts } from './segments';
+import { numberValue, sameTextKey, segmentTexts, voiceParts } from './segments';
 
 export interface LineDef {
   speaker: string;
@@ -12,6 +13,8 @@ export interface LineDef {
   /** repris (conversation), propose (document), provisoire (à écrire par les scénaristes). */
   source?: string;
   scene?: string;
+  /** Autre façon de dire la réplique indiquée (variété des répliques qui reviennent souvent). */
+  variante_de?: string;
 }
 
 export interface SpeakerInfo {
@@ -21,7 +24,10 @@ export interface SpeakerInfo {
 }
 
 export interface Spoken {
+  /** Réplique demandée par le jeu (pour une réplique à variantes : la réplique de base). */
   id: string;
+  /** Variante effectivement dite, si ce n'est pas la réplique de base. */
+  variant?: string;
   speaker: string;
   text: string;
   /** line = réplique (jamais coupée par un nom de bouton ou un nombre), number/label = lecture courte. */
@@ -47,6 +53,7 @@ const TTS: Record<string, { pitch: number; rate: number }> = {
   collegue: { pitch: 0.8, rate: 1.08 },
   houston: { pitch: 0.9, rate: 1 },
   lauren: { pitch: 1.6, rate: 1.05 },
+  astronaute: { pitch: 0.85, rate: 0.95 },
 };
 
 interface Playback {
@@ -91,6 +98,8 @@ export class Voice {
   readonly speakers: Record<string, SpeakerInfo> = linesData.speakers;
   /** Clé du manifeste (« id », « id#2 », « id|n=3 », « nombre_7 ») → URL du fichier audio. */
   files: Record<string, string> = {};
+  /** Tirage des variantes (flux à part : il ne décale pas celui des problèmes). */
+  random: Rng = Math.random;
   current: Spoken | null = null;
   ttsEnabled: boolean;
   /** Journal (tests et débogage). */
@@ -102,6 +111,16 @@ export class Voice {
   silent = false;
 
   private playback: Playback | null = null;
+  /** Réplique de base → ses variantes (dans l'ordre de lines.json). */
+  private readonly variants = new Map<string, string[]>();
+  /**
+   * Enregistrements interchangeables : même personnage, même texte, même sorte (réplique entière ou morceau).
+   * « puis appuie sur la grande coche. » n'est enregistré qu'une fois et sert à toutes les répliques qui le disent.
+   */
+  private readonly sameText = new Map<string, string[]>();
+  private readonly textOfKey = new Map<string, string>();
+  /** Dernière façon de dire chaque réplique à variantes (jamais deux fois la même de suite). */
+  private lastVariant = new Map<string, string>();
   private listeners: ((e: 'start' | 'end', s: Spoken) => void)[] = [];
   private frVoice: SpeechSynthesisVoice | null = null;
   private paused = false;
@@ -115,6 +134,16 @@ export class Voice {
     mute: boolean,
   ) {
     this.ttsEnabled = !mute && typeof window !== 'undefined' && 'speechSynthesis' in window;
+    for (const [id, line] of Object.entries(this.lines)) {
+      if (line.variante_de) this.variants.set(line.variante_de, [...(this.variants.get(line.variante_de) ?? []), id]);
+      const recorded = line.text.includes('{')
+        ? segmentTexts(line.text).map((t, i) => [`${id}#${i + 1}`, sameTextKey(line.speaker, 'morceau', t)])
+        : [[id, sameTextKey(line.speaker, 'entiere', line.text)]];
+      for (const [key, same] of recorded) {
+        this.textOfKey.set(key, same);
+        this.sameText.set(same, [...(this.sameText.get(same) ?? []), key]);
+      }
+    }
     if (this.ttsEnabled) {
       const pickVoice = () => {
         const voices = speechSynthesis.getVoices().filter((v) => v.lang.toLowerCase().startsWith('fr'));
@@ -138,12 +167,36 @@ export class Voice {
 
   /** Dit une réplique et se résout quand elle est finie (ou interrompue par `stop`). */
   say(id: string, vars: Vars = {}): Promise<void> {
-    const line = this.lines[id];
-    if (!line) {
+    if (!this.lines[id]) {
       console.warn(`[voix] réplique inconnue : ${id}`);
       return Promise.resolve();
     }
-    return this.speak({ id, speaker: line.speaker, text: this.text(id, vars), kind: 'line' }, this.clipsFor(id, line.text, vars));
+    const chosen = this.chooseVariant(id, vars);
+    const line = this.lines[chosen];
+    const spoken: Spoken = { id, speaker: line.speaker, text: this.text(chosen, vars), kind: 'line' };
+    if (chosen !== id) spoken.variant = chosen;
+    return this.speak(spoken, this.clipsFor(chosen, line.text, vars));
+  }
+
+  /**
+   * Façon de dire une réplique qui revient souvent. La première fois, le texte de base (celui du scénario) ;
+   * ensuite, au hasard, jamais la même deux fois de suite. Quand la réplique de base a son fichier livré,
+   * seules les variantes livrées elles aussi sont tirées : une même voix, jamais un mélange avec la synthèse.
+   */
+  chooseVariant(id: string, vars: Vars = {}): string {
+    const others = this.variants.get(id);
+    if (!others) return id;
+    const last = this.lastVariant.get(id);
+    let chosen = id;
+    if (last !== undefined) {
+      const recorded = (v: string) => Boolean(this.clipsFor(v, this.lines[v].text, vars));
+      const all = [id, ...others];
+      const pool = recorded(id) ? all.filter(recorded) : all;
+      const fresh = pool.length > 1 ? pool.filter((v) => v !== last) : pool;
+      chosen = fresh[Math.floor(this.random() * fresh.length)] ?? id;
+    }
+    this.lastVariant.set(id, chosen);
+    return chosen;
   }
 
   /**
@@ -157,12 +210,20 @@ export class Voice {
       .filter(([, v]) => numberValue(v) !== null)
       .sort(([a], [b]) => (a < b ? -1 : 1));
     const varKey = numeric.length ? `${id}|${numeric.map(([k, v]) => `${k}=${numberValue(v)}`).join('|')}` : id;
-    const whole = this.files[varKey] ?? (text.includes('{') ? undefined : this.files[id]);
+    const whole = this.files[varKey] ?? (text.includes('{') ? undefined : this.fileFor(id));
     if (whole) return [{ url: whole, pauseBefore: 0 }];
     if (!text.includes('{')) return undefined;
-    const parts = voiceParts(id, text, vars);
-    if (!parts || parts.some((p) => !this.files[p.key])) return undefined;
-    return parts.map((p) => ({ url: this.files[p.key], pauseBefore: p.pauseBefore }));
+    const parts = voiceParts(id, text, vars)?.map((p) => ({ url: this.fileFor(p.key), pauseBefore: p.pauseBefore }));
+    if (!parts || parts.some((p) => !p.url)) return undefined;
+    return parts as Clip[];
+  }
+
+  /** Fichier livré pour cette clé, ou celui d'un enregistrement interchangeable (même personnage, même texte). */
+  fileFor(key: string): string | undefined {
+    if (this.files[key]) return this.files[key];
+    const same = this.textOfKey.get(key);
+    const other = same ? this.sameText.get(same)?.find((k) => this.files[k]) : undefined;
+    return other ? this.files[other] : undefined;
   }
 
   /** Lit un nombre (quand l'enfant le choisit ou le touche). Ne coupe jamais une réplique. */

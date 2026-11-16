@@ -9,7 +9,7 @@ import type { AudioEngine } from './AudioEngine';
  * Ambiances (section 9.1) : le laboratoire installe la curiosité, la recherche reste calme,
  * les révélations élargissent la musique.
  */
-export type Mood = 'mystere' | 'leger' | 'calme' | 'ample';
+export type Mood = 'mystere' | 'leger' | 'calme' | 'ample' | 'theme';
 
 interface MoodDef {
   chords: number[][];
@@ -28,6 +28,8 @@ const MOODS: Record<Mood, MoodDef> = {
   calme: { chords: [[60, 64, 67], [57, 60, 64]], bar: 6, level: 0.45, bells: 0, cutoff: 700 },
   // do – sol – la m – fa, plus large et lumineux
   ample: { chords: [[48, 60, 64, 67], [43, 59, 62, 67], [45, 60, 64, 69], [41, 57, 60, 65]], bar: 4, level: 1, bells: 1, cutoff: 2200 },
+  // thème de Margaret, version finale (C5.5, bilan de la mission, générique) : do – fa – sol – do, large et joyeux
+  theme: { chords: [[48, 60, 64, 67, 72], [41, 57, 60, 65, 69], [43, 59, 62, 67, 71], [48, 60, 64, 67, 72]], bar: 3, level: 1, bells: 1, cutoff: 2600 },
 };
 
 const midiToHz = (m: number) => 440 * Math.pow(2, (m - 69) / 12);
