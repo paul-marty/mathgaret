@@ -16,7 +16,7 @@ Le document qui fait foi est `Mathgaret-document-de-reference.md`. Ses propositi
 | Chapitre 5 « Le grand retour sur Terre » (C5.1 à C5.5), 3 niveaux | jouable de bout en bout, avec ses voix, bruitages, la musique finale (lot 6) et ses images |
 | Fin de la mission (C5.6, C5.7) | bilan des cinq chapitres avec une phrase de progrès, diplôme (imprimable sur ordinateur), générique, scène de Mars |
 | Voix | les 713 fichiers des lots 1 à 7 sont livrés (`public/audio/voix/`, état : `npm run audio`) ; une réplique sans fichier passe par la synthèse du navigateur |
-| Images | 74 des 75 images sont livrées (`src/assets/images/`, références et journal de production dans `art/`) ; `terre_proche` (C5.4, ajoutée le 16/11) est commandée ; la photographie d'archive de Margaret (`photos/`) attend la validation de ses droits : elle reste hors du dépôt (`.gitignore`) et, sans elle, le Narrateur parle sur la fête (C5.5) |
+| Images | les 75 images sont livrées (`src/assets/images/`, références et journal de production dans `art/`) ; la photographie d'archive de Margaret (`photos/`) attend la validation de ses droits : elle reste hors du dépôt (`.gitignore`) et, sans elle, le Narrateur parle sur la fête (C5.5) |
 | Musique et bruitages | les 29 bruitages et les 5 musiques sont livrés (`public/audio/sons/`, `musique/`) ; sans fichier, le jeu les synthétise en direct |
 
 ## Jouer
