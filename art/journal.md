@@ -1471,3 +1471,82 @@ Use IMAGE 1 as a STRICT locked geometric composition mask. Paint it as an illust
 ```
 
 La génération 4 emploie aussi un guide géométrique 1672 × 941, disque de centre (1304, 1092) et rayon 659, dessiné sur fond uni. Le guide fixe la composition et les deux PNG du jeu fixent le style.
+
+
+## Objets laissés sur la Lune — chapitre 5, lot 9, 18 novembre 2026
+
+ImageGen intégré à Codex. Références de style : `src/assets/images/objets/capsule.png` et `src/assets/images/objets/terre.png`. Six objets isolés sur fond transparent. Recadrage de la zone utile, réduction aux formats demandés et compression PNG ; boîte, sac et bottes alignés au bas de leur toile.
+
+Vérification : PNG RGBA, coins transparents, poids inférieurs à 500 Kio ; formats 600 × 400 pour la boîte, 500 × 375 pour les bottes et l’appareil, 500 × 500 pour le sac et les outils. Silhouettes examinées à 165 × 125 px et comparées aux objets de référence. Les halos extérieurs de la boîte et du marteau ont fait l’objet d’une correction par génération.
+
+### `boite_cailloux.png`
+
+Prompt initial :
+
+```text
+Illustration 2D douce mid-century de la fin des années 1960 pour Mathgaret, jeu de mathématiques pour enfant de six ans. Même style que les deux références jointes : formes simples et lisibles, contours bruns, palette crème #f6ecd9, gris argenté, bleu-gris, légères textures de grain, éclairage doux en haut à gauche. Objet isolé sur vrai fond transparent. Aucun texte, aucune lettre ou chiffre, aucun logo, aucune marque, aucun drapeau. Éviter les détails fins, silhouette immédiatement reconnaissable en vignette 165 × 125. Les références sont uniquement pour le style.
+
+Format paysage 3:2. Une boîte rectangulaire en aluminium brossé pour rapporter des cailloux de la Lune, vue de trois quarts face : deux fermoirs noirs sur le devant, une poignée sur le dessus, le couvercle légèrement entrouvert laissant dépasser quelques cailloux gris de Lune. Le devant de la boîte reste lisse et uni (le jeu y pose une étiquette). Dessin animé doux. Fond transparent, objet seul. La boîte repose sur une base horizontale. Pas de sol, pas d'ombre extérieure, objet intégralement visible.
+```
+
+Correction du rendu précédent, même objet en référence :
+
+```text
+Edit this exact illustration. Keep the aluminum rock sample box, stones, handle, two black clasps and blank front panel exactly as drawn. Remove ALL brown glow, brown haze, shadow and background outside the object. Make everything outside the precise silhouette of box, lid, handle and stones fully transparent. Also make the open hole inside the handle fully transparent. Keep solid opaque object colors. No drop shadow, no aura, no rim glow. The box is a game sprite, intended for placing on a scale pan. True transparent background. Frame the complete object with a small margin.
+```
+
+### `lune_sac.png`
+
+Prompt initial :
+
+```text
+Illustration 2D douce mid-century de la fin des années 1960 pour Mathgaret, jeu de mathématiques pour enfant de six ans. Même style que les deux références jointes : formes simples et lisibles, contours bruns, palette crème #f6ecd9, gris argenté, bleu-gris, légères textures de grain, éclairage doux en haut à gauche. Objet isolé sur vrai fond transparent. Aucun texte, aucune lettre ou chiffre, aucun logo, aucune marque, aucun drapeau. Éviter les détails fins, silhouette immédiatement reconnaissable en vignette 165 × 125. Les références sont uniquement pour le style.
+
+Format carré. Le grand sac à dos blanc d'un astronaute de la fin des années 1960, seul, sans astronaute, vu de dos : un grand boîtier blanc aux coins arrondis, un petit boîtier argenté sur le dessus, deux sangles grises, un ou deux tuyaux discrets. Dessin animé doux. Fond transparent, objet seul. Posé droit sur sa base, intégralement visible, pas d'ombre extérieure.
+```
+
+### `lune_bottes.png`
+
+Prompt initial :
+
+```text
+Illustration 2D douce mid-century de la fin des années 1960 pour Mathgaret, jeu de mathématiques pour enfant de six ans. Même style que les deux références jointes : formes simples et lisibles, contours bruns, palette crème #f6ecd9, gris argenté, bleu-gris, légères textures de grain, éclairage doux en haut à gauche. Objet isolé sur vrai fond transparent. Aucun texte, aucune lettre ou chiffre, aucun logo, aucune marque, aucun drapeau. Éviter les détails fins, silhouette immédiatement reconnaissable en vignette 165 × 125. Les références sont uniquement pour le style.
+
+Format paysage 4:3. Une paire de grosses bottes de Lune blanches, rembourrées, à semelle épaisse bleu-gris, posées côte à côte, vues de profil, pointes vers la droite. Dessin animé doux. Fond transparent, objet seul. Les deux semelles reposent sur une même ligne horizontale, pas de sol ni ombre extérieure, bottes entièrement visibles.
+```
+
+### `lune_appareil.png`
+
+Prompt initial :
+
+```text
+Illustration 2D douce mid-century de la fin des années 1960 pour Mathgaret, jeu de mathématiques pour enfant de six ans. Même style que les deux références jointes : formes simples et lisibles, contours bruns, palette crème #f6ecd9, gris argenté, bleu-gris, légères textures de grain, éclairage doux en haut à gauche. Objet isolé sur vrai fond transparent. Aucun texte, aucune lettre ou chiffre, aucun logo, aucune marque, aucun drapeau. Éviter les détails fins, silhouette immédiatement reconnaissable en vignette 165 × 125. Les références sont uniquement pour le style.
+
+Format paysage 4:3. Un appareil photo argenté et carré de la fin des années 1960 (moyen format), avec un gros objectif noir tourné vers nous et une petite poignée sur le côté, vu de face légèrement de trois quarts. Aucune marque. Dessin animé doux. Fond transparent, objet seul.
+```
+
+### `lune_pelle.png`
+
+Prompt initial :
+
+```text
+Illustration 2D douce mid-century de la fin des années 1960 pour Mathgaret, jeu de mathématiques pour enfant de six ans. Même style que les deux références jointes : formes simples et lisibles, contours bruns, palette crème #f6ecd9, gris argenté, bleu-gris, légères textures de grain, éclairage doux en haut à gauche. Objet isolé sur vrai fond transparent. Aucun texte, aucune lettre ou chiffre, aucun logo, aucune marque, aucun drapeau. Éviter les détails fins, silhouette immédiatement reconnaissable en vignette 165 × 125. Les références sont uniquement pour le style.
+
+Format carré. Une petite pelle de géologue à long manche en métal gris, tenue en biais (manche en haut à gauche, pelle en bas à droite), la pelle argentée avec un peu de poussière grise de Lune. Dessin animé doux. Fond transparent, objet seul. Objet intégralement visible.
+```
+
+### `lune_marteau.png`
+
+Prompt initial :
+
+```text
+Illustration 2D douce mid-century de la fin des années 1960 pour Mathgaret, jeu de mathématiques pour enfant de six ans. Même style que les deux références jointes : formes simples et lisibles, contours bruns, palette crème #f6ecd9, gris argenté, bleu-gris, légères textures de grain, éclairage doux en haut à gauche. Objet isolé sur vrai fond transparent. Aucun texte, aucune lettre ou chiffre, aucun logo, aucune marque, aucun drapeau. Éviter les détails fins, silhouette immédiatement reconnaissable en vignette 165 × 125. Les références sont uniquement pour le style.
+
+Format carré. Un marteau de géologue en biais (manche en bas à gauche, tête en haut à droite) : manche gris métal, tête métallique gris foncé, une extrémité plate et une extrémité pointue. Dessin animé doux. Fond transparent, objet seul. Objet intégralement visible.
+```
+
+Correction du rendu précédent, même objet en référence :
+
+```text
+Edit this exact game sprite. Keep the geologist hammer, its shape, diagonal placement (handle bottom left, head top right), gray metal, warm brown outlines and subtle painted texture exactly as drawn. Remove ALL glow, haze, shadow and background outside the hammer. Everything outside the precise hammer silhouette must be fully transparent. Solid opaque object colors, only antialiasing at the outline. No drop shadow, aura, glow or background. Entire object visible with small margins. True transparent background.
+```
