@@ -50,7 +50,8 @@ export type Gesture =
   | 'tuto_batterie'
   | 'tuto_jauge'
   | 'tuto_compteur'
-  | 'tuto_plateau';
+  | 'tuto_plateau'
+  | 'tuto_objets';
 
 export type Action = { type: 'validate' | 'reecouter' | 'aide' | 'reorient' };
 

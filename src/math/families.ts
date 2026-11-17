@@ -749,46 +749,124 @@ export function capacityFollowUp(p: CapacityParams): CapacityParams | null {
 // ---------------------------------------------------------------------------
 
 /**
- * C5.1 — Il faut rentrer à la maison : la liste des vérifications du départ d'Eagle (compléter).
- * Exemples du document : 6 et 4 (début), 14 et 9 (milieu), 40 et 27 (fin de CP).
- * Au moins deux équipements déjà prêts (« deux sont prêts »).
+ * C5.1 — Il faut rentrer à la maison : alléger Eagle (décomposer un nombre).
+ * Pour de vrai, Armstrong et Aldrin ont laissé sur la Lune leurs sacs à dos, leurs bottes et des outils,
+ * pour qu'Eagle puisse remporter les cailloux. Dans la simulation, les objets laissés doivent peser
+ * autant que la boîte de cailloux (`target`) : l'enfant les choisit, la balance les pèse.
+ * Deux objets font le poids ensemble (une seule paire, sauf dans l'exemple du début : 3 + 2 ou 4 + 1), et aucun objet
+ * ne pèse à lui seul le poids des cailloux. Choix demandé par le propriétaire le 18/11 (à la place de la liste).
  */
-export const DEPART_MAX: Record<Profile, number> = { debut: 10, milieu: 20, fin: 50 };
+export type LoadKind = 'sac' | 'bottes' | 'appareil' | 'pelle' | 'marteau';
+export const LOAD_KINDS: readonly LoadKind[] = ['sac', 'bottes', 'appareil', 'pelle', 'marteau'];
 
-export const departure: Family<ComplementParams, number> = {
-  id: 'verifier',
-  key: (p) => `${p.total}-${p.deja}`,
-  answer: (p) => p.total - p.deja,
-  check: (p, a) => a === p.total - p.deja,
+export interface LightenParams {
+  /** Poids de la boîte de cailloux, en kilos. */
+  target: number;
+  /** Les objets proposés, dans l'ordre de l'étagère. */
+  items: { kind: LoadKind; w: number }[];
+}
+
+export const LIGHTEN_MAX: Record<Profile, number> = { debut: 9, milieu: 18, fin: 90 };
+
+export const loadSum = (p: LightenParams, chosen: readonly number[]): number => chosen.reduce((s, i) => s + (p.items[i]?.w ?? 0), 0);
+
+/** Deux objets qui font le poids (les plus lourds d'abord) : la solution montrée par l'aide. */
+export function lightenPair(p: LightenParams): [number, number] | null {
+  let best: [number, number] | null = null;
+  for (let i = 0; i < p.items.length; i++)
+    for (let j = i + 1; j < p.items.length; j++)
+      if (p.items[i].w + p.items[j].w === p.target) {
+        const big = Math.max(p.items[i].w, p.items[j].w);
+        if (!best || big > Math.max(p.items[best[0]].w, p.items[best[1]].w)) best = [i, j];
+      }
+  return best;
+}
+
+/**
+ * Les poids des objets : la paire `a + b`, puis des leurres tous différents. Aucun leurre ne vaut `target`
+ * ni ne fait le poids avec un autre objet : l'aide montre la seule paire possible.
+ */
+function loadItems(rng: Rng, n: number, target: number, a: number, distractor: () => number): LightenParams {
+  const ws = [a, target - a];
+  for (let guard = 0; ws.length < n && guard < 500; guard++) {
+    const w = distractor();
+    if (w !== target && w > 0 && !ws.includes(w) && !ws.some((x) => x + w === target)) ws.push(w);
+  }
+  const kinds = shuffle(rng, LOAD_KINDS).slice(0, n);
+  return { target, items: shuffle(rng, ws).map((w, i) => ({ kind: kinds[i], w })) };
+}
+
+export const lighten: Family<LightenParams, number[]> = {
+  id: 'alleger',
+  key: (p) => `${p.target}:${p.items.map((it) => it.w).join(',')}`,
+  answer: (p) => lightenPair(p) ?? [],
+  check: (p, a) => a.length > 0 && new Set(a).size === a.length && a.every((i) => i >= 0 && i < p.items.length) && loadSum(p, a) === p.target,
+  // Un seul objet ne fait jamais le poids : c'est la réponse fausse des tests et de la console.
+  wrong: () => [0],
   generate(profile, ctx) {
     const { rng } = ctx;
-    const firsts: Record<Profile, ComplementParams> = {
-      debut: { total: 6, deja: 4 },
-      milieu: { total: 14, deja: 9 },
-      fin: { total: 40, deja: 27 },
+    const firsts: Record<Profile, LightenParams> = {
+      debut: {
+        target: 5,
+        items: [
+          { kind: 'sac', w: 3 },
+          { kind: 'bottes', w: 2 },
+          { kind: 'appareil', w: 4 },
+          { kind: 'pelle', w: 1 },
+        ],
+      },
+      milieu: {
+        target: 12,
+        items: [
+          { kind: 'sac', w: 7 },
+          { kind: 'bottes', w: 4 },
+          { kind: 'appareil', w: 5 },
+          { kind: 'pelle', w: 9 },
+          { kind: 'marteau', w: 6 },
+        ],
+      },
+      fin: {
+        target: 40,
+        items: [
+          { kind: 'sac', w: 10 },
+          { kind: 'bottes', w: 25 },
+          { kind: 'appareil', w: 30 },
+          { kind: 'pelle', w: 15 },
+          { kind: 'marteau', w: 20 },
+        ],
+      },
     };
-    if (ctx.index === 0 && !ctx.used.has(departure.key(firsts[profile]))) return firsts[profile];
-    return fresh(ctx, departure.key, () => {
+    if (ctx.index === 0 && !ctx.used.has(lighten.key(firsts[profile]))) return firsts[profile];
+    return fresh(ctx, lighten.key, () => {
       switch (profile) {
         case 'debut': {
-          const total = randInt(rng, 4, ctx.easier ? 6 : 10);
-          return { total, deja: randInt(rng, 2, total - 1) };
+          const target = randInt(rng, ctx.easier ? 4 : 5, ctx.easier ? 6 : 9);
+          const a = randInt(rng, 1, target - 1);
+          return loadItems(rng, 4, target, a, () => randInt(rng, 1, 9));
         }
         case 'milieu': {
-          const total = randInt(rng, ctx.easier ? 8 : 11, ctx.easier ? 12 : 20);
-          const answer = randInt(rng, 2, Math.min(9, total - 2));
-          return { total, deja: total - answer };
+          // Après une erreur : sans passer la dizaine ; sinon, la paire passe la dizaine (7 + 5).
+          if (ctx.easier) {
+            const target = randInt(rng, 7, 10);
+            return loadItems(rng, 5, target, randInt(rng, 2, target - 2), () => randInt(rng, 1, 9));
+          }
+          const target = randInt(rng, 11, 17);
+          const a = randInt(rng, target - 9, 9);
+          return loadItems(rng, 5, target, a, () => randInt(rng, 2, 9));
         }
         case 'fin': {
-          // Pages de dix lignes : dizaines entières après une erreur et au deuxième problème, puis dizaines et unités.
+          // Dizaines entières après une erreur et au deuxième problème, puis dizaines et unités sans retenue.
           if (ctx.easier || ctx.index === 1) {
-            const total = 10 * randInt(rng, 2, 5);
-            return { total, deja: 10 * randInt(rng, 1, total / 10 - 1) };
+            const target = 10 * randInt(rng, 4, 9);
+            const a = 10 * randInt(rng, 1, target / 10 - 1);
+            return loadItems(rng, 5, target, a, () => 10 * randInt(rng, 1, 8));
           }
-          const total = 10 * randInt(rng, 3, 5);
-          let deja = randInt(rng, 11, total - 4);
-          if (deja % 10 === 0) deja++;
-          return { total, deja };
+          for (;;) {
+            const a = randInt(rng, 21, 49);
+            const b = randInt(rng, 11, 39);
+            if (a % 10 === 0 || b % 10 === 0 || (a % 10) + (b % 10) > 9 || a + b > 90) continue;
+            return loadItems(rng, 5, a + b, a, () => randInt(rng, 11, 69));
+          }
         }
       }
     });
@@ -796,49 +874,54 @@ export const departure: Family<ComplementParams, number> = {
 };
 
 /**
- * C5.2 — Les retrouvailles dans l'espace : une piste de balises sur l'orbite, d'Eagle (`from`)
- * au repère d'amarrage de Columbia (`to`). Exemples du document : 2 → 5, 7 → 12, 35 → 50.
+ * C5.2 — Les retrouvailles dans l'espace : le radar du rendez-vous (suites de nombres).
+ * Le radar d'Eagle affiche la distance qui le sépare de Columbia : trois mesures, puis la suivante à trouver.
+ * Début : on compte à rebours de 1 en 1 ; milieu : de 2 en 2 ; fin : de 10 en 10, de 5 en 5, puis de 10 en 10
+ * à partir d'un nombre qui n'est pas rond. Choix demandé par le propriétaire le 18/11 (à la place de la piste).
  */
-export function orbitWindow(profile: Profile, from: number): { lo: number; hi: number } {
-  if (profile === 'debut') return { lo: 0, hi: 10 };
-  if (profile === 'milieu') return { lo: 0, hi: 20 };
-  const lo = 10 * Math.floor(from / 10);
-  return { lo, hi: lo + 30 };
+export interface RadarParams {
+  /** Première mesure affichée. */
+  start: number;
+  /** De combien la distance baisse à chaque mesure. */
+  step: number;
 }
 
-export const rendezvous: Family<AdvanceParams, number> = {
-  id: 'rejoindre',
-  key: (p) => `${p.from}-${p.to}`,
-  answer: (p) => p.to - p.from,
-  check: (p, a) => a === p.to - p.from,
+/** Nombre de mesures déjà affichées avant celle à trouver. */
+export const RADAR_SHOWN = 3;
+export const RADAR_MAX: Record<Profile, number> = { debut: 10, milieu: 20, fin: 100 };
+
+export const radarTerms = (p: RadarParams): number[] => Array.from({ length: RADAR_SHOWN }, (_, i) => p.start - i * p.step);
+
+export const radar: Family<RadarParams, number> = {
+  id: 'radar',
+  key: (p) => `${p.start}-${p.step}`,
+  answer: (p) => p.start - RADAR_SHOWN * p.step,
+  check: (p, a) => a === radar.answer(p),
   generate(profile, ctx) {
     const { rng } = ctx;
-    const firsts: Record<Profile, AdvanceParams> = {
-      debut: { from: 2, to: 5 },
-      milieu: { from: 7, to: 12 },
-      fin: { from: 35, to: 50 },
+    const firsts: Record<Profile, RadarParams> = {
+      debut: { start: 10, step: 1 },
+      milieu: { start: 20, step: 2 },
+      fin: { start: 50, step: 10 },
     };
-    if (ctx.index === 0 && !ctx.used.has(rendezvous.key(firsts[profile]))) return firsts[profile];
-    return fresh(ctx, rendezvous.key, () => {
+    if (ctx.index === 0 && !ctx.used.has(radar.key(firsts[profile]))) return firsts[profile];
+    return fresh(ctx, radar.key, () => {
       switch (profile) {
-        case 'debut': {
-          const to = randInt(rng, 4, ctx.easier ? 7 : 10);
-          return { from: randInt(rng, 0, to - 2), to };
-        }
+        case 'debut':
+          return { start: randInt(rng, ctx.easier ? 5 : 6, ctx.easier ? 7 : 10), step: 1 };
         case 'milieu': {
-          const to = randInt(rng, ctx.easier ? 7 : 10, ctx.easier ? 12 : 20);
-          const jump = randInt(rng, 2, Math.min(ctx.easier ? 6 : 9, to - 1));
-          return { from: to - jump, to };
+          // Après une erreur : de 1 en 1 ; au deuxième problème, des nombres pairs ; ensuite, aussi des impairs.
+          if (ctx.easier) return { start: randInt(rng, 12, 20), step: 1 };
+          const start = ctx.index === 1 ? 2 * randInt(rng, 5, 10) : randInt(rng, 11, 20);
+          return { start, step: 2 };
         }
         case 'fin': {
-          // Bonds de dizaines entières après une erreur et au deuxième problème, puis dizaines et unités.
-          if (ctx.easier || ctx.index === 1) {
-            const from = 10 * randInt(rng, 2, 4) + (ctx.easier ? 0 : randInt(rng, 1, 5));
-            return { from, to: from + 10 * randInt(rng, 1, 2) };
-          }
-          const from = randInt(rng, 21, 45);
-          const room = orbitWindow('fin', from).hi - from;
-          return { from, to: from + randInt(rng, 11, Math.min(25, room)) };
+          if (ctx.easier) return { start: 10 * randInt(rng, 4, 9), step: 10 };
+          if (ctx.index === 1) return { start: 5 * randInt(rng, 6, 12), step: 5 };
+          // De 10 en 10 sans partir d'un nombre rond : seul le chiffre des dizaines change.
+          let start = randInt(rng, 41, 99);
+          if (start % 10 === 0) start++;
+          return { start, step: 10 };
         }
       }
     });

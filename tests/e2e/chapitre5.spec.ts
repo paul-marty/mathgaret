@@ -3,7 +3,7 @@ import type { Page } from '@playwright/test';
 import { arrowsTo, expect, mg, open, playToBilan, state, test, until, waitAnswer } from './helpers';
 
 // Chapitre 5 « Le grand retour sur Terre » joué de bout en bout aux trois niveaux, puis la fin de la mission
-// (bilan de la mission, diplôme, générique, Mars) ; le dépassement de la piste d'orbite (C5.2) aux touches chiffres ;
+// (bilan de la mission, diplôme, générique, Mars) ; la balance de C5.1 aux flèches ; le radar de C5.2 aux touches chiffres ;
 // la note aux parents et le prénom du diplôme ; le passage du bilan du chapitre 4 au chapitre 5.
 
 for (const niveau of ['debut', 'milieu', 'fin'] as const) {
@@ -25,18 +25,21 @@ for (const niveau of ['debut', 'milieu', 'fin'] as const) {
     expect(s.voiceLog).toEqual(expect.arrayContaining(['fin_accomplie', 'fin_etoiles_mission', 'bilan_efficacite', 'fin_progres_correction']));
     expect(s.voiceLog).toEqual(
       expect.arrayContaining([
-        // C5.1 : Eagle sur la Lune, la liste des vérifications, le départ.
+        // C5.1 : Eagle sur la Lune, alléger Eagle sur la balance, les sacs à dos laissés pour de vrai, le départ.
         'c5_1_date',
         'c5_1_rentrer',
-        'c5_1_liste',
-        'c5_1_consigne',
+        'c5_1_cailloux',
+        'c5_1_balance',
+        'c5_1_poids',
+        'c5_1_vrai',
         'c5_1_pret',
         'c5_1_envol',
-        // C5.2 : Collins, la simulation du rapprochement, « Clac ! », le retour.
+        // C5.2 : Collins, le radar du rendez-vous, « Clac ! », le retour.
         'c5_2_collins',
         'c5_2_retrouver',
         'c5_2_simulation',
-        'c5_2_consigne',
+        'c5_2_radar',
+        'c5_2_suite',
         'c5_2_reunis',
         'c5_2_ensemble',
         'c5_2_retour',
@@ -63,6 +66,7 @@ for (const niveau of ['debut', 'milieu', 'fin'] as const) {
       ]),
     );
     const at = (id: string) => s.voiceLog.indexOf(id);
+    expect(at('c5_1_vrai')).toBeLessThan(at('c5_1_envol'));
     // La panne est annoncée comme imaginaire avant qu'elle arrive, et la fin de la simulation est dite.
     expect(at('c5_3_imaginaire')).toBeLessThan(at('c5_3_perdu'));
     expect(at('c5_3_recoit')).toBeLessThan(at('c5_3_fin_simulation'));
@@ -87,26 +91,66 @@ for (const niveau of ['debut', 'milieu', 'fin'] as const) {
   });
 }
 
-test('piste d’orbite : Eagle dépasse Columbia et reste au-delà, puis la réponse corrigée l’amène au repère', async ({ page, consoleErrors }) => {
+test('balance de C5.1 aux flèches : trop lourd, puis la bonne paire ; les objets restent choisis après l’erreur', async ({ page, consoleErrors }) => {
   test.setTimeout(240_000);
   void consoleErrors;
-  await open(page, 'vitesse=10&niveau=milieu&scene=c5.2');
+  await open(page, 'vitesse=10&niveau=debut&scene=c5.1');
   let s = await waitAnswer(page, 150_000);
-  expect(s.problem!.params).toEqual({ from: 7, to: 12 });
-  // 8 cases au lieu de 5 : Eagle va jusqu'à la case 15, trois cases au-delà de Columbia.
-  await page.keyboard.press('Digit8');
+  // 5 kilos de cailloux ; sac 3, bottes 2, appareil 4, pelle 1 (de gauche à droite).
+  expect(s.problem!.params).toMatchObject({ target: 5 });
+  const card = (i: number) => ({ x: 960 + (i - 1.5) * 250, y: 725 });
+  const press = async (i: number, label: string) => {
+    await arrowsTo(page, card(i).x, card(i).y, label);
+    await page.keyboard.press('Enter');
+  };
+  // Changer d'avis n'est pas une erreur : la pelle est choisie puis reprise.
+  await press(3, 'pelle');
+  await press(3, 'pelle');
+  await press(0, 'sac');
+  await press(2, 'appareil');
   await arrowsTo(page, 1400, 935, 'Valider');
   await page.keyboard.press('Enter');
-  s = await until(page, (st) => st.voiceLog.includes('c5_2_corriger'), 'dépassement constaté', 60_000);
-  expect(s.voiceLog).toContain('c5_2_long');
+  // 3 + 4 = 7 : la balance penche du côté des objets, deux kilos de trop.
+  s = await until(page, (st) => st.voiceLog.includes('c5_1_lourd'), 'trop lourd', 60_000);
   s = await waitAnswer(page);
-  await page.keyboard.press('Digit5');
+  expect(s.problem!.answer).toEqual([2, 3]);
+  // Les objets sont restés choisis : on remplace seulement l'appareil par les bottes.
+  await press(2, 'appareil');
+  await press(1, 'bottes');
   await arrowsTo(page, 1400, 935, 'Valider');
   await page.keyboard.press('Enter');
-  s = await until(page, (st) => st.save.run?.records.some((r) => r.challengeId === 'c5_rendezvous') ?? false, 'rendez-vous réussi', 60_000);
-  expect(s.save.run!.records.find((r) => r.challengeId === 'c5_rendezvous')).toMatchObject({ errors: 1 });
-  expect(s.voiceLog).toContain('c5_2_succes');
-  s = await state(page);
+  s = await until(page, (st) => st.save.run?.records.some((r) => r.challengeId === 'c5_alleger') ?? false, 'balance droite', 60_000);
+  expect(s.save.run!.records.find((r) => r.challengeId === 'c5_alleger')).toMatchObject({ errors: 1 });
+  expect(s.voiceLog).toEqual(expect.arrayContaining(['tuto_objets', 'c5_1_aide_1_poids']));
+  expect(s.voiceLog.some((id) => id.startsWith('c5_1_equilibre'))).toBe(true);
+  expect(s.diag.erreurs).toBe(0);
+});
+
+test('radar de C5.2 aux touches chiffres : pas plus près, trop grand bond, trop petit bond, puis la bonne mesure', async ({ page, consoleErrors }) => {
+  test.setTimeout(240_000);
+  void consoleErrors;
+  await open(page, 'vitesse=10&niveau=fin&scene=c5.2');
+  let s = await waitAnswer(page, 150_000);
+  // 50, 40, 30… puis 20.
+  expect(s.problem!.params).toEqual({ start: 50, step: 10 });
+  const tryNumber = async (digits: string) => {
+    await waitAnswer(page);
+    for (const d of digits) await page.keyboard.press(`Digit${d}`);
+    await arrowsTo(page, 1500, 935, 'Valider');
+    await page.keyboard.press('Enter');
+  };
+  await tryNumber('40');
+  await until(page, (st) => st.voiceLog.includes('c5_2_eloigne'), 'pas plus près', 60_000);
+  await tryNumber('10');
+  await until(page, (st) => st.voiceLog.includes('c5_2_grand_bond'), 'trop grand bond', 60_000);
+  await tryNumber('25');
+  await until(page, (st) => st.voiceLog.includes('c5_2_petit_bond'), 'trop petit bond', 90_000);
+  await tryNumber('20');
+  s = await until(page, (st) => st.save.run?.records.some((r) => r.challengeId === 'c5_radar') ?? false, 'bonne mesure', 90_000);
+  expect(s.save.run!.records.find((r) => r.challengeId === 'c5_radar')).toMatchObject({ errors: 3 });
+  // Après chaque erreur, l'aide monte d'un cran : relire les mesures, voir les bonds, compter à rebours.
+  expect(s.voiceLog).toEqual(expect.arrayContaining(['c5_2_aide_1_radar', 'c5_2_aide_2_radar', 'gen_compter']));
+  expect(s.voiceLog.some((id) => id.startsWith('c5_2_proche'))).toBe(true);
   expect(s.diag.erreurs).toBe(0);
 });
 

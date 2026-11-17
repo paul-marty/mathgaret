@@ -1739,6 +1739,12 @@
       "source": "provisoire",
       "scene": "C4.3 (tutoriel)"
     },
+    "tuto_objets": {
+      "speaker": "collegue",
+      "text": "Touche les objets à laisser sur la Lune, puis appuie sur la grande coche pour peser. Pour reprendre un objet, touche-le encore une fois.",
+      "source": "provisoire",
+      "scene": "C5.1 (tutoriel)"
+    },
     "c4_1_eagle": {
       "speaker": "narrateur",
       "text": "Le 20 juillet 1969, Eagle descend vers la Lune. À bord, Neil Armstrong et Buzz Aldrin.",
@@ -2205,104 +2211,133 @@
       "source": "repris",
       "scene": "C5.1"
     },
-    "c5_1_liste": {
+    "c5_1_cailloux": {
       "speaker": "collegue",
-      "text": "Voici la liste des vérifications du départ. Les lignes cochées sont prêtes.",
+      "text": "Eagle rapporte des cailloux de Lune. Mais avec eux, il est trop lourd pour repartir !",
       "source": "provisoire",
       "scene": "C5.1"
     },
-    "c5_1_consigne": {
+    "c5_1_balance": {
       "speaker": "collegue",
-      "text": "Nous avons {total} équipements à vérifier. {deja} sont prêts. Combien en reste-t-il ?",
-      "source": "repris",
-      "scene": "C5.1"
-    },
-    "c5_1_suivant": {
-      "speaker": "collegue",
-      "text": "Voici une autre liste !",
+      "text": "Dans notre simulation, on va laisser sur la Lune des objets qui pèsent autant que les cailloux. La balance va nous aider.",
       "source": "provisoire",
       "scene": "C5.1"
     },
-    "c5_1_suivant_v2": {
+    "c5_1_poids": {
       "speaker": "collegue",
-      "text": "Encore une liste à cocher !",
+      "text": "Les cailloux pèsent {target} kilos. Choisis des objets qui pèsent {target} kilos en tout.",
+      "source": "provisoire",
+      "scene": "C5.1"
+    },
+    "c5_1_autre": {
+      "speaker": "collegue",
+      "text": "Eagle rapporte une autre boîte de cailloux !",
+      "source": "provisoire",
+      "scene": "C5.1"
+    },
+    "c5_1_autre_v2": {
+      "speaker": "collegue",
+      "text": "Encore une boîte de cailloux à emporter !",
       "source": "provisoire",
       "scene": "C5.1",
-      "variante_de": "c5_1_suivant"
+      "variante_de": "c5_1_autre"
     },
-    "c5_1_suivant_v3": {
+    "c5_1_equilibre": {
       "speaker": "collegue",
-      "text": "Une nouvelle liste de vérifications !",
+      "text": "La balance est bien droite ! Ces objets restent sur la Lune.",
+      "source": "provisoire",
+      "scene": "C5.1"
+    },
+    "c5_1_equilibre_v2": {
+      "speaker": "collegue",
+      "text": "Juste le bon poids ! Eagle est plus léger.",
       "source": "provisoire",
       "scene": "C5.1",
-      "variante_de": "c5_1_suivant"
+      "variante_de": "c5_1_equilibre"
     },
-    "c5_1_valide": {
+    "c5_1_equilibre_v3": {
       "speaker": "collegue",
-      "text": "Tout est coché ! Un témoin de plus s'allume.",
-      "source": "provisoire",
-      "scene": "C5.1"
-    },
-    "c5_1_valide_v2": {
-      "speaker": "collegue",
-      "text": "La liste est complète ! Encore un témoin allumé.",
+      "text": "Pile le poids des cailloux ! Ces objets restent ici.",
       "source": "provisoire",
       "scene": "C5.1",
-      "variante_de": "c5_1_valide"
+      "variante_de": "c5_1_equilibre"
     },
-    "c5_1_valide_v3": {
+    "c5_1_leger": {
       "speaker": "collegue",
-      "text": "Toutes les lignes sont cochées ! Un témoin de plus brille.",
-      "source": "provisoire",
-      "scene": "C5.1",
-      "variante_de": "c5_1_valide"
-    },
-    "c5_1_peu": {
-      "speaker": "collegue",
-      "text": "Avec {n} de plus, il reste encore {k} lignes sans coche.",
+      "text": "La balance penche du côté des cailloux : il manque encore {k} kilos.",
       "source": "provisoire",
       "scene": "C5.1"
     },
-    "c5_1_peu_1": {
+    "c5_1_leger_1": {
       "speaker": "collegue",
-      "text": "Avec {n} de plus, il reste encore une ligne sans coche.",
+      "text": "La balance penche du côté des cailloux : il manque encore un kilo.",
       "source": "provisoire",
       "scene": "C5.1"
     },
-    "c5_1_trop": {
+    "c5_1_lourd": {
       "speaker": "collegue",
-      "text": "Avec {n} coches, on dépasse la liste : il y a {k} coches en trop.",
+      "text": "La balance penche du côté des objets : il y a {k} kilos de trop.",
       "source": "provisoire",
       "scene": "C5.1"
     },
-    "c5_1_trop_1": {
+    "c5_1_lourd_1": {
       "speaker": "collegue",
-      "text": "Avec {n} coches, on dépasse la liste : il y a une coche en trop.",
+      "text": "La balance penche du côté des objets : il y a un kilo de trop.",
       "source": "provisoire",
       "scene": "C5.1"
     },
-    "c5_1_aide_1": {
+    "c5_1_aide_1_poids": {
       "speaker": "collegue",
-      "text": "Il y a {total} lignes. {deja} sont déjà cochées. Combien de lignes n'ont pas encore de coche ?",
+      "text": "Il faut {target} kilos en tout. Cherche deux objets qui font {target} kilos ensemble.",
       "source": "provisoire",
       "scene": "C5.1"
     },
-    "c5_1_aide_2": {
+    "c5_1_aide_2_poids": {
       "speaker": "collegue",
-      "text": "Regarde : j'entoure les lignes qui n'ont pas encore de coche.",
+      "text": "Regarde : chaque petit carré, c'est un kilo.",
       "source": "provisoire",
       "scene": "C5.1"
     },
-    "c5_1_aide_2_fin": {
+    "c5_1_aide_2_poids_dizaine": {
       "speaker": "collegue",
-      "text": "Regarde : j'entoure les lignes qui n'ont pas encore de coche. Une page pleine, c'est une dizaine.",
+      "text": "Regarde : chaque petit carré, c'est un kilo, et chaque barre, dix kilos.",
       "source": "provisoire",
       "scene": "C5.1"
     },
-    "c5_1_aide_4": {
+    "c5_1_aide_3_poids": {
       "speaker": "collegue",
-      "text": "Il en reste {answer}. Choisis {answer}, puis appuie sur la grande coche.",
+      "text": "Je pose déjà l'objet de {a} kilos. Comptons jusqu'à {target}.",
       "source": "provisoire",
+      "scene": "C5.1"
+    },
+    "c5_1_aide_3_manque": {
+      "speaker": "collegue",
+      "text": "Il manque {k} kilos. Quel objet pèse {k} kilos ?",
+      "source": "provisoire",
+      "scene": "C5.1"
+    },
+    "c5_1_aide_3_manque_1": {
+      "speaker": "collegue",
+      "text": "Il manque un kilo. Quel objet pèse un kilo ?",
+      "source": "provisoire",
+      "scene": "C5.1"
+    },
+    "c5_1_aide_4_poids": {
+      "speaker": "collegue",
+      "text": "Laisse l'objet de {a} kilos et celui de {b} kilos. Puis appuie sur la grande coche.",
+      "source": "provisoire",
+      "scene": "C5.1"
+    },
+    "c5_1_aide_4_poids_1": {
+      "speaker": "collegue",
+      "text": "Laisse l'objet de {a} kilos et celui d'un kilo. Puis appuie sur la grande coche.",
+      "source": "provisoire",
+      "scene": "C5.1"
+    },
+    "c5_1_vrai": {
+      "speaker": "narrateur",
+      "text": "Pour de vrai, Neil Armstrong et Buzz Aldrin ont laissé leurs sacs à dos et leurs bottes sur la Lune, pour qu'Eagle soit plus léger.",
+      "source": "propose",
       "scene": "C5.1"
     },
     "c5_1_pret": {
@@ -2335,103 +2370,84 @@
       "source": "propose",
       "scene": "C5.2"
     },
-    "c5_2_consigne": {
+    "c5_2_radar": {
       "speaker": "collegue",
-      "text": "Eagle est sur la case {from}. Columbia l'attend sur la case {to}. Combien de cases doit-il avancer ?",
-      "source": "propose",
-      "scene": "C5.2"
-    },
-    "c5_2_autre": {
-      "speaker": "collegue",
-      "text": "Un autre rapprochement !",
+      "text": "Le radar d'Eagle mesure la distance jusqu'à Columbia. Plus le nombre est petit, plus les vaisseaux sont proches.",
       "source": "provisoire",
       "scene": "C5.2"
     },
-    "c5_2_autre_v2": {
+    "c5_2_suite": {
       "speaker": "collegue",
-      "text": "Nouvelle simulation de rapprochement !",
+      "text": "Le radar a affiché {a}, puis {b}, puis {c}. Quel nombre va-t-il afficher ensuite ?",
+      "source": "provisoire",
+      "scene": "C5.2"
+    },
+    "c5_2_mesure": {
+      "speaker": "collegue",
+      "text": "Une nouvelle mesure du radar !",
+      "source": "provisoire",
+      "scene": "C5.2"
+    },
+    "c5_2_mesure_v2": {
+      "speaker": "collegue",
+      "text": "Le radar mesure encore !",
       "source": "provisoire",
       "scene": "C5.2",
-      "variante_de": "c5_2_autre"
+      "variante_de": "c5_2_mesure"
     },
-    "c5_2_autre_v3": {
+    "c5_2_proche": {
       "speaker": "collegue",
-      "text": "Encore un rapprochement à préparer !",
+      "text": "Bien vu ! Eagle se rapproche de Columbia.",
+      "source": "provisoire",
+      "scene": "C5.2"
+    },
+    "c5_2_proche_v2": {
+      "speaker": "collegue",
+      "text": "C'est ça ! Les deux vaisseaux sont encore plus près.",
       "source": "provisoire",
       "scene": "C5.2",
-      "variante_de": "c5_2_autre"
+      "variante_de": "c5_2_proche"
     },
-    "c5_2_succes": {
+    "c5_2_proche_v3": {
       "speaker": "collegue",
-      "text": "Pile au bon endroit ! Les deux vaisseaux se rapprochent.",
-      "source": "provisoire",
-      "scene": "C5.2"
-    },
-    "c5_2_succes_v2": {
-      "speaker": "collegue",
-      "text": "Bien visé ! Eagle et Columbia sont tout près.",
+      "text": "Le radar est d'accord avec toi !",
       "source": "provisoire",
       "scene": "C5.2",
-      "variante_de": "c5_2_succes"
+      "variante_de": "c5_2_proche"
     },
-    "c5_2_succes_v3": {
+    "c5_2_eloigne": {
       "speaker": "collegue",
-      "text": "Eagle arrive juste à côté de Columbia !",
-      "source": "provisoire",
-      "scene": "C5.2",
-      "variante_de": "c5_2_succes"
-    },
-    "c5_2_court": {
-      "speaker": "collegue",
-      "text": "Eagle s'arrête sur la case {stop}. Il manque encore {k} cases.",
+      "text": "Avec {n}, Eagle ne se rapprocherait pas de Columbia !",
       "source": "provisoire",
       "scene": "C5.2"
     },
-    "c5_2_court_1": {
+    "c5_2_grand_bond": {
       "speaker": "collegue",
-      "text": "Eagle s'arrête sur la case {stop}. Il manque encore une case.",
+      "text": "Avec {n}, Eagle ferait un trop grand bond !",
       "source": "provisoire",
       "scene": "C5.2"
     },
-    "c5_2_long": {
+    "c5_2_petit_bond": {
       "speaker": "collegue",
-      "text": "Eagle est allé jusqu'à la case {stop}. Il a dépassé Columbia de {k} cases.",
+      "text": "Avec {n}, Eagle ferait un trop petit bond !",
       "source": "provisoire",
       "scene": "C5.2"
     },
-    "c5_2_long_1": {
+    "c5_2_aide_1_radar": {
       "speaker": "collegue",
-      "text": "Eagle est allé jusqu'à la case {stop}. Il a dépassé Columbia d'une case.",
+      "text": "Regarde les nombres du radar. De combien la distance baisse-t-elle à chaque fois ?",
       "source": "provisoire",
       "scene": "C5.2"
     },
-    "c5_2_corriger": {
+    "c5_2_aide_2_radar": {
       "speaker": "collegue",
-      "text": "Change ton nombre : Eagle repartira de sa case.",
+      "text": "Regarde : à chaque fois, la distance baisse de {step}.",
       "source": "provisoire",
       "scene": "C5.2"
     },
-    "c5_2_aide_1": {
+    "c5_2_aide_4_radar": {
       "speaker": "collegue",
-      "text": "Eagle est sur la case {from}. Columbia est sur la case {to}. Combien de cases entre les deux ?",
-      "source": "provisoire",
-      "scene": "C5.2"
-    },
-    "c5_2_aide_2": {
-      "speaker": "collegue",
-      "text": "Regarde : j'allume le chemin d'Eagle jusqu'à Columbia.",
-      "source": "provisoire",
-      "scene": "C5.2"
-    },
-    "c5_2_aide_2_fin": {
-      "speaker": "collegue",
-      "text": "Regarde : j'allume le chemin d'Eagle jusqu'à Columbia. Chaque grande balise marque une dizaine.",
-      "source": "provisoire",
-      "scene": "C5.2"
-    },
-    "c5_2_aide_4": {
-      "speaker": "collegue",
-      "text": "Eagle doit avancer de {answer} cases. Choisis {answer}, puis appuie sur la grande coche.",
+      "text": "Le radar va afficher {answer}. Choisis {answer}, puis appuie sur la grande coche.",
       "source": "provisoire",
       "scene": "C5.2"
     },

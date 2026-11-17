@@ -1,25 +1,27 @@
 import * as Phaser from 'phaser';
 import { C, textStyle } from '../config';
-import { NumberPicker } from '../engine/answers';
+import { NumberPicker, PickAnswer } from '../engine/answers';
 import { runChallenge, type ChallengeSpec } from '../engine/challenge';
 import {
-  DEPART_MAX,
-  departure,
-  orbitWindow,
-  rendezvous,
+  lighten,
+  lightenPair,
+  loadSum,
+  radar,
+  RADAR_MAX,
+  RADAR_SHOWN,
+  radarTerms,
   wave,
   WAVE_MAX,
   waveFollowUp,
-  type AdvanceParams,
-  type ComplementParams,
+  type LightenParams,
+  type RadarParams,
   type WaveParams,
 } from '../math/families';
 import type { StoryScene } from '../scenes/StoryScene';
 import { services } from '../services';
 import { cover } from '../view/assets';
 import { GROUND } from '../view/placeholders-c4';
-import { PanelLamps } from '../view/widgets-c4';
-import { Clipboard, OrbitTrack, RadioWave } from '../view/widgets-c5';
+import { LoadOption, MoonScale, RadarScreen, RadioWave } from '../view/widgets-c5';
 import { lab3 } from './c3';
 import { destroyAll, dropFrame, fade, simFrame, starSky } from './c4';
 import { calmVeil, papersSurprise } from './common';
@@ -71,70 +73,92 @@ function threeSuns(s: StoryScene, firstMs: number, everyMs: number): Phaser.Game
 }
 
 // ---------------------------------------------------------------------------
-// C5.1 — Il faut rentrer à la maison : la liste des vérifications du départ (compléter)
+// C5.1 — Il faut rentrer à la maison : alléger Eagle (décomposer un nombre ; choix du propriétaire, 18/11)
 // ---------------------------------------------------------------------------
 
-const BOARD = { x: 960, y: 560 };
-const LAMPS = { x: 960, y: 175 };
+const SCALE = { x: 960, y: 455 };
+const CARDS_Y = 725;
 
-function departSpec(s: StoryScene, lamps: PanelLamps): ChallengeSpec<ComplementParams, number> {
-  let board: Clipboard | null = null;
-  const fin = s.profile === 'fin';
+function lightenSpec(s: StoryScene): ChallengeSpec<LightenParams, number[]> {
+  let scale: MoonScale | null = null;
+  let cards: LoadOption[] = [];
+  let pick: PickAnswer | null = null;
+  const weights = (p: LightenParams, a: number[]) => a.map((i) => p.items[i].w);
   return {
-    id: 'c5_depart',
-    family: departure,
-    gesture: 'tuto_reponse',
-    nextIntro: 'c5_1_suivant',
+    id: 'c5_alleger',
+    family: lighten,
+    gesture: 'tuto_objets',
+    nextIntro: 'c5_1_autre',
     maxProblems: 4,
     async build(p) {
       calmVeil(s, true);
-      board = new Clipboard(s, BOARD.x, BOARD.y, s.profile, p.total, p.deja).setDepth(30).setAlpha(0);
+      scale = new MoonScale(s, SCALE.x, SCALE.y, p.target).setDepth(31).setAlpha(0);
+      const gap = p.items.length > 4 ? 235 : 250;
+      cards = p.items.map((it, i) =>
+        new LoadOption(s, SCALE.x + (i - (p.items.length - 1) / 2) * gap, CARDS_Y, it.kind, it.w, () => pick?.toggle(i))
+          .setDepth(32)
+          .setAlpha(0),
+      );
       sfx().paper();
-      await s.tween({ targets: board, alpha: 1, y: { from: BOARD.y + 40, to: BOARD.y }, duration: 350 });
+      await s.tween({ targets: [scale, ...cards], alpha: 1, duration: 400 });
     },
-    consigne: (p) => ({ id: 'c5_1_consigne', vars: { total: p.total, deja: p.deja } }),
-    answer: (_p, onValidate) => new NumberPicker(s, { max: DEPART_MAX[s.profile], tens: fin, onValidate }),
-    async success(_p, a) {
-      board!.clearTemp();
-      await board!.tick(a, C.green);
-      await lamps.lightNext();
-      await s.say('c5_1_valide');
+    consigne: (p) => ({ id: 'c5_1_poids', vars: { target: p.target } }),
+    answer: (p, onValidate) => (pick = new PickAnswer(s, cards, onValidate, (chosen) => scale?.setLoad(chosen.map((i) => p.items[i])))),
+    async success(p, a) {
+      scale!.clearTemp();
+      await scale!.weigh(weights(p, a));
+      // Les objets choisis restent sur la Lune.
+      await Promise.all(a.map((i) => cards[i].leave()));
+      s.char('collegue', 'enthousiaste');
+      await s.say('c5_1_equilibre');
+      s.char('collegue', 'explique');
     },
     async error(p, a) {
-      // La proposition de l'enfant se coche en orange : il reste des lignes, ou des coches sortent de la liste.
-      const k = Math.abs(p.total - p.deja - a);
-      await board!.tick(a, C.orange);
+      // La balance pèse et penche : du côté des cailloux (il manque des kilos) ou des objets (il y en a trop).
+      scale!.clearTemp();
+      await scale!.weigh(weights(p, a));
+      const sum = loadSum(p, a);
+      const k = Math.abs(p.target - sum);
       s.char('collegue', 'inquiet');
-      if (a < p.total - p.deja) await s.say(k === 1 ? 'c5_1_peu_1' : 'c5_1_peu', { n: a, k });
-      else await s.say(k === 1 ? 'c5_1_trop_1' : 'c5_1_trop', { n: a, k });
+      if (sum < p.target) await s.say(k === 1 ? 'c5_1_leger_1' : 'c5_1_leger', { k });
+      else await s.say(k === 1 ? 'c5_1_lourd_1' : 'c5_1_lourd', { k });
       s.char('collegue', 'explique');
     },
     resetAfterError() {
-      // La liste redevient manipulable : les coches orange s'effacent, le témoin reste en attente.
-      board?.clearTemp();
+      // Les objets restent choisis (on peut n'en changer qu'un) ; la balance se rebloque, penchée vers les cailloux.
+      void scale?.relock();
     },
     async help(p, level, ui) {
       s.char('collegue', 'explique');
-      const answer = p.total - p.deja;
-      if (level === 1) await s.say('c5_1_aide_1', { total: p.total, deja: p.deja });
+      const [big, small] = [...lightenPair(p)!].sort((x, y) => p.items[y].w - p.items[x].w);
+      const a = p.items[big].w;
+      const b = p.items[small].w;
+      if (level === 1) await s.say('c5_1_aide_1_poids', { target: p.target });
       else if (level === 2) {
-        board!.circleUnchecked();
-        await s.say(fin ? 'c5_1_aide_2_fin' : 'c5_1_aide_2');
+        const tens = s.profile === 'fin';
+        scale!.showUnits(tens);
+        for (const c of cards) c.showUnits(tens);
+        await s.say(tens ? 'c5_1_aide_2_poids_dizaine' : 'c5_1_aide_2_poids');
       } else if (level === 3) {
-        await s.say('gen_compter');
-        await board!.countUnchecked();
+        // L'objet le plus lourd de la paire est posé ; on compte jusqu'au poids des cailloux.
+        ui.set([big]);
+        await s.say('c5_1_aide_3_poids', { a, target: p.target });
+        await scale!.countOn(a, p.target);
+        await s.say(b === 1 ? 'c5_1_aide_3_manque_1' : 'c5_1_aide_3_manque', { k: b });
       } else {
-        ui.set(answer);
-        await s.say('c5_1_aide_4', { answer });
+        scale!.clearTemp();
+        ui.set([big, small].sort((x, y) => x - y));
+        await s.say(b === 1 ? 'c5_1_aide_4_poids_1' : 'c5_1_aide_4_poids', { a, b });
         services.focus.focus(ui.validateButton, { silent: true });
       }
     },
     async clear() {
-      if (!board) return;
-      const old = board;
-      board = null;
-      await s.tween({ targets: old, alpha: 0, y: old.y - 30, duration: 300 });
-      old.destroy();
+      const old: Phaser.GameObjects.Container[] = [...(scale ? [scale] : []), ...cards];
+      scale = null;
+      cards = [];
+      pick = null;
+      await s.tween({ targets: old, alpha: 0, duration: 300 });
+      for (const o of old) o.destroy();
     },
   };
 }
@@ -160,7 +184,7 @@ function returnSchema(s: StoryScene): Phaser.GameObjects.Graphics {
 const c5_1: SceneScript = {
   id: 'c5.1',
   estMs: 60_000,
-  challenge: { id: 'c5_depart', family: 'verifier' },
+  challenge: { id: 'c5_alleger', family: 'alleger' },
   async run(s) {
     const cam = s.cameras.main;
     // Le 21 juillet 1969 : la caméra survole Eagle posé sur la Lune, une musique douce.
@@ -188,18 +212,17 @@ const c5_1: SceneScript = {
     const schema = returnSchema(s);
     await s.say('c5_1_rentrer');
 
-    // La liste des vérifications, et les témoins du tableau de bord d'Eagle.
+    // Les cailloux de Lune alourdissent Eagle : dans la simulation, on choisit ce qu'on laisse sur la Lune.
     collegue.setPose('explique');
     margaret.setPose('neutre');
-    const lamps = new PanelLamps(s, LAMPS.x, LAMPS.y, 4).setDepth(31).setAlpha(0);
-    await s.tween({ targets: lamps, alpha: 1, duration: 300 });
-    await s.say('c5_1_liste');
+    await s.say('c5_1_cailloux');
+    await simFrame(s);
+    await s.say('c5_1_balance');
     s.surprises = [papersSurprise(s)];
-    await runChallenge(s, departSpec(s, lamps));
+    await runChallenge(s, lightenSpec(s));
     sfx().chord();
     calmVeil(s, false);
-    await s.tween({ targets: lamps, alpha: 0, duration: 300 });
-    lamps.destroy();
+    await dropFrame(s);
     schema.destroy();
 
     // La radio annonce le départ ; le haut d'Eagle s'élève et laisse sa base sur le sol.
@@ -212,9 +235,16 @@ const c5_1: SceneScript = {
     l.show(false);
     const ground2 = cover(s.add.image(960, 540, 'lune_sol')).setDepth(11);
     const lm2 = eagleOnGround(s, 960);
+    // Pour de vrai, les sacs à dos et les bottes restent sur la Lune, au pied d'Eagle.
+    const groundY = 1080 * GROUND.y;
+    const pack = s.prop('lune_sac', 620, 0, 130, 136, 12);
+    pack.setY(groundY - pack.displayHeight / 2 + 6);
+    const boots = s.prop('lune_bottes', 1290, 0, 150, 106, 12);
+    boots.setY(groundY - boots.displayHeight / 2 + 6);
     services.music.play('ample');
     await fade(s, 1, 500);
-    await s.wait(500);
+    await s.say('c5_1_vrai');
+    await s.wait(300);
     sfx().liftoff();
     const dust = s.add.graphics().setDepth(12);
     dust.fillStyle(0xc4c1b9, 0.7);
@@ -226,7 +256,7 @@ const c5_1: SceneScript = {
 
     // La caméra accompagne le départ vers l'orbite.
     await fade(s, 0, 400);
-    destroyAll([ground2, dust, lm2.base, lm2.top]);
+    destroyAll([ground2, dust, lm2.base, lm2.top, pack, boots]);
     const orbit = cover(s.add.image(960, 540, 'orbite_lune')).setDepth(11);
     const climber = s.prop('eagle_montee', 700, 900, 180, 160, 13);
     await fade(s, 1, 400);
@@ -241,67 +271,71 @@ const c5_1: SceneScript = {
 };
 
 // ---------------------------------------------------------------------------
-// C5.2 — Les retrouvailles dans l'espace : la piste de balises de l'orbite (écart)
+// C5.2 — Les retrouvailles dans l'espace : le radar du rendez-vous (suites ; choix du propriétaire, 18/11)
 // ---------------------------------------------------------------------------
 
-const TRACK = { x: 960, y: 470 };
+const RADAR_AT = { x: 960, y: 470 };
 
-function rendezvousSpec(s: StoryScene): ChallengeSpec<AdvanceParams, number> {
-  let track: OrbitTrack | null = null;
+function radarSpec(s: StoryScene): ChallengeSpec<RadarParams, number> {
+  let screen: RadarScreen | null = null;
   const fin = s.profile === 'fin';
+  const last = (p: RadarParams) => radarTerms(p)[RADAR_SHOWN - 1];
   return {
-    id: 'c5_rendezvous',
-    family: rendezvous,
+    id: 'c5_radar',
+    family: radar,
     gesture: 'tuto_reponse',
-    nextIntro: 'c5_2_autre',
+    nextIntro: 'c5_2_mesure',
     maxProblems: 4,
     async build(p) {
       calmVeil(s, true);
-      track = new OrbitTrack(s, TRACK.x, TRACK.y, s.profile, p.from, p.to).setDepth(31).setAlpha(0);
-      await s.tween({ targets: track, alpha: 1, duration: 400 });
+      screen = new RadarScreen(s, RADAR_AT.x, RADAR_AT.y, radarTerms(p), p.step).setDepth(31).setAlpha(0);
+      await s.tween({ targets: screen, alpha: 1, duration: 400 });
+      await screen.print();
     },
-    consigne: (p) => ({ id: 'c5_2_consigne', vars: { from: p.from, to: p.to } }),
-    answer: (p, onValidate) => new NumberPicker(s, { max: orbitWindow(s.profile, p.from).hi - p.from + 5, tens: fin, onValidate }),
-    async success(p, a) {
-      await track!.advance(p.from, a, p.to);
-      await track!.docked();
+    consigne: (p) => {
+      const [a, b, c] = radarTerms(p);
+      return { id: 'c5_2_suite', vars: { a, b, c } };
+    },
+    answer: (_p, onValidate) => new NumberPicker(s, { max: RADAR_MAX[s.profile], tens: fin, onValidate }),
+    async success(_p, a) {
+      await screen!.approach(a);
       sfx().chord();
       s.char('collegue', 'soulage');
-      await s.say('c5_2_succes');
+      await s.say('c5_2_proche');
       s.char('collegue', 'explique');
     },
     async error(p, a) {
-      // Eagle avance de la réponse et reste où il s'arrête : avant Columbia, ou au-delà (validé le 15/11).
-      const { stop, missing, extra } = await track!.advance(p.from, a, p.to);
+      // Eagle va là où la mesure proposée le mettrait : pas plus près, trop près d'un coup, pas assez près.
+      await screen!.tryWrong(a);
       s.char('collegue', 'inquiet');
-      if (missing > 0) await s.say(missing === 1 ? 'c5_2_court_1' : 'c5_2_court', { stop, k: missing });
-      else await s.say(extra === 1 ? 'c5_2_long_1' : 'c5_2_long', { stop, k: extra });
-      await s.say('c5_2_corriger');
+      if (a >= last(p)) await s.say('c5_2_eloigne', { n: a });
+      else if (a < radar.answer(p)) await s.say('c5_2_grand_bond', { n: a });
+      else await s.say('c5_2_petit_bond', { n: a });
       s.char('collegue', 'explique');
     },
     resetAfterError() {
-      /* Eagle reste visible là où il s'est arrêté ; il repartira de sa case au prochain essai. */
+      void screen?.reset();
     },
     async help(p, level, ui) {
       s.char('collegue', 'explique');
-      if (level === 1) await s.say('c5_2_aide_1', { from: p.from, to: p.to });
+      const answer = radar.answer(p);
+      if (level === 1) await s.say('c5_2_aide_1_radar');
       else if (level === 2) {
-        track!.showPath(p.from, p.to);
-        await s.say(fin ? 'c5_2_aide_2_fin' : 'c5_2_aide_2');
+        screen!.showJumps(p.step);
+        await s.say('c5_2_aide_2_radar', { step: p.step });
       } else if (level === 3) {
         await s.say('gen_compter');
-        await track!.countPath(p.from, p.to);
+        await screen!.countDown(last(p), answer);
       } else {
-        const answer = p.to - p.from;
         ui.set(answer);
-        await s.say('c5_2_aide_4', { answer });
+        await s.say('c5_2_aide_4_radar', { answer });
         services.focus.focus(ui.validateButton, { silent: true });
       }
     },
     async clear() {
-      if (!track) return;
-      const old = track;
-      track = null;
+      if (!screen) return;
+      const old = screen;
+      screen = null;
       await s.tween({ targets: old, alpha: 0, duration: 350 });
       old.destroy();
     },
@@ -311,7 +345,7 @@ function rendezvousSpec(s: StoryScene): ChallengeSpec<AdvanceParams, number> {
 const c5_2: SceneScript = {
   id: 'c5.2',
   estMs: 55_000,
-  challenge: { id: 'c5_rendezvous', family: 'rejoindre' },
+  challenge: { id: 'c5_radar', family: 'radar' },
   async run(s) {
     const l = lab3(s);
     // Columbia attend dans le noir de l'espace ; Michael Collins, sur sa carte (comme en C4.1).
@@ -346,8 +380,9 @@ const c5_2: SceneScript = {
     await s.say('c5_2_retrouver');
     await simFrame(s);
     await s.say('c5_2_simulation');
+    await s.say('c5_2_radar');
     s.surprises = [papersSurprise(s)];
-    await runChallenge(s, rendezvousSpec(s));
+    await runChallenge(s, radarSpec(s));
     calmVeil(s, false);
     await dropFrame(s);
 

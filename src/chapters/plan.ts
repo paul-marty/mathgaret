@@ -73,8 +73,8 @@ export const CHAPTERS: ChapterPlan[] = [
     weight: 12,
     essentialMs: 0, // calculé à partir des scènes réalisées
     challenges: [
-      { id: 'c5_depart', family: 'verifier' },
-      { id: 'c5_rendezvous', family: 'rejoindre' },
+      { id: 'c5_alleger', family: 'alleger' },
+      { id: 'c5_radar', family: 'radar' },
       { id: 'c5_silence', family: 'onde' },
     ],
   },

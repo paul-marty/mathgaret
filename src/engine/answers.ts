@@ -295,6 +295,60 @@ export class ChoiceAnswer implements AnswerUI<number> {
 }
 
 /**
+ * Choisir plusieurs objets (C5.1) : toucher un objet le choisit, le toucher encore le reprend
+ * (changer d'avis n'est jamais une erreur, P3). La réponse est la liste des objets choisis.
+ */
+export class PickAnswer implements AnswerUI<number[]> {
+  validateButton: Button;
+
+  constructor(
+    scene: Phaser.Scene,
+    private options: Option[],
+    onValidate: () => void,
+    private onChange?: (chosen: number[]) => void,
+  ) {
+    this.validateButton = makeValidate(scene, 1400, onValidate);
+  }
+
+  toggle(index: number): void {
+    const o = this.options[index];
+    o.setSelected(!o.selected);
+    services.sfx.select();
+    this.onChange?.(this.chosen());
+  }
+
+  private chosen(): number[] {
+    return this.options.flatMap((o, i) => (o.selected ? [i] : []));
+  }
+
+  value(): number[] | null {
+    const c = this.chosen();
+    return c.length > 0 ? c : null;
+  }
+
+  set(v: number[]): void {
+    this.options.forEach((o, i) => o.setSelected(v.includes(i)));
+    this.onChange?.(this.chosen());
+  }
+
+  focusables(): Focusable[] {
+    return [...this.options, this.validateButton];
+  }
+
+  first(): Focusable {
+    return this.options[0];
+  }
+
+  onDigit(): void {
+    /* pas de chiffres ici */
+  }
+
+  destroy(): void {
+    this.validateButton.destroy();
+  }
+}
+
+/**
  * Ranger des cartes dans l'ordre : toucher une carte la place dans la première case libre,
  * toucher une carte placée la remet à sa place (correction libre, P3).
  */

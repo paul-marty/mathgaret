@@ -241,6 +241,95 @@ export function drawC5Object(g: G, id: string): { w: number; h: number } | null 
       for (let i = 0; i < 4; i++) g.fillRect(575 + i * 18, 70, 10, 14);
       return { w: 900, h: 210 };
     }
+    // C5.1 : la boîte de cailloux de Lune et les objets laissés sur la Lune pour alléger Eagle.
+    case 'boite_cailloux': {
+      // Une caisse en aluminium à deux fermoirs, des cailloux gris qui dépassent du couvercle entrouvert.
+      g.fillStyle(MOON, 1);
+      for (const [x, r] of [
+        [70, 26],
+        [118, 32],
+        [170, 24],
+      ] as const)
+        g.fillCircle(x, 62, r);
+      g.fillStyle(SILVER, 1);
+      g.fillRoundedRect(20, 60, 200, 110, 12);
+      g.fillStyle(0xb9bec8, 1);
+      g.fillRect(20, 60, 200, 26);
+      g.fillStyle(C.ink, 1);
+      g.fillRect(58, 78, 20, 26);
+      g.fillRect(162, 78, 20, 26);
+      g.lineStyle(5, C.ink, 1);
+      g.strokeRoundedRect(20, 60, 200, 110, 12);
+      g.lineBetween(20, 86, 220, 86);
+      return { w: 240, h: 180 };
+    }
+    case 'lune_sac': {
+      // Le sac à dos des astronautes (il garde l'air et le froid) : un grand boîtier blanc, ses sangles, un petit boîtier.
+      g.fillStyle(0xeef1f5, 1);
+      g.fillRoundedRect(40, 50, 140, 170, 22);
+      g.fillStyle(SILVER, 1);
+      g.fillRoundedRect(60, 14, 100, 44, 10);
+      g.fillStyle(0x7fb8d8, 1);
+      g.fillRect(60, 120, 100, 14);
+      g.lineStyle(5, C.ink, 1);
+      g.strokeRoundedRect(40, 50, 140, 170, 22);
+      g.strokeRoundedRect(60, 14, 100, 44, 10);
+      g.lineStyle(10, 0x8a93a6, 1);
+      g.lineBetween(70, 60, 70, 210);
+      g.lineBetween(150, 60, 150, 210);
+      return { w: 220, h: 230 };
+    }
+    case 'lune_bottes': {
+      // Une paire de grosses bottes de Lune, blanches à semelle bleue.
+      for (const x of [20, 120]) {
+        g.fillStyle(0xeef1f5, 1);
+        g.fillRoundedRect(x, 20, 60, 120, 14);
+        g.fillRoundedRect(x, 100, 100, 48, 18);
+        g.fillStyle(0x3d7fb8, 1);
+        g.fillRect(x, 140, 100, 16);
+        g.lineStyle(5, C.ink, 1);
+        g.strokeRoundedRect(x, 20, 60, 120, 14);
+        g.strokeRoundedRect(x, 100, 100, 56, 18);
+      }
+      return { w: 240, h: 170 };
+    }
+    case 'lune_appareil': {
+      // Un appareil photo argenté et son gros objectif noir.
+      g.fillStyle(SILVER, 1);
+      g.fillRoundedRect(20, 40, 180, 120, 14);
+      g.fillStyle(0x3a3f48, 1);
+      g.fillRect(150, 20, 50, 30);
+      g.fillCircle(110, 100, 46);
+      g.fillStyle(0x7fb8d8, 1);
+      g.fillCircle(110, 100, 22);
+      g.lineStyle(5, C.ink, 1);
+      g.strokeRoundedRect(20, 40, 180, 120, 14);
+      g.strokeCircle(110, 100, 46);
+      return { w: 220, h: 180 };
+    }
+    case 'lune_pelle': {
+      // Une petite pelle à long manche, en biais.
+      g.lineStyle(16, 0x8a93a6, 1);
+      g.lineBetween(40, 30, 160, 150);
+      g.lineStyle(5, C.ink, 1);
+      g.strokeRect(24, 14, 34, 22);
+      g.fillStyle(SILVER, 1);
+      g.fillTriangle(140, 130, 210, 160, 170, 200);
+      g.fillCircle(185, 172, 30);
+      g.lineStyle(5, C.ink, 1);
+      g.strokeCircle(185, 172, 30);
+      return { w: 230, h: 220 };
+    }
+    case 'lune_marteau': {
+      // Un marteau de géologue : manche en biais, tête métallique.
+      g.lineStyle(18, 0xa87a22, 1);
+      g.lineBetween(50, 190, 150, 70);
+      g.fillStyle(0x8a93a6, 1);
+      g.fillRoundedRect(90, 30, 130, 52, 12);
+      g.lineStyle(5, C.ink, 1);
+      g.strokeRoundedRect(90, 30, 130, 52, 12);
+      return { w: 240, h: 210 };
+    }
     case 'equipe_fete': {
       // L'équipe du laboratoire en silhouettes joyeuses, bras levés (personnes inventées).
       const colors = [0x7fb8d8, 0xf2c14e, 0x8fd1b5, 0xf08a3c, 0xc9d6e8];

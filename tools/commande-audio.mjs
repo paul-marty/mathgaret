@@ -92,6 +92,8 @@ const TON_C5 = {
   fin_diplome_fin: 'joyeux et fier, sans crier',
   fin_mars_question: 'chuchoté, rêveur, plein d’émerveillement',
   fin_mars_aventure: 'conteur : rêveur, lent, une porte ouverte sur l’imagination',
+  c5_1_cailloux: 'surpris, un peu inquiet, jamais effrayant',
+  c5_2_radar: 'explique simplement, posé, avec curiosité',
 };
 
 function ton(id, speaker) {
@@ -102,11 +104,11 @@ function ton(id, speaker) {
   if (/^(menu|cfg|hud|parents)_|^bilan_(continuer|pause)$|^fin_(continuer|imprimer|accueil)$/.test(id)) return 'nom de bouton : court, clair, simple, sans emphase';
   if (id === 'rejeu_chapitre') return 'titre de chapitre : posé, petite pause après le numéro';
   if (/_(ohnon|direction)$/.test(id)) return 'surpris, un peu inquiet, jamais effrayant';
-  if (/succes|bravo|correction|fonctionne|valide|^ms_bip$|^gen_etape$|^bilan_mission$|^fin_progres_|^c5_2_reunis$/.test(id)) return 'joyeux et fier de l’enfant, sans crier';
-  if (/_(peu|trop|court|long|rien)(_1)?$|erreur|^c4_3_(deborde|tient)$/.test(id)) return 'doux et rassurant : on regarde ensemble, jamais déçu ni moqueur';
+  if (/succes|bravo|correction|fonctionne|valide|^ms_bip$|^gen_etape$|^bilan_mission$|^fin_progres_|^c5_2_reunis$|^c5_1_equilibre|^c5_2_proche/.test(id)) return 'joyeux et fier de l’enfant, sans crier';
+  if (/_(peu|trop|court|long|rien|leger|lourd)(_1)?$|erreur|^c4_3_(deborde|tient)$|^c5_2_(eloigne|grand_bond|petit_bond)$/.test(id)) return 'doux et rassurant : on regarde ensemble, jamais déçu ni moqueur';
   if (/aide|^gen_compter$|^gen_reecoute/.test(id)) return 'patient, un peu plus lent, comme en montrant du doigt';
   if (/^tuto_/.test(id)) return 'explique simplement un bouton, rassurant';
-  if (/consigne|^c2_3_(plein|radio|etoiles|freinage)$|^c2_1_liste$|^c4_3_choix_/.test(id)) return 'consigne de problème : très clair, posé, vraie question à la fin';
+  if (/consigne|^c2_3_(plein|radio|etoiles|freinage)$|^c2_1_liste$|^c4_3_choix_|^c5_1_poids$|^c5_2_suite$/.test(id)) return 'consigne de problème : très clair, posé, vraie question à la fin';
   if (/^ms_/.test(id)) return 'amusé, léger';
   if (speaker === 'narrateur') return 'conteur : chaleureux, posé, un soupçon de mystère';
   if (speaker === 'margaret') return 'calme, sûre d’elle, bienveillante';
@@ -122,6 +124,17 @@ const fill = (text, vars) => text.replace(/\{(\w+)\}/g, (_, k) => String(vars[k]
 function example(id, text) {
   const v = { total: 8, minus: 3, deja: 3, answer: 5, a: 5, b: 3, from: 2, to: 7, target: 5, cap: 8, units: 3, free: 8, n: 3, k: 2, stop: 9 };
   if (/plein|somme/.test(id)) v.answer = v.a + v.b;
+  // Radar (C5.2) : 10, 8, 6, puis 4 ; une erreur trop loin (7), trop près (2), pas assez près (5).
+  if (/^c5_2_/.test(id)) {
+    Object.assign(v, { a: 10, b: 8, c: 6, step: 2, answer: 4 });
+    v.n = /eloigne/.test(id) ? 7 : /grand_bond/.test(id) ? 2 : 5;
+    return fill(text, v);
+  }
+  // Alléger Eagle (C5.1) : 5 kilos de cailloux, 3 + 2 ; l'aide pose l'objet de 3 kilos.
+  if (/^c5_1_/.test(id)) {
+    Object.assign(v, { target: 5, a: 3, b: 2 });
+    return fill(text, v);
+  }
   const k = /_1$/.test(id) ? 1 : 2;
   if (/^c4_1_/.test(id)) {
     // Jauge : n est l'énergie qui resterait d'après l'enfant, k ce que le contrôle aurait alors pris.
@@ -192,12 +205,15 @@ for (const r of rows) {
   if (notes.length) r.remarque = [r.remarque, ...notes].filter(Boolean).join(' ; ');
 }
 
-// Pas encore livré dans public/audio/voix : lot 6 (chapitre 5, fin de la mission, nouveautés de l'accueil),
-// et lot 7 pour les variantes des répliques qui reviennent souvent. Les lots 4 et 5 sont entièrement livrés.
+// Les lots 1 à 7 sont entièrement livrés (lot 7 : les variantes des répliques qui reviennent souvent).
+// Ce qui n'est pas encore dans public/audio/voix forme le lot 9 (les nouveaux exercices de C5.1 et C5.2, 18/11).
 const voixDir = resolve(root, 'public/audio/voix');
 const delivered = new Set(existsSync(voixDir) ? readdirSync(voixDir) : []);
-for (const r of rows) if (r.variante) r.lot = 7;
-else if (!delivered.has(r.fichier)) r.lot = 6;
+for (const r of rows) {
+  r.lot0 = r.variante ? 7 : r.lot;
+  if (!delivered.has(r.fichier)) r.lot = 9;
+  else if (r.variante) r.lot = 7;
+}
 
 const FACULTATIF = 'facultatif';
 // Un même enregistrement n'est commandé qu'une fois : même personnage, même sorte (réplique entière ou morceau),
@@ -216,6 +232,8 @@ for (const group of groups.values()) {
   const kept = group.find((r) => delivered.has(r.fichier)) ?? group[0];
   for (const r of group) {
     if (r === kept || delivered.has(r.fichier)) continue;
+    // Déjà enregistré sous un autre nom : rien à commander, le jeu le réutilise (il ne va pas dans le lot 9).
+    if (delivered.has(kept.fichier) && r.lot === 9) r.lot = r.lot0;
     // Gardé dans son lot (les commandes déjà transmises restent valables), mais facultatif.
     r.remarque = [FACULTATIF + ` : même texte et même voix que ${kept.fichier}, que le jeu réutilise. Tu peux ne pas l'enregistrer`, r.remarque]
       .filter(Boolean)
@@ -229,9 +247,9 @@ const head = ['lot', 'fichier', 'personnage', 'texte_a_dire', 'ton', 'phrase_com
 const csv = [head.join(';'), ...rows.map((r) => [r.lot, r.fichier, r.personnage, r.texte, r.ton, r.phrase, r.scene, r.remarque].map(q).join(';'))].join('\n');
 mkdirSync(resolve(root, 'docs/audio'), { recursive: true });
 writeFileSync(resolve(root, 'docs/audio/commande-voix.csv'), '﻿' + csv + '\n');
-for (const lot of [4, 5, 6, 7]) {
+// Les commandes des lots déjà livrés (commande-voix-lot4.csv à lot7.csv) restent telles qu'elles ont été passées.
+for (const lot of [9]) {
   const part = rows.filter((r) => r.lot === lot);
-  // Lot entièrement livré : on garde le fichier de la commande passée.
   if (part.length === 0) continue;
   const text = [head.join(';'), ...part.map((r) => [r.lot, r.fichier, r.personnage, r.texte, r.ton, r.phrase, r.scene, r.remarque].map(q).join(';'))].join('\n');
   writeFileSync(resolve(root, `docs/audio/commande-voix-lot${lot}.csv`), '﻿' + text + '\n');
@@ -240,4 +258,4 @@ for (const lot of [4, 5, 6, 7]) {
 const byLot = rows.reduce((m, r) => ((m[r.lot] = (m[r.lot] ?? 0) + 1), m), {});
 const chars = (lot) => rows.filter((r) => r.lot === lot).reduce((s, r) => s + r.texte.length, 0);
 console.log(`✓ docs/audio/commande-voix.csv : ${rows.length} fichiers`);
-for (const lot of [1, 2, 3, 4, 5, 6, 7]) if (byLot[lot]) console.log(`  lot ${lot} : ${byLot[lot]} fichiers, ${chars(lot)} caractères`);
+for (const lot of [1, 2, 3, 4, 5, 6, 7, 9]) if (byLot[lot]) console.log(`  lot ${lot} : ${byLot[lot]} fichiers, ${chars(lot)} caractères`);

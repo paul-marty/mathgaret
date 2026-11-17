@@ -148,11 +148,11 @@ describe('manifeste audio', () => {
     const voice = new Voice({} as AudioEngine, {} as GameClock, {} as Diag, true);
     // « Il en reste {answer}. Choisis {answer}, puis appuie sur la grande coche. » : les trois morceaux du chapitre 2.
     voice.files = { 'c2_1_aide_4#1': 'u/reste', 'c2_1_aide_4#2': 'u/choisis', 'c2_1_aide_4#3': 'u/coche', nombre_4: 'u/4' };
-    expect(lines.c5_1_aide_4.text).toBe(lines.c2_1_aide_4.text);
-    expect(voice.clipsFor('c5_1_aide_4', lines.c5_1_aide_4.text, { answer: 4 })?.map((c) => c.url)).toEqual(['u/reste', 'u/4', 'u/choisis', 'u/4', 'u/coche']);
+    expect(lines.c3_2_aide_4.text).toBe(lines.c2_1_aide_4.text);
+    expect(voice.clipsFor('c3_2_aide_4', lines.c3_2_aide_4.text, { answer: 4 })?.map((c) => c.url)).toEqual(['u/reste', 'u/4', 'u/choisis', 'u/4', 'u/coche']);
     // Le fichier propre à la réplique, s'il est livré, passe avant.
-    voice.files['c5_1_aide_4#3'] = 'u/coche-c5';
-    expect(voice.clipsFor('c5_1_aide_4', lines.c5_1_aide_4.text, { answer: 4 })?.at(-1)?.url).toBe('u/coche-c5');
+    voice.files['c3_2_aide_4#3'] = 'u/coche-c3';
+    expect(voice.clipsFor('c3_2_aide_4', lines.c3_2_aide_4.text, { answer: 4 })?.at(-1)?.url).toBe('u/coche-c3');
     // Pas d'échange entre personnages ni entre réplique entière et morceau.
     expect(voice.fileFor('menu_continuer')).toBeUndefined();
     voice.files.menu_continuer = 'u/continuer';

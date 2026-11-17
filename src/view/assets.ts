@@ -98,6 +98,13 @@ export const IMAGES = {
     'helicoptere',
     'navire',
     'equipe_fete',
+    // Chapitre 5, ajoutés le 18/11 : alléger Eagle (C5.1)
+    'boite_cailloux',
+    'lune_sac',
+    'lune_bottes',
+    'lune_appareil',
+    'lune_pelle',
+    'lune_marteau',
   ],
   /** Photographies d'archive (pas de forme provisoire : le fichier est dans le dépôt). */
   photos: ['photo_margaret'],

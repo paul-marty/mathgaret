@@ -36,10 +36,13 @@ import {
   type Family,
   type GenContext,
   type Profile,
-  DEPART_MAX,
-  departure,
-  orbitWindow,
-  rendezvous,
+  LIGHTEN_MAX,
+  lighten,
+  lightenPair,
+  loadSum,
+  RADAR_MAX,
+  radar,
+  radarTerms,
   wave,
   WAVE_MAX,
   waveFollowUp,
@@ -497,13 +500,23 @@ describe('familles du chapitre 4', () => {
 });
 
 describe('familles du chapitre 5', () => {
-  it('premiers problèmes = exemples du document (14 et 9, 7 → 12, 50 : 25 puis 15)', () => {
-    expect(series(departure, 'debut', 1)[0]).toEqual({ total: 6, deja: 4 });
-    expect(series(departure, 'milieu', 1)[0]).toEqual({ total: 14, deja: 9 });
-    expect(series(departure, 'fin', 1)[0]).toEqual({ total: 40, deja: 27 });
-    expect(series(rendezvous, 'debut', 1)[0]).toEqual({ from: 2, to: 5 });
-    expect(series(rendezvous, 'milieu', 1)[0]).toEqual({ from: 7, to: 12 });
-    expect(series(rendezvous, 'fin', 1)[0]).toEqual({ from: 35, to: 50 });
+  it('premiers problèmes : 5 kilos (3 + 2 ou 4 + 1), 10, 9, 8…, 20, 18, 16…, 50, 40, 30…, et l’onde (50 : 25 puis 15)', () => {
+    const l = series(lighten, 'debut', 1)[0];
+    expect(l.target).toBe(5);
+    expect(l.items.map((it) => it.w)).toEqual([3, 2, 4, 1]);
+    expect(lighten.check(l, [0, 1])).toBe(true);
+    expect(lighten.check(l, [2, 3])).toBe(true);
+    expect(lighten.check(l, [0])).toBe(false);
+    expect(lighten.check(l, [0, 0])).toBe(false);
+    expect(lighten.answer(l)).toEqual([2, 3]); // l'aide montre la paire avec l'objet le plus lourd
+    expect(series(lighten, 'milieu', 1)[0].target).toBe(12);
+    expect(series(lighten, 'fin', 1)[0].target).toBe(40);
+    expect(radarTerms(series(radar, 'debut', 1)[0])).toEqual([10, 9, 8]);
+    expect(radar.answer(series(radar, 'debut', 1)[0])).toBe(7);
+    expect(radarTerms(series(radar, 'milieu', 1)[0])).toEqual([20, 18, 16]);
+    expect(radar.answer(series(radar, 'milieu', 1)[0])).toBe(14);
+    expect(radarTerms(series(radar, 'fin', 1)[0])).toEqual([50, 40, 30]);
+    expect(radar.answer(series(radar, 'fin', 1)[0])).toBe(20);
     expect(series(wave, 'debut', 1)[0]).toMatchObject({ stage: 'reste', total: 6, deja: 4 });
     expect(series(wave, 'milieu', 1)[0]).toMatchObject({ stage: 'reste', total: 15, deja: 9 });
     const p = series(wave, 'fin', 1)[0];
@@ -515,25 +528,51 @@ describe('familles du chapitre 5', () => {
     expect(waveFollowUp(next)).toBeNull();
   });
 
-  it.each(PROFILES)('vérifications du départ (%s) : au moins deux lignes prêtes, au moins une à cocher, pages de dix', (profile) => {
-    for (let seed = 1; seed <= 40; seed++) {
-      const ps = series(departure, profile, 4, seed, 2);
-      expect(new Set(ps.map((p) => departure.key(p))).size).toBe(ps.length);
-      for (const p of ps) {
-        expect(p.total).toBeLessThanOrEqual(DEPART_MAX[profile]);
-        expect(p.deja).toBeGreaterThanOrEqual(2);
-        expect(departure.answer(p)).toBeGreaterThanOrEqual(1);
+  it.each(PROFILES)('alléger Eagle (%s) : deux objets font le poids, aucun seul, poids distincts et lisibles', (profile) => {
+    const counts: Record<Profile, number> = { debut: 4, milieu: 5, fin: 5 };
+    for (let seed = 1; seed <= 60; seed++) {
+      const ps = series(lighten, profile, 4, seed, 2);
+      expect(new Set(ps.map((p) => lighten.key(p))).size).toBe(ps.length);
+      for (const [i, p] of ps.entries()) {
+        expect(p.items).toHaveLength(counts[profile]);
+        expect(new Set(p.items.map((it) => it.kind)).size).toBe(p.items.length);
+        expect(p.target).toBeLessThanOrEqual(LIGHTEN_MAX[profile]);
+        for (const it of p.items) {
+          expect(it.w).toBeGreaterThan(0);
+          expect(it.w).not.toBe(p.target);
+        }
+        const pair = lightenPair(p)!;
+        expect(pair).not.toBeNull();
+        // Une seule paire fait le poids (hors exemple du début), pour que l'aide montre la bonne.
+        if (i > 0) {
+          const pairs = p.items.flatMap((x, k) => p.items.slice(k + 1).filter((y) => x.w + y.w === p.target));
+          expect(pairs).toHaveLength(1);
+        }
+        expect(loadSum(p, pair)).toBe(p.target);
+        expect(lighten.check(p, lighten.answer(p))).toBe(true);
+        expect(lighten.check(p, lighten.wrong!(p))).toBe(false);
+        if (profile === 'milieu' && i !== 2) expect(p.target).toBeGreaterThan(10);
+        if (profile === 'fin' && i > 0) {
+          const [a, b] = pair.map((k) => p.items[k].w);
+          if (i === 1 || i === 2) expect((a % 10) + (b % 10)).toBe(0);
+          else expect((a % 10) + (b % 10)).toBeLessThanOrEqual(9);
+        }
       }
     }
   });
 
-  it.each(PROFILES)('rendez-vous (%s) : départ et repère dans la fenêtre de la piste, écart d’au moins deux', (profile) => {
-    for (let seed = 1; seed <= 40; seed++) {
-      for (const p of series(rendezvous, profile, 4, seed, 2)) {
-        const { lo, hi } = orbitWindow(profile, p.from);
-        expect(p.from).toBeGreaterThanOrEqual(lo);
-        expect(p.to).toBeLessThanOrEqual(hi);
-        expect(rendezvous.answer(p)).toBeGreaterThanOrEqual(2);
+  it.each(PROFILES)('radar (%s) : la distance baisse toujours du même pas et reste positive', (profile) => {
+    const steps: Record<Profile, number[]> = { debut: [1], milieu: [1, 2], fin: [5, 10] };
+    for (let seed = 1; seed <= 60; seed++) {
+      const ps = series(radar, profile, 4, seed, 2);
+      expect(new Set(ps.map((p) => radar.key(p))).size).toBe(ps.length);
+      for (const p of ps) {
+        expect(steps[profile]).toContain(p.step);
+        expect(p.start).toBeLessThanOrEqual(RADAR_MAX[profile]);
+        expect(radar.answer(p)).toBeGreaterThanOrEqual(2);
+        const t = radarTerms(p);
+        expect(t[1] - t[2]).toBe(p.step);
+        expect(t[2] - radar.answer(p)).toBe(p.step);
       }
     }
   });
